@@ -9,7 +9,8 @@ __pycache__/
 .vscode/
 
 # Data files
-data/
+db/
+*.db
 *.csv
 *.json
 
