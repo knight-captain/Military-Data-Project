@@ -68,7 +68,7 @@ def clean_column_names(df):
 
     df.columns = new_cols
 
-    # Pass 2: insert section row if needed
+    # Pass 2: insert section row if needed (usually becasue there was a ("name","category") type header)
     if section_values:
         section_row = [None] * len(new_cols)
         for idx, sec in section_values.items():

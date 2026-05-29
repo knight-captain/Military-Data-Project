@@ -1,12 +1,15 @@
 import os
-import requests
-from bs4 import BeautifulSoup
 import pandas as pd
+import re
+import requests
 import sqlite3
 import time
-import re #regex
+from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from io import StringIO
+
+from data.utils.html_cleaning import clean_html
+from data.data_acquisition.build_meta_table import insert_meta_row
 
 BASE_URL = "https://en.wikipedia.org"
 MASTER_LIST = "https://en.wikipedia.org/wiki/Lists_of_currently_active_military_equipment_by_country"
@@ -15,30 +18,15 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; MilitaryDataScraper/1.0; +https://github.com/knight-captain)"
 }
 
-def get_next_db_path():
-    """Get the next available .db name"""
-    os.makedirs(DB_DIR, exist_ok=True)
-    existing = [f for f in os.listdir(DB_DIR) if f.startswith("military_equipment_") and f.endswith(".db")]
+DB_PATH = os.path.join("data", "db", "military_equipment.db")
+# FOR VERSIONING, not pipeline
+# DB_DIR = os.path.join("data", "db")
+# os.makedirs(DB_DIR, exist_ok=True)
+# DB_PATH = get_next_db_path()
 
-    if not existing:
-        return os.path.join(DB_DIR, "military_equipment_01.db")
-
-    # Extract version numbers
-    versions = []
-    for f in existing:
-        try:
-            num = int(f.replace("military_equipment_", "").replace(".db", ""))
-            versions.append(num)
-        except ValueError:
-            continue
-
-    next_version = max(versions) + 1
-    return os.path.join(DB_DIR, f"military_equipment_{next_version:02d}.db") #pads the versions
-
-# Ensure data/db directory exists
-DB_DIR = os.path.join("data", "db")
-os.makedirs(DB_DIR, exist_ok=True)
-DB_PATH = get_next_db_path()
+# -----------------------------
+# Utility functions
+# -----------------------------
 
 def clean_name(name: str) -> str:
     """Convert a country/page name into a safe SQLite table name."""
@@ -51,10 +39,11 @@ def get_soup(url):
     """Fetch a URL and return a BeautifulSoup object."""
     response = requests.get(url, headers=HEADERS)
     response.raise_for_status()
-    return BeautifulSoup(response.text, "lxml")
+    html = clean_html(response.text)
+    return BeautifulSoup(html, "lxml")
 
 def get_country_links():
-    """Extract all relevant links from the master list page, grouped by country."""
+    """Extract all relevant links from the master list page."""
     soup = get_soup(MASTER_LIST)
     content = soup.find("div", {"class": "mw-parser-output"})
 
@@ -63,20 +52,17 @@ def get_country_links():
 
     # Iterate through all elements in order
     for element in content.children:
-        # Skip whitespace, comments, etc.
+        # skip whitespace, comment, etc.
         if not hasattr(element, "name"):
             continue
 
-        # Detect <div><h2>Country</h2></div> to get country name. <- bad
-        # Caught AI when it missed that the <div><h2></div> was a sibling of the <ul>. 
-        # It also tried to get this from the following <span> containing the [edit] link
-        # Detect <div class="mw-heading mw-heading2"><h2>Country</h2></div>
+        # Detect <div class="mw-heading mw-heading2"><h2>Country</h2></div>. This is a sibpling of the actual <ul>
         if element.name == "div" and "mw-heading2" in element.get("class", []):
             h2 = element.find("h2")
             if h2:
                 current_country = h2.get_text(strip=True)
 
-        # Now collect links from the <ul> that follows
+        # Collect links under <ul>
         if element.name == "ul" and current_country:
             for a in element.find_all("a", href=True):
                 href = a["href"]
@@ -90,6 +76,10 @@ def get_country_links():
 
     return links
 
+# -----------------------------
+# Main functions
+# -----------------------------
+
 def extract_tables_from_page(url):
     """Extract all tables from a Wikipedia page with section headers."""
     soup = get_soup(url)
@@ -98,13 +88,16 @@ def extract_tables_from_page(url):
     extracted = []
 
     for idx, table in enumerate(tables):
-        # Try to parse the table
         try:
-            df = pd.read_html(StringIO(str(table)))[0] #DEPRECIATED w/out StringIO()
+            df = pd.read_html(StringIO(str(table)))[0]
         except Exception:
             continue
 
-        # Find nearest section headers above the table
+        #TODO: "or" instead? if it's a Navigation section, skip it, i.e.: <div role="navigation" class="navbox" ...>. These usually get associated with a "references" or "external links" section
+        if table.find_parent("div", {"role": "navigation"}) is not None and table.find_parent("div", class_="navbox") is not None:
+            continue
+
+        # Find nearest section headers
         h2 = h3 = h4 = None
         prev = table
 
@@ -125,8 +118,7 @@ def extract_tables_from_page(url):
                 break
 
         # Build a meaningful title
-        title_parts = [p for p in [h2, h3, h4] if p]
-        section_title = "_".join(title_parts) if title_parts else "untitled"
+        section_title = "_".join([p for p in [h2, h3, h4] if p]) or "untitled"
 
         extracted.append({
             "index": idx,
@@ -139,37 +131,40 @@ def extract_tables_from_page(url):
 
     return extracted
 
+
 def save_to_sqlite(country, page_title, url, tables, conn):
-    """Save all tables for a country/page into SQLite with section titles."""
+    """Save all tables for a country/page into SQLite and update a_meta_table."""
     base_name = clean_name(country)
 
     for t in tables:
         idx = t["index"]
         df = t["data"]
 
-        # Zero-pad table index
+        # Zero-pad table index to 2 digits
         idx_str = str(idx).zfill(2)
 
-        # Clean section title for table name
+        #cleans and builds table title
         title_clean = clean_name(t["section_title"])
-
-        # Build final table name
         table_name = f"{base_name}_table_{idx_str}_{title_clean}"
 
-        # Add metadata columns
-        df["_source_country"] = country
-        df["_source_page"] = page_title
-        df["_source_url"] = url
-        df["_table_index"] = idx
-        df["_section_h2"] = t["h2"]
-        df["_section_h3"] = t["h3"]
-        df["_section_h4"] = t["h4"]
-        df["_section_title"] = t["section_title"]
-        df["_scrape_timestamp"] = pd.Timestamp.now(tz="UTC")
-
+        # Save table & data
         df.to_sql(table_name, conn, if_exists="replace", index=False)
 
-#Main function: Opens DB, runs get_country_links, for each page returned from get_country_links it runs extract_tables_from_page and save_to_sqlite
+        # Insert metadata row in a_meta_table
+        insert_meta_row(
+            conn=conn,
+            table_name=table_name,
+            country=country,
+            h2=t["h2"],
+            h3=t["h3"],
+            h4=t["h4"],
+            section_title=t["section_title"],
+            table_idx=idx,
+            url=url
+        )
+
+
+# Main function: Opens DB, runs get_country_links, for each page returned from get_country_links it runs extract_tables_from_page and save_to_sqlite
 def scrape_all_to_sqlite():
     """Scrape all equipment tables for all countries and save to SQLite."""
     conn = sqlite3.connect(DB_PATH)
@@ -186,9 +181,10 @@ def scrape_all_to_sqlite():
         except Exception as e:
             print(f"Error scraping {country} ({url}): {e}")
 
-        time.sleep(1)  # polite delay, 'cause we don't want to tick Wiki off
+        time.sleep(1)
 
     conn.close()
+
 
 if __name__ == "__main__":
     scrape_all_to_sqlite()
