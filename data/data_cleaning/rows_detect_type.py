@@ -1,7 +1,7 @@
 import re
 import pandas as pd
 
-# Patterns that indicate a COUNT row, not a category
+# Patterns that count as "numeric" for quantity rows
 COUNT_PATTERNS = [
     r"active\s*\(\d+\)",
     r"in service\s*\(\d+\)",
@@ -9,79 +9,58 @@ COUNT_PATTERNS = [
     r"\(\d+\)",             # parentheses with numbers
     r"^\d+$",               # pure numbers
     r"^\d{4}$",             # years
-    r"^\d+\s*$"             # numeric-only
+    r"^\d+\s*$"             # numeric-only with whitespace
 ]
 
-def is_count_value(value):
-    """Returns True if the value indicates a count row."""
-    if not isinstance(value, str):
-        return False
-    value = value.lower().strip()
-    return any(re.search(p, value) for p in COUNT_PATTERNS)
-
-
-def row_values(df, row):
-    """Extract values from meaningful columns only."""
-    cols = [
-        c for c in df.columns
-        if not c.startswith("_")
-        and c not in ("scrape_url", "scrape_timestamp", "source_url")
-    ]
-    return [str(row[c]).strip() if pd.notna(row[c]) else "" for c in cols]
-
-
-def is_repeat_row(values):
-    non_empty = [v for v in values if v != ""]
-
-    # If there's only one non-empty value, it's NOT a repeat row
-    if len(non_empty) <= 1:
-        return False
-
-    # Case 1: all values identical
-    if len(set(values)) == 1 and values[0] != "":
-        return True
-
-    # Case 2: first value present, others blank (but only if >1 columns exist)
-    if values[0] != "" and all(v == "" for v in values[1:]):
-        return True
-
-    # Case 3: first value repeated across all columns
-    if values[0] != "" and all(v == values[0] for v in values):
-        return True
-
+def is_quantity_value(val: str) -> bool:
+    """Return True if the value matches any quantity/count pattern."""
+    for pat in COUNT_PATTERNS:
+        if re.fullmatch(pat, val.lower()):
+            return True
     return False
 
 
-def detect_row_type(df):
+def detect_row_type(df: pd.DataFrame):
     """
+    Detects special row types in a cleaned Wikipedia table.
+
+    Definitions:
+      - Section row:   every cell has the same non-empty value (merged header row)
+      - Quantity row:  every cell has the same numeric-like value (per COUNT_PATTERNS)
+      - Empty row:     every cell is empty or NaN
+
     Returns:
-        section_rows: list of row indices that are category rows
-        count_rows: list of row indices that are count rows
+        section_rows:  list of row indexes
+        quantity_rows: list of row indexes
+        empty_rows:    list of row indexes
     """
 
     section_rows = []
-    count_rows = []
+    quantity_rows = []
     empty_rows = []
 
     for idx, row in df.iterrows():
-        vals = row_values(df, row)
+        # Normalize values
+        values = [str(v).strip() if pd.notna(v) else "" for v in row.tolist()]
+        unique_vals = set(values)
 
-        # returns rows with no meaningful values
-        if all(v == "" for v in vals):
+        # Case 1: Entire row empty
+        if unique_vals == {""}:
             empty_rows.append(idx)
             continue
 
-        # Check if it's a repeat row
-        if is_repeat_row(vals):
-            # Now classify it
-            first_val = vals[0]
+        # Case 2: All values identical AND non-empty
+        if len(unique_vals) == 1:
+            val = next(iter(unique_vals))
 
-            if is_count_value(first_val):
-                count_rows.append(idx)
+            # Quantity row?
+            if is_quantity_value(val):
+                quantity_rows.append(idx)
             else:
                 section_rows.append(idx)
-            continue
-        
-        #don't do anything with other types of rows
 
-    return section_rows, count_rows, empty_rows
+            continue
+
+        # Case 3: Normal row → ignore
+
+    return section_rows, quantity_rows, empty_rows

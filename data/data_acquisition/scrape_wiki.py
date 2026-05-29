@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from io import StringIO
 
-from data.utils.html_cleaning import clean_html
+from data.utils.normalization import clean_html
 from data.data_acquisition.build_meta_table import insert_meta_row
 
 BASE_URL = "https://en.wikipedia.org"
@@ -17,12 +17,6 @@ MASTER_LIST = "https://en.wikipedia.org/wiki/Lists_of_currently_active_military_
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; MilitaryDataScraper/1.0; +https://github.com/knight-captain)"
 }
-
-DB_PATH = os.path.join("data", "db", "military_equipment.db")
-# FOR VERSIONING, not pipeline
-# DB_DIR = os.path.join("data", "db")
-# os.makedirs(DB_DIR, exist_ok=True)
-# DB_PATH = get_next_db_path()
 
 # -----------------------------
 # Utility functions
@@ -165,9 +159,9 @@ def save_to_sqlite(country, page_title, url, tables, conn):
 
 
 # Main function: Opens DB, runs get_country_links, for each page returned from get_country_links it runs extract_tables_from_page and save_to_sqlite
-def scrape_all_to_sqlite():
+def scrape_all_to_sqlite(db_path="data/db/military_equipment.db"):
     """Scrape all equipment tables for all countries and save to SQLite."""
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(db_path)
     country_links = get_country_links()
 
     print(f"Found {len(country_links)} links on MASTER_LIST")
@@ -187,5 +181,7 @@ def scrape_all_to_sqlite():
 
 
 if __name__ == "__main__":
-    scrape_all_to_sqlite()
-    print(f"Scrape complete. Data saved to {DB_PATH}")
+    default_path = "data/db/military_equipment.db" #<- will overwrite if run from here
+    scrape_all_to_sqlite(db_path=default_path)
+    print(f"Scrape complete. Data saved to {default_path}")
+

@@ -1,8 +1,21 @@
 import ast
 import numpy as np
 import pandas as pd
+from collections import Counter
 from data.utils.normalization import normalize_text
 
+def make_unique(colnames):
+    '''Make sure every column has a name (for weird wiki colspan shenanigans)
+    e.g.: <tr 1> has 5 <td>'s, but <tr 2 colspan=6>'''
+    counter = Counter()
+    result = []
+    for col in colnames:
+        counter[col] += 1
+        if counter[col] == 1:
+            result.append(col)
+        else:
+            result.append(f"{col}_{counter[col]}")
+    return result
 
 def detect_column_elements(col):
     """Return number of elements in a multi-element header."""
@@ -17,8 +30,9 @@ def detect_column_elements(col):
         except Exception:
             pass
 
-    if isinstance(col, str) and "," in col:
-        return len(col.split(","))
+    # Breaks if there is a comma in one col, but not the others, just like I told Copilot
+    # if isinstance(col, str) and "," in col:
+    #     return len(col.split(","))
 
     return 1
 
@@ -51,12 +65,7 @@ def parse_multi_element_column(df):
             except Exception:
                 parts = [normalize_text(col)]
 
-        # Case 3: comma-separated <- this shouln't happen
-        elif isinstance(col, str) and "," in col:
-            print("CASE 3 HIT - this shouldn't happen")
-            parts = [normalize_text(x) for x in col.split(",")]
-
-        # Case 4: simple column <- this shouldn't happen
+        # Case 3: comma-separated <- this shouln't happen, but the AI really likes it for some reason
         else:
             print("CASE 4 HIT - this DEFINITELY shouldn't happen")
             parts = [normalize_text(col)]
@@ -67,6 +76,7 @@ def parse_multi_element_column(df):
     columns_as_rows = np.array(temp_rows, dtype=object).T.tolist()
 
     # Identify the row where all values differ. The first to satisfy this it the col_names
+    # This is one of my favorite snippets of code! 
     col_names = None
     for row in columns_as_rows:
         if len(set(row)) == len(row):
@@ -76,14 +86,15 @@ def parse_multi_element_column(df):
     if col_names is None:
         # fallback: use first row
         col_names = columns_as_rows[0]
+        print(f"used first row as default: {col_names}")
 
-    # Build metadata row (everything except the header row)
+    # Build metadata row (everything except the col_names)
     new_row = []
     for parts in temp_rows:
         leftover = [x for x in parts if x not in col_names]
         new_row.append(", ".join(leftover) if leftover else None)
 
-    print(f"fixed column names: {col_names} & found row: {new_row}")
+    # print(f"fixed column names: {col_names} & found row: {new_row}")
 
     return col_names, new_row
 
@@ -91,7 +102,7 @@ def parse_multi_element_column(df):
 def column_name_standardizer(df: pd.DataFrame) -> pd.DataFrame:
     """
     Full column cleaning pipeline:
-    - Detect multi-element headers
+    - Detect multi-element headers ("type","small arms")
     - Parse them
     - Insert metadata row only when needed
     - Normalize all column names
@@ -107,11 +118,27 @@ def column_name_standardizer(df: pd.DataFrame) -> pd.DataFrame:
 
     # Complex case: parse multi-element headers
     new_cols, new_row = parse_multi_element_column(df)
-
-    # Insert metadata row
-    df = pd.concat([df, pd.DataFrame([new_row], columns=new_cols)], ignore_index=True)
-
-    # Apply new column names
+    
+    # Make sure every column has a name (for weird wiki colspan shenanigans); then apply. There may be more tacked on funcs like this as we get into the weeds...
+    new_cols = make_unique(new_cols)
     df.columns = new_cols
+
+    # Insert metadata row (AFTER renaming new_cols, or it will make new cols)
+    df.loc[-1] = new_row
+    df.index = df.index + 1
+    df = df.sort_index()
+
+    # CLEANUP FOR numbered cols that slipped through
+    clean_cols = []
+    for c in df.columns:
+        c_str = str(c).strip().lower()
+        if c_str.isdigit() or c_str.startswith("unnamed"):
+            if c_str.isdigit():
+                print(f"WARNING: dropping numeric/unnamed column in standardizer: {c}")
+            continue
+        clean_cols.append(c)
+
+    df = df[clean_cols]
+    df.columns = [normalize_text(str(c)) for c in df.columns]
 
     return df

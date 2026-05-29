@@ -1,18 +1,35 @@
 def remove_superfluous_columns(df):
-    """Removes image, thumbnail, and empty columns."""
+    """Removes image-like columns, unnamed/numeric columns, and empty columns."""
     drop_cols = []
 
     for col in df.columns:
-        col_lower = col.lower()
+        col_lower = str(col).lower()
 
-        # Image-like columns
+        # 1. Image-like columns
         if any(x in col_lower for x in ["image", "photo", "thumbnail", "file"]):
             drop_cols.append(col)
             continue
 
-        # Columns with all NaN or empty
-        if df[col].isna().all():
+        # 2. Unnamed or numeric-only columns <- not catching, so moving to end of column_name_standardizer.py
+        col_str = str(col).strip().lower()
+        if col_str.startswith("unnamed") or col_str.isdigit():
             drop_cols.append(col)
+            if col_str.isdigit():
+                print("NO, ACTUALLY IT CAUGHT ONE!!!")
             continue
 
-    return df.drop(columns=drop_cols)
+        # 3. Columns with all NaN or empty-like values
+        series = df[col]
+        if series.isna().all() or series.astype(str).str.lower().str.strip().isin(["", "nan", "none", "[null]"]).all():
+            drop_cols.append(col)
+            continue
+    
+    if len(drop_cols) >0:
+        print(f"Dropping {len(drop_cols)} cols!")
+    df = df.drop(columns=drop_cols)
+
+    # 4. If the table is now empty or has only 1 column → skip it
+    if df.shape[1] <= 1:
+        return None
+
+    return df

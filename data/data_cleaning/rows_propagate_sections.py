@@ -1,44 +1,64 @@
 import pandas as pd
 
-def propagate_sections(df, section_rows, count_rows):
+def propagate_sections(df, section_rows, quantity_rows, empty_rows):
     """
-    Adds 'section' and 'count' columns and fills them downward.
-    Removes both section and count rows afterward.
+    Adds 'section' and/or 'quantity' columns (only if needed) and fills them downward.
+    Removes section/quantity rows afterward.
+
+    Assumes section_rows and quantity_rows were detected using:
+      - all cells identical and non-empty
     """
 
     df = df.copy()
-    df["section"] = None
-    df["count"] = None
+
+    # Determine whether we need these columns
+    has_section = len(section_rows) > 0
+    has_quantity = len(quantity_rows) > 0
+
+    if has_section:
+        df["section"] = None
+    if has_quantity:
+        df["quantity"] = None
 
     section_to_propagate = None
-    count_to_propagate = None
+    quantity_to_propagate = None
 
     for idx, row in df.iterrows():
 
-        # --- SECTION ROWS ---
+        # Normalize row values
+        values = [str(v).strip() if pd.notna(v) else "" for v in row.tolist()]
+        unique_vals = set(values)
+
+        # --- META ROWS ---
         if idx in section_rows:
-            val = str(row.iloc[0]).strip()
-            section_to_propagate = val
-            # do NOT write to df here — this row will be removed
+            section_to_propagate = next(iter(unique_vals))
             continue
 
-        # --- COUNT ROWS ---
-        if idx in count_rows:
-            val = str(row.iloc[0]).strip()
-            count_to_propagate = val
-            # do NOT write to df here — this row will be removed
+        if idx in quantity_rows:
+            quantity_to_propagate = next(iter(unique_vals))
             continue
 
         # --- NORMAL ROWS ---
-        df.at[idx, "section"] = section_to_propagate
-        df.at[idx, "count"] = count_to_propagate
+        if has_section:
+            df.at[idx, "section"] = section_to_propagate
 
-    # Remove both section and count rows
-    rows_to_drop = sorted(set(section_rows + count_rows))
-    df = df.drop(rows_to_drop)
+        if has_quantity:
+            df.at[idx, "quantity"] = quantity_to_propagate
 
-    # Move section + count columns to the front
-    cols = ["section", "count"] + [c for c in df.columns if c not in ("section", "count")]
-    df = df[cols]
+
+    # Remove section + quantity rows
+    rows_to_drop = sorted(set(section_rows + quantity_rows + empty_rows))
+    if len(rows_to_drop) > 0:
+        print(f"Dropping {len(rows_to_drop)} rows!")
+    df = df.drop(rows_to_drop).reset_index(drop=True)
+
+    # Move metadata columns to the front (if they exist)
+    front_cols = []
+    if has_section:
+        front_cols.append("section")
+    if has_quantity:
+        front_cols.append("quantity")
+
+    df = df[front_cols + [c for c in df.columns if c not in front_cols]]
 
     return df
