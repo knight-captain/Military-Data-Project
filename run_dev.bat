@@ -14,5 +14,3 @@ call venv\Scripts\activate
 
 echo Opening VS Code...
 start "" code .
-
-cmd

@@ -6,27 +6,16 @@ import sqlite3
 from data.data_acquisition.scrape_wiki import scrape_all_to_sqlite
 from data.data_cleaning.clean_columns import clean_columns
 from data.data_cleaning.clean_rows import clean_rows
-
+from data.data_cleaning.clean_table import clean_table
+from datetime import datetime
 
 def get_next_db_path():
     DB_DIR = os.path.join("data", "db")
     os.makedirs(DB_DIR, exist_ok=True)
 
-    existing = [
-        f for f in os.listdir(DB_DIR)
-        if f.startswith("military_equipment_") and f.endswith(".db")
-    ]
-
-    if not existing:
-        next_num = 1
-    else:
-        nums = [
-            int(f.split("_")[-1].split(".")[0])
-            for f in existing
-        ]
-        next_num = max(nums) + 1
-
-    return os.path.join(DB_DIR, f"military_equipment_{next_num:02d}.db")
+    stamp = datetime.now().strftime("%y%m%d%H%M%S")  # e.g. 260601102300
+    filename = f"military_equipment_{stamp}.db"
+    return os.path.join(DB_DIR, filename)
 
 
 def run_pipeline():
@@ -35,13 +24,12 @@ def run_pipeline():
     - Comment out clean_columns() or clean_rows() if necessary
     '''
     # --- Phase I: Scrape ---
-    RUN_SCRAPER = False #<- set True to run scraper, or False to just work on a test .db 
+    RUN_SCRAPER = True #<- set True to run scraper, or False to just work on a TEST.db 
     TEST_DB = "data/db/military_equipment_TEST.db"
     DEV_DB = "data/db/military_equipment_TESTED.db" 
     if RUN_SCRAPER:
         db_path = get_next_db_path()
         print("\n=== PHASE I: SCRAPING WIKIPEDIA ===")
-        print(f"\nUsing next database: {db_path}")
         scrape_all_to_sqlite(db_path=db_path)
     else:
         # Make a fresh copy of the TEST DB for development
@@ -49,7 +37,8 @@ def run_pipeline():
             os.remove(DEV_DB)
         shutil.copy(TEST_DB, DEV_DB)
         db_path = DEV_DB
-        print(f"\nSkipping Phase I: Scrape. Using database: {db_path}")
+        print(f"\nSkipping Phase I: Scrape.")
+    print(f"Using db: {db_path}")
 
 
     # --- Phase II: Clean tables ---
@@ -64,10 +53,11 @@ def run_pipeline():
         if table.startswith("a_"):
             continue
 
-        print(f"Cleaning {table}")
+        print(f"Cleaning {table}") #keep this so we now where errors are coming from!
         clean_columns(table, conn=conn, db_path=db_path)
         clean_rows(table, conn=conn, db_path=db_path)
-    
+        clean_table(table, conn=conn, db_path=db_path)
+
     # --- Phase III: Join tables ---
     #TODO
 
@@ -75,7 +65,6 @@ def run_pipeline():
     conn.close()
 
     print("\n=== PIPELINE COMPLETE ===")
-    print(f"All tables scraped and cleaned into: {db_path}\n")
 
 
 if __name__ == "__main__":

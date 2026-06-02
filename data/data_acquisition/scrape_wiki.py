@@ -82,33 +82,42 @@ def extract_tables_from_page(url):
     extracted = []
 
     for idx, table in enumerate(tables):
+        html = str(table)
+
+        # Detect header presence, or a handful of folks that don't know proper html will ruin this whole project /jk
+        first_tr = table.find("tr")
+        first_tr_has_th = bool(first_tr.find("th")) if first_tr else False
+
         try:
-            df = pd.read_html(StringIO(str(table)))[0]
+            if first_tr_has_th:
+                df = pd.read_html(StringIO(html))[0]
+            else:
+                df = pd.read_html(StringIO(html), header=0)[0]
         except Exception:
             continue
 
-        #TODO: "or" instead? if it's a Navigation section, skip it, i.e.: <div role="navigation" class="navbox" ...>. These usually get associated with a "references" or "external links" section
+
+        # if it's a Navigation section, skip it, i.e.: <div role="navigation" class="navbox" ...>. These usually get associated with a "references" or "external links" section
+        #TODO: also add the article's meta issues. Prolly "<table class??? role="presentation">" or something like that.
         if table.find_parent("div", {"role": "navigation"}) is not None and table.find_parent("div", class_="navbox") is not None:
             continue
 
-        # Find nearest section headers
+        # Find nearest section headers; but now with more hierarchy
         h2 = h3 = h4 = None
         prev = table
-
         while True:
             prev = prev.find_previous()
             if prev is None:
                 break
 
-            if prev.name == "h2" and h2 is None:
-                h2 = prev.get_text(strip=True)
-            elif prev.name == "h3" and h3 is None:
-                h3 = prev.get_text(strip=True)
-            elif prev.name == "h4" and h4 is None:
+            if prev.name == "h4" and h4 is None:
                 h4 = prev.get_text(strip=True)
 
-            # Stop early if we found all three
-            if h2 and h3 and h4:
+            elif prev.name == "h3" and h3 is None:
+                h3 = prev.get_text(strip=True)
+
+            elif prev.name == "h2" and h2 is None:
+                h2 = prev.get_text(strip=True)
                 break
 
         # Build a meaningful title

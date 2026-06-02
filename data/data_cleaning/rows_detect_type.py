@@ -50,6 +50,7 @@ def detect_row_type(df: pd.DataFrame):
             continue
 
         # Case 2: All values identical AND non-empty
+        # This triggers for single-column tables, which is ok.
         if len(unique_vals) == 1:
             val = next(iter(unique_vals))
 

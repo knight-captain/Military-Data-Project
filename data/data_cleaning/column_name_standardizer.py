@@ -67,12 +67,14 @@ def parse_multi_element_column(df):
 
         # Case 3: comma-separated <- this shouln't happen, but the AI really likes it for some reason
         else:
-            print("CASE 4 HIT - this DEFINITELY shouldn't happen")
+            print("CASE 3 HIT - this DEFINITELY shouldn't happen")
             parts = [normalize_text(col)]
 
         temp_rows.append(parts)
 
-    # Transpose matrix
+    # Transpose matrix so each part of the tuple can be in a separate row
+    # grouped by col [[col_1-a, col_1-b, col_1-c],[col_2-a, col_2-b, col_2-c],[col_3-a, col_3-b, col_3-c]] -> 
+    # grouped by row [[col_1-a, col_2-a, col_3-a],[col_1-b, col_2-b, col_3-b],[col_1-c, col_2-c, col_3-c]]
     columns_as_rows = np.array(temp_rows, dtype=object).T.tolist()
 
     # Identify the row where all values differ. The first to satisfy this it the col_names
@@ -116,7 +118,7 @@ def column_name_standardizer(df: pd.DataFrame) -> pd.DataFrame:
         df.columns = [normalize_text(str(c)) for c in df.columns]
         return df
 
-    # Complex case: parse multi-element headers
+    # COMPLEX CASE: parse multi-element headers
     new_cols, new_row = parse_multi_element_column(df)
     
     # Make sure every column has a name (for weird wiki colspan shenanigans); then apply. There may be more tacked on funcs like this as we get into the weeds...
@@ -125,7 +127,7 @@ def column_name_standardizer(df: pd.DataFrame) -> pd.DataFrame:
 
     # Insert metadata row (AFTER renaming new_cols, or it will make new cols)
     df.loc[-1] = new_row
-    df.index = df.index + 1
+    df.index = df.index + 1 # put it in last, then move it to the "next" idx, which is first
     df = df.sort_index()
 
     # CLEANUP FOR numbered cols that slipped through
@@ -134,9 +136,13 @@ def column_name_standardizer(df: pd.DataFrame) -> pd.DataFrame:
         c_str = str(c).strip().lower()
         if c_str.isdigit() or c_str.startswith("unnamed"):
             if c_str.isdigit():
-                print(f"WARNING: dropping numeric/unnamed column in standardizer: {c}")
+                print("WARNING: dropping numeric column in standardizer")            
+            if c_str.startswith("unnamed"):
+                print("WARNING: dropping unnamed column in standardizer")
             continue
         clean_cols.append(c)
+
+    #TODO: OTHER LANGUAGES
 
     df = df[clean_cols]
     df.columns = [normalize_text(str(c)) for c in df.columns]

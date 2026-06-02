@@ -1,7 +1,7 @@
 from data.utils.get_country_for_table import get_country_for_table
 from data.utils.normalization import normalize_text, strip_country_prefix
 
-def update_meta_columns(conn, table_name, df):
+def update_meta_table(conn, table_name, df):
     cursor = conn.cursor()
 
     # Get country for this table
@@ -16,7 +16,7 @@ def update_meta_columns(conn, table_name, df):
 
     # Ensure row exists
     cursor.execute("""
-        INSERT OR IGNORE INTO a_meta_table_of_columns (table_name)
+        INSERT OR REPLACE INTO a_meta_table_of_columns (table_name)
         VALUES (?)
     """, (table_name,))
 
@@ -27,6 +27,7 @@ def update_meta_columns(conn, table_name, df):
     # Add missing columns + update values
     for col in df.columns:
         # Normalize and strip country prefix 
+        #TODO: need to add demonyms to a table to lookup
         norm = normalize_text(col)
         if country:
             norm = strip_country_prefix(norm, country)

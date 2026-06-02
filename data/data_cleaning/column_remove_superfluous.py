@@ -6,16 +6,18 @@ def remove_superfluous_columns(df):
         col_lower = str(col).lower()
 
         # 1. Image-like columns
-        if any(x in col_lower for x in ["image", "photo", "thumbnail", "file"]):
+        if any(x in col_lower for x in ["image", "photo", "thumbnail", "file", "picture"]):
             drop_cols.append(col)
             continue
 
-        # 2. Unnamed or numeric-only columns <- not catching, so moving to end of column_name_standardizer.py
+        # 2. Unnamed or numeric-only columns <- might not need in column_name_standardizer.py
         col_str = str(col).strip().lower()
         if col_str.startswith("unnamed") or col_str.isdigit():
             drop_cols.append(col)
             if col_str.isdigit():
-                print("NO, ACTUALLY IT CAUGHT ONE!!!")
+                print("WARNING: dropping numeric column in superfluous")            
+            if col_str.startswith("unnamed"):
+                print("WARNING: dropping numeric column in superfluous")
             continue
 
         # 3. Columns with all NaN or empty-like values
@@ -24,7 +26,7 @@ def remove_superfluous_columns(df):
             drop_cols.append(col)
             continue
     
-    if len(drop_cols) >0:
+    if len(drop_cols) >=5:
         print(f"Dropping {len(drop_cols)} cols!")
     df = df.drop(columns=drop_cols)
 
