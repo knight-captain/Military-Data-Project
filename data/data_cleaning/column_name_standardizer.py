@@ -2,7 +2,7 @@ import ast
 import numpy as np
 import pandas as pd
 from collections import Counter
-from data.utils.normalization import normalize_text
+from utils.normalization import normalize_text
 
 def make_unique(colnames):
     '''Make sure every column has a name (for weird wiki colspan shenanigans)

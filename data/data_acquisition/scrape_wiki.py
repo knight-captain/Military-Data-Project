@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from io import StringIO
 
-from data.utils.normalization import clean_html
+from utils.normalization import clean_html
 from data.data_acquisition.build_meta_table import insert_meta_row
 
 BASE_URL = "https://en.wikipedia.org"

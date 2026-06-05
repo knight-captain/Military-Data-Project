@@ -1,5 +1,5 @@
-from data.utils.get_country_for_table import get_country_for_table
-from data.utils.normalization import normalize_text, strip_country_prefix
+from utils.get_country_for_table import get_country_for_table
+from utils.normalization import normalize_text, strip_country_prefix
 
 def update_meta_table(conn, table_name, df):
     cursor = conn.cursor()
