@@ -135,14 +135,14 @@ def column_name_standardizer(df: pd.DataFrame) -> pd.DataFrame:
     for c in df.columns:
         c_str = str(c).strip().lower()
         if c_str.isdigit() or c_str.startswith("unnamed"):
-            if c_str.isdigit():
-                print("WARNING: dropping numeric column in standardizer")            
-            if c_str.startswith("unnamed"):
-                print("WARNING: dropping unnamed column in standardizer")
+            # if c_str.isdigit():
+            #     print("WARNING: dropping numeric column in standardizer")            
+            # if c_str.startswith("unnamed"):
+            #     print("WARNING: dropping unnamed column in standardizer")
             continue
         clean_cols.append(c)
 
-    #TODO: OTHER LANGUAGES
+    #TODO: OTHER LANGUAGES. Actually, its looking like those are either ranks (and can be ignored) or object names in a non-english language, which can be kept
 
     df = df[clean_cols]
     df.columns = [normalize_text(str(c)) for c in df.columns]

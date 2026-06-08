@@ -14,10 +14,10 @@ def remove_superfluous_columns(df):
         col_str = str(col).strip().lower()
         if col_str.startswith("unnamed") or col_str.isdigit():
             drop_cols.append(col)
-            if col_str.isdigit():
-                print("WARNING: dropping numeric column in superfluous")            
-            if col_str.startswith("unnamed"):
-                print("WARNING: dropping numeric column in superfluous")
+            # if col_str.isdigit():
+            #     print("WARNING: dropping numeric column in superfluous")            
+            # if col_str.startswith("unnamed"):
+            #     print("WARNING: dropping numeric column in superfluous")
             continue
 
         # 3. Columns with all NaN or empty-like values
@@ -26,8 +26,8 @@ def remove_superfluous_columns(df):
             drop_cols.append(col)
             continue
     
-    if len(drop_cols) >=5:
-        print(f"Dropping {len(drop_cols)} cols!")
+    # if len(drop_cols) >=5:
+    #     print(f"Dropping {len(drop_cols)} cols!")
     df = df.drop(columns=drop_cols)
 
     # 4. If the table is now empty or has only 1 column → skip it

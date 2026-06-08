@@ -42,8 +42,8 @@ def propagate_sections(df, section_rows, quantity_rows, empty_rows):
 
     # Remove section + quantity rows
     rows_to_drop = sorted(set(section_rows + quantity_rows + empty_rows))
-    if len(rows_to_drop) >= 5:
-        print(f"Dropping {len(rows_to_drop)} rows!")
+    # if len(rows_to_drop) >= 5:
+    #     print(f"Dropping {len(rows_to_drop)} rows!")
     df = df.drop(rows_to_drop).reset_index(drop=True)
 
     # Move metadata columns to the front (if they exist)

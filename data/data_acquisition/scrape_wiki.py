@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 import re
 import requests
@@ -18,10 +17,7 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; MilitaryDataScraper/1.0; +https://github.com/knight-captain)"
 }
 
-# -----------------------------
 # Utility functions
-# -----------------------------
-
 def clean_name(name: str) -> str:
     """Convert a country/page name into a safe SQLite table name."""
     name = name.lower()
@@ -36,6 +32,7 @@ def get_soup(url):
     html = clean_html(response.text)
     return BeautifulSoup(html, "lxml")
 
+#TODO: add a module that does this, especially so other pages can be added manually
 def get_country_links():
     """Extract all relevant links from the master list page."""
     soup = get_soup(MASTER_LIST)
@@ -70,10 +67,7 @@ def get_country_links():
 
     return links
 
-# -----------------------------
 # Main functions
-# -----------------------------
-
 def extract_tables_from_page(url):
     """Extract all tables from a Wikipedia page with section headers."""
     soup = get_soup(url)
