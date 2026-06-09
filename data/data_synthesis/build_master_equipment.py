@@ -1,115 +1,22 @@
 """
-build_master_equipment.py
--------------------------
+Creates a unified a_master_equipment table by mapping raw columns
+from each cleaned equipment table into a canonical super-column schema.
 
-Final synthesis step:
-Builds the canonical a_master_equipment table using:
+Inputs:
+    conn                : sqlite3.Connection
+    contextual_mapping  : dict[(table_name, raw_col)] → (super_col, confidence, notes)
+    super_cols          : list of canonical super columns
 
-- contextual_mapping (passed in from synthesize_equipment.py)
-- a_table_categories (table → branch/domain/type/platform/ignore)
-- ontology/super_columns.txt (canonical schema)
+Reads:
+    a_meta_table_of_columns   (to know which raw columns each table has)
+    all cleaned tables        (to extract actual values)
+
+Writes:
+    a_master_equipment        (final unified table)
 """
 
 from pathlib import Path
 from utils.safe_SQL_caller import q, ql
-
-
-# LOAD SUPPORTING DATA
-def load_table_categories(conn):
-    """
-    Load table categories from a_table_categories.
-
-    Returns:
-        dict: { table_name : {branch, role, domain, type, platform, ignore} }
-    """
-    sql = """
-        SELECT table_name, branch, role, domain, type, platform, ignore
-        FROM a_table_categories
-    """
-    categories = {}
-    for row in conn.execute(sql).fetchall():
-        table_name, branch, role, domain, type_, platform, ignore = row
-        categories[table_name] = {
-            "branch": branch,
-            "role": role,
-            "domain": domain,
-            "type": type_,
-            "platform": platform,
-            "ignore": bool(ignore)
-        }
-    return categories
-
-
-def load_super_columns(path):
-    """
-    Load canonical super-column names from ontology/super_columns.txt.
-    """
-    cols = []
-    with open(path, encoding="utf-8") as f:
-        for line in f:
-            c = line.strip()
-            if c:
-                cols.append(c)
-    return cols
-
-
-def list_equipment_tables(conn):
-    """
-    Return all scraped equipment tables (excluding meta tables).
-    """
-    sql = "SELECT name FROM sqlite_master WHERE type='table'"
-    tables = [row[0] for row in conn.execute(sql).fetchall()]
-    return [t for t in tables if not t.startswith("a_")]
-
-
-def get_raw_columns(conn, table):
-    """
-    Return list of raw column names for a given table.
-    """
-    sql = f'PRAGMA table_info("{table}")'
-    return [row[1] for row in conn.execute(sql).fetchall()]
-
-
-# ALIGNMENT LOGIC
-def build_aligned_select(table, conn, contextual_map, super_cols, categories):
-    """
-    Build SELECT that aligns a raw table to canonical schema.
-
-    - Uses contextual mapping (table_name, raw_col) → super_col
-    - Inserts "MISSING" where a value SHOULD exist but does not
-    - Inserts NULL where a value is not applicable
-
-    Returns:
-        str: SQL SELECT statement
-    """
-
-    raw_cols = get_raw_columns(conn, table)
-    cat = categories[table]
-
-    parts = [
-        f"{q(table)} AS source_table",
-        f"{ql(cat['branch'])} AS branch",
-        f"{ql(cat['domain'])} AS domain",
-        f"{ql(cat['type'])} AS type",
-        f"{ql(cat['platform'])} AS platform"
-    ]
-
-    # Add canonical super-columns
-    for super_col in super_cols:
-
-        # Find raw column mapped to this super-column
-        matches = [
-            rc for rc in raw_cols
-            if contextual_map.get((table, rc)) == super_col
-        ]
-
-        if matches:
-            parts.append(f"{q(matches[0])} AS {q(super_col)}")
-        else:
-            # Placeholder for ontology-based required fields
-            parts.append(f"NULL AS {q(super_col)}")
-
-    return "SELECT " + ", ".join(parts) + f" FROM {q(table)}"
 
 
 def chunked(iterable, size):
@@ -117,45 +24,72 @@ def chunked(iterable, size):
         yield iterable[i:i+size]
 
 
-# MASTER TABLE BUILDER
-def build_master_equipment(conn, contextual_mapping, super_cols_path):
-    """
-    Build a_master_equipment using contextual mapping + table categories.
-    """
-
+def build_master_equipment(conn, contextual_mapping, super_cols):
     cursor = conn.cursor()
 
-    categories = load_table_categories(conn)
-    super_cols = load_super_columns(super_cols_path)
+    # Drop old master table
+    cursor.execute("DROP TABLE IF EXISTS a_master_equipment")
 
-    tables = list_equipment_tables(conn)
-
-    # Filter out ignored tables
-    tables = [t for t in tables if not categories.get(t, {}).get("ignore", False)]
-
-    # Chunk tables to avoid SQLite UNION limits
-    batches = list(chunked(tables, 300))
-    temp_tables = []
-
-    for i, batch in enumerate(batches):
-        temp_name = f"temp_batch_{i}"
-        temp_tables.append(temp_name)
-
-        selects = [
-            build_aligned_select(t, conn, contextual_mapping, super_cols, categories)
-            for t in batch
-        ]
-
-        union_sql = " UNION ALL ".join(selects)
-        cursor.execute(f"CREATE TEMP TABLE {temp_name} AS {union_sql}")
-
-    # Final merge
-    final_union = " UNION ALL ".join(
-        f"SELECT * FROM {q(t)}" for t in temp_tables
+    # Create empty master table with canonical schema
+    col_defs = ", ".join(f"{q(col)} TEXT" for col in super_cols)
+    cursor.execute(
+        f"""
+        CREATE TABLE a_master_equipment (
+            table_name TEXT,
+            {col_defs}
+        )
+        """
     )
 
-    cursor.execute("DROP TABLE IF EXISTS a_master_equipment")
-    cursor.execute(f"CREATE TABLE a_master_equipment AS {final_union}")
+    # Get list of all cleaned tables
+    table_rows = cursor.execute("SELECT table_name FROM a_meta_table").fetchall()
+    all_tables = [r[0] for r in table_rows]
+
+    # Filter out meta tables and ignored tables
+    tables = [
+        t for t in all_tables
+        if not t.startswith("a_")
+    ]
+
+    # Process tables in chunks to avoid SQLite UNION limits
+    for batch in chunked(tables, 50):
+
+        for table_name in batch:
+
+            # Get raw columns for this table
+            raw_cols = cursor.execute(
+                f"PRAGMA table_info({q(table_name)})"
+            ).fetchall()
+
+            raw_col_names = [r[1] for r in raw_cols]
+
+            # Build SELECT for this table
+            select_parts = [f"'{table_name}' AS table_name"]
+
+            for super_col in super_cols:
+
+                # Find raw columns that map to this super_col
+                mapped_raw_cols = [
+                    raw for raw in raw_col_names
+                    if (table_name, raw) in contextual_mapping
+                    and contextual_mapping[(table_name, raw)][0] == super_col
+                ]
+
+                if not mapped_raw_cols:
+                    select_parts.append("NULL AS " + q(super_col))
+                    continue
+
+                # If multiple raw columns map to the same super_col,
+                # choose the first (future: composite handling)
+                raw = mapped_raw_cols[0]
+                select_parts.append(f"{q(raw)} AS {q(super_col)}")
+
+            select_sql = "SELECT " + ", ".join(select_parts) + f" FROM {q(table_name)}"
+
+            # Insert into master table
+            cursor.execute(
+                f"INSERT INTO a_master_equipment {select_sql}"
+            )
 
     conn.commit()
     print("Created a_master_equipment")

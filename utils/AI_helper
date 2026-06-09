@@ -1,0 +1,8 @@
+Method: old code + TODO's = drop-in new code + separate utils. Structure: 
+- synthesize_equipment.py # orchstrates the other synth steps
+- table_categories = categorize_all_tables(conn) # from categorize_tables.py; non-arg inputs: table_regex_rules.csv and a_meta_table table from .db, ignoring "a_" tables
+- contextual_mapping, super_cols = build_contextual_column_mapping(conn, table_categories) (BELOW) #from categorize_columns.py; non-arg inputs: uses column_mapping.csv (raw_col,super_col) to assign each raw_col to a super_col, cross-referencing with the table_categories (dict {table_name : {branch, role, domain, group_1, group_2, platform, ignore}}) to build a confidence of whether that type of table should/shouldn't have that column. It will eventually also split or ignore tagged columns. It also doens't write anything to the .db. 
+- build_master_equipment(conn, contextual_mapping, super_cols) #from build_master_equipment.py; non-arg inputs: the .db; it takes the super_cols list and makes a_master_equipment table from that. Then it reads each (non-a_) table, and maps the raw_cols to the super_cols using contextual_mapping dict. It does this in chunks, and writes to a_master_equipment in the .db
+
+NEXT .py to work on:
+

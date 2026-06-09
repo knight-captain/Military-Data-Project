@@ -1,171 +1,123 @@
 """
 Builds a context-aware column mapping for every raw table.
+
 Inputs:
-    - a_table_categories (from categorize_tables.py)
-    - ontology/column_mapping.csv (raw→super base mapping)
-    - ontology/super_columns.txt (canonical schema)
-    - raw table columns (from a_meta_table_of_columns or PRAGMA)
-Output:
-    - a_column_mapping_contextual (DB table)
-    - dict mapping (table_name, raw_column) → super_column
+    conn : sqlite3.Connection
+    table_categories : dict {
+        table_name : {
+            branch, role, domain, group_1, group_2, platform, ignore
+        }
+    }
+
+Reads:
+    ontology/column_mapping.csv   (raw_col → super_col)
+    a_meta_table_of_columns       (wide table: table_name + raw columns)
+
+Outputs:
+    contextual_map : dict {
+        (table_name, raw_col) : (super_col, confidence, notes)
+    }
+
+    super_cols : sorted list of unique super columns
 """
 
-import csv
+import re
 from pathlib import Path
-from utils.safe_SQL_caller import q
-
-# LOAD BASE ONTOLOGY MAPPING
-def load_base_column_mapping(path):
-    """
-    Load raw→super mappings from ontology/column_mapping.csv.
-    """
-    mapping = {}
-    with open(path, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            raw = row["original_column"].strip()
-            super_col = row["super_column"].strip()
-            if raw and super_col:
-                mapping[raw] = super_col
-    return mapping
+from utils import read_csv
 
 
-# LOAD TABLE CATEGORIES
-def load_table_categories(conn):
-    """
-    Load table categories from a_table_categories.
-
-    Returns:
-        dict: { table_name : {branch, role, domain, type, platform, ignore} }
-    """
-    sql = """
-        SELECT table_name, branch, role, domain, type, platform, ignore
-        FROM a_table_categories
-    """
-    categories = {}
-    for row in conn.execute(sql).fetchall():
-        table_name, branch, role, domain, type_, platform, ignore = row
-        categories[table_name] = {
-            "branch": branch,
-            "role": role,
-            "domain": domain,
-            "type": type_,
-            "platform": platform,
-            "ignore": bool(ignore)
-        }
-    return categories
-
-
-# RAW COLUMN LOADING
-def load_raw_columns(conn):
-    """
-    Load raw columns per table from a_list_of_columns.
-
-    Returns:
-        dict: { table_name : [raw_column1, raw_column2, ...] }
-    """
-    sql = """
-        SELECT table_name, column_name
-        FROM a_list_of_columns
-    """
-    out = {}
-    for table, col in conn.execute(sql).fetchall():
-        out.setdefault(table, []).append(col)
-    return out
-
-
-# CONTEXT STRING BUILDER
-def build_context_string(cat):
-    """
-    Build a context string from table categories.
-
-    Example:
-        navy.surface.frigate
-    """
-    parts = [
-        cat.get("branch") or "",
-        cat.get("domain") or "",
-        cat.get("type") or "",
-        cat.get("platform") or ""
-    ]
-    return ".".join(p for p in parts if p)
-
-
-# CONTEXT-AWARE COLUMN MAPPING
+# Base column-mapping logic (context-aware later)
 def map_column(raw_col, base_map, context):
     """
     Determine the super-column for a raw column given context.
+
     For now:
         - use base mapping if available
         - TODO: add context-aware overrides
+        - TODO: add composite handling
+        - TODO: compute confidence based on similar tables
+
     Returns:
-        (super_column, confidence, notes)
+        (super_col, confidence, notes)
     """
+
+    # TODO: composite detection (e.g., "size")
+    # TODO: flags in column_mapping.csv (future)
+
     if raw_col in base_map:
         return base_map[raw_col], 1.0, "base mapping"
 
-    # Placeholder for future context-aware logic
+    # Placeholder for future logic
     return None, 0.0, "unmapped"
 
 
-# MAIN PIPELINE FUNCTION
-def build_contextual_column_mapping(conn, mapping_path=None):
+# Main pipeline function
+def build_contextual_column_mapping(conn, table_categories):
     """
-    Build a_column_mapping_contextual using:
-        - raw columns
-        - table categories
-        - base ontology mapping
-        - context strings
+    Build a context-aware mapping from raw columns to super columns.
 
     Returns:
-        dict: { (table_name, raw_column) : super_column }
+        contextual_map : dict[(table_name, raw_col)] → (super_col, confidence, notes)
+        super_cols     : sorted list of unique super columns
     """
-    if mapping_path is None:
-        mapping_path = Path(__file__).resolve().parents[2] / "ontology" / "column_mapping.csv"
 
-    base_map = load_base_column_mapping(mapping_path)
-    categories = load_table_categories(conn)
-    raw_cols = load_raw_columns(conn)
+    # Load raw → super mapping from CSV
+    raw_map = read_csv.to_dicts(
+        Path(__file__).resolve().parents[2]
+        / "ontology"
+        / "column_mapping.csv"
+    )
 
+    # Build simple base mapping: raw_col → super_col
+    base_map = {}
+    for row in raw_map:
+        raw = row["original_column"].strip()
+        sup = row["super_column"].strip()
+        if raw:
+            base_map[raw] = sup
+
+    # Extract list of super columns
+    super_cols = sorted(set(base_map.values()))
+
+    # Load raw columns from a_meta_table_of_columns
     cursor = conn.cursor()
+    sql = "SELECT * FROM a_meta_table_of_columns"
+    table_rows = cursor.execute(sql).fetchall()
 
-    # Drop + recreate output table
-    cursor.execute("DROP TABLE IF EXISTS a_column_mapping_contextual")
-    cursor.execute("""
-        CREATE TABLE a_column_mapping_contextual (
-            table_name TEXT,
-            raw_column TEXT,
-            super_column TEXT,
-            confidence REAL,
-            notes TEXT
-        )
-    """)
+    # Column names (raw columns) come from the DB schema
+    col_names = [desc[0] for desc in cursor.description]
+
+    # table_name is the key; all other columns are raw columns
+    raw_columns = [c for c in col_names if c != "table_name"]
 
     contextual_map = {}
 
-    for table, cols in raw_cols.items():
+    # Iterate through each table
+    for row in table_rows:
+        row_dict = dict(zip(col_names, row))
+        table_name = row_dict["table_name"]
 
-        # Skip ignored tables
-        if categories.get(table, {}).get("ignore", False):
+        # Skip meta tables (already filtered in categorize_tables)
+        if table_name.startswith("a_"):
             continue
 
-        context = build_context_string(categories[table])
+        # Skip ignored tables
+        if table_name in table_categories:
+            if table_categories[table_name].get("ignore", False):
+                continue
 
-        for raw_col in cols:
+        # Build context string (future use)
+        context = table_categories.get(table_name, {})
+
+        # Iterate through raw columns
+        for raw_col in raw_columns:
+
+            # Column is present if the cell is not NULL
+            if row_dict[raw_col] is None:
+                continue
+
             super_col, conf, notes = map_column(raw_col, base_map, context)
 
-            cursor.execute(
-                """
-                INSERT INTO a_column_mapping_contextual
-                (table_name, raw_column, super_column, confidence, notes)
-                VALUES (?, ?, ?, ?, ?)
-                """,
-                (table, raw_col, super_col, conf, notes)
-            )
+            contextual_map[(table_name, raw_col)] = (super_col, conf, notes)
 
-            contextual_map[(table, raw_col)] = super_col
-
-    conn.commit()
-    print("Created a_column_mapping_contextual")
-
-    return contextual_map
+    return contextual_map, super_cols

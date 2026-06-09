@@ -14,10 +14,9 @@ from data.data_cleaning.clean_all import clean_all
 from data.data_synthesis.synthesize_equipment import synthesize_equipment
 
 
-RUN_SCRAPER = False 
-RUN_CLEANING = False
+RUN_SCRAPER = True #If False, make sure a set of military_equipment_TEST.db exists
+RUN_CLEANING = True
 RUN_SYNTHESIZER = True
-
 
 def run_pipeline():
     # Phase I: Scrape or load existing RAW
@@ -25,7 +24,7 @@ def run_pipeline():
         print("\n=== PHASE I: SCRAPING WIKIPEDIA ===")
         raw_path = scrape_pipe()
     else:
-        proxy_scrape = Path("data/db/military_equipment_TEST.db") #MAKE SURE THIS EXISTS!
+        proxy_scrape = Path("data/db/military_equipment_TEST.db")
         raw_path = Path(str(proxy_scrape).replace("TEST.db", "TEST-RAW.db"))
         if not raw_path.exists():
             raise FileNotFoundError(

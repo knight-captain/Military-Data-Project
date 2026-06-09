@@ -10,6 +10,8 @@ if errorlevel 1 (
     echo.
 )
 
+start "" "C:\Users\mckay\OneDrive\Documents\Code\Military Data Project"
+
 call venv\Scripts\activate
 
 echo Opening VS Code...
