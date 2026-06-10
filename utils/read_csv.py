@@ -26,26 +26,67 @@ def to_list_of_lists(path):
         return [row for row in reader]
 
 
-# DICT-OF-DICTS (header → value)
-def to_dicts(path):
+# list of dicts (header = key → other cells in row = value)
+def to_list_of_dicts(path):
     """
     Load CSV into a list of dictionaries using the header row.
+    Validates row lengths and warns on mismatches.
     """
     path = Path(path)
-    with path.open(newline="", encoding="utf-8") as f:
-        return list(csv.DictReader(f))
 
+    with path.open(newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        rows = list(reader)
+
+    if not rows:
+        return []
+
+    header = rows[0]
+    num_cols = len(header)
+
+    clean_rows = []
+
+    for row in rows[1:]:
+        if len(row) == num_cols:
+            clean_rows.append(row)
+        elif len(row) > num_cols:
+            print(f"[CSV WARNING] Row has too many columns: {row}")
+        elif len(row) < num_cols:
+            print(f"[CSV WARNING] Row is missing columns: {row}")
+        else:
+            print(f"[CSV WARNING] Unexpected row format: {row}")
+
+    # Convert clean rows to list-of-dicts
+    dicts = []
+    for row in clean_rows:
+        dicts.append(dict(zip(header, row)))
+
+    return dicts
+
+# DICT KEYED BY FIRST COLUMN, value is the second column
+def to_dict(path):
+    """
+    Load CSV into a dict keyed by the first column.
+    Values are the second column.
+    WILL NOT save the header row.
+    """
+    rows = to_list_of_lists(path)
+    data_rows = rows[1:]
+    out = {}
+    for row in data_rows:
+        if not row:
+            continue
+        out[row[0]] = row[1]
+    return out
 
 # DICT KEYED BY FIRST COLUMN
-def to_dict(path):
+def to_dict_of_lists(path):
     """
     Load CSV into a dict keyed by the first column.
     Values are lists of the remaining columns.
     """
     rows = to_list_of_lists(path)
-    header = rows[0]
     data_rows = rows[1:]
-
     out = {}
     for row in data_rows:
         if not row:
@@ -71,9 +112,9 @@ def to_array(path):
         if len(row) == num_cols:
             array_rows.append(row)
         elif len(row) > num_cols:
-            print(f"[CSV WARNING] Row has too many columns: {row}")
+            print(f"[CSV WARNING] {row} has more columns than {rows[0]}")
         elif len(row) < num_cols:
-            print(f"[CSV WARNING] Row is missing columns: {row}")
+            print(f"[CSV WARNING] {row} has fewer columns than {rows[0]}")
         else:
             print(f"[CSV WARNING] Unexpected row format: {row}")
 
@@ -83,26 +124,3 @@ def to_array(path):
 def to_set(path):
     rows = to_list_of_lists(path)
     return {row[0] for row in rows[1:] if row}
-
-def to_regex_rules(path, category_col="CATEGORY", type_col="TYPE", regex_col="REGEX"):
-    """
-    Load a CSV of regex rules into a list of rule objects:
-        {
-            "category": <string>,
-            "type": <string>,
-            "pattern": <compiled regex>
-        }
-
-    This is used by categorize_tables.py.
-    """
-    rows = to_dicts(path)
-    rules = []
-
-    for row in rows:
-        rules.append({
-            "category": row[category_col].strip(),
-            "type": row[type_col].strip().lower(),
-            "pattern": re.compile(row[regex_col], re.IGNORECASE)
-        })
-
-    return rules

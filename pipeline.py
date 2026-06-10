@@ -14,8 +14,8 @@ from data.data_cleaning.clean_all import clean_all
 from data.data_synthesis.synthesize_equipment import synthesize_equipment
 
 
-RUN_SCRAPER = True #If False, make sure a set of military_equipment_TEST.db exists
-RUN_CLEANING = True
+RUN_SCRAPER = False #If False, make sure a set of military_equipment_TEST.db exists
+RUN_CLEANING = False
 RUN_SYNTHESIZER = True
 
 def run_pipeline():

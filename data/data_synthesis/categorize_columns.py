@@ -62,7 +62,7 @@ def build_contextual_column_mapping(conn, table_categories):
     """
 
     # Load raw → super mapping from CSV
-    raw_map = read_csv.to_dicts(
+    raw_map = read_csv.to_dict(
         Path(__file__).resolve().parents[2]
         / "ontology"
         / "column_mapping.csv"
@@ -70,14 +70,14 @@ def build_contextual_column_mapping(conn, table_categories):
 
     # Build simple base mapping: raw_col → super_col
     base_map = {}
-    for row in raw_map:
-        raw = row["original_column"].strip()
-        sup = row["super_column"].strip()
+    for raw, sup in raw_map.items():
+        raw = raw.strip()
+        sup = sup.strip()
         if raw:
             base_map[raw] = sup
 
     # Extract list of super columns
-    super_cols = sorted(set(base_map.values()))
+    super_cols = sorted({col.strip().lower() for col in base_map.values()})
 
     # Load raw columns from a_meta_table_of_columns
     cursor = conn.cursor()

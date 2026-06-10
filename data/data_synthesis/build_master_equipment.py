@@ -32,6 +32,9 @@ def build_master_equipment(conn, contextual_mapping, super_cols):
 
     # Create empty master table with canonical schema
     col_defs = ", ".join(f"{q(col)} TEXT" for col in super_cols)
+
+    print(super_cols)
+
     cursor.execute(
         f"""
         CREATE TABLE a_master_equipment (
@@ -68,21 +71,18 @@ def build_master_equipment(conn, contextual_mapping, super_cols):
 
             for super_col in super_cols:
 
-                # Find raw columns that map to this super_col
-                mapped_raw_cols = [
-                    raw for raw in raw_col_names
-                    if (table_name, raw) in contextual_mapping
-                    and contextual_mapping[(table_name, raw)][0] == super_col
-                ]
+                # Find the *first* raw column that maps to this super_col
+                raw = None
+                for candidate in raw_col_names:
+                    if (table_name, candidate) in contextual_mapping:
+                        if contextual_mapping[(table_name, candidate)][0] == super_col:
+                            raw = candidate
+                            break
 
-                if not mapped_raw_cols:
+                if raw is None:
                     select_parts.append("NULL AS " + q(super_col))
-                    continue
-
-                # If multiple raw columns map to the same super_col,
-                # choose the first (future: composite handling)
-                raw = mapped_raw_cols[0]
-                select_parts.append(f"{q(raw)} AS {q(super_col)}")
+                else:
+                    select_parts.append(f"{q(raw)} AS {q(super_col)}")
 
             select_sql = "SELECT " + ", ".join(select_parts) + f" FROM {q(table_name)}"
 
