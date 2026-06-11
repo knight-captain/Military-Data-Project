@@ -15,6 +15,8 @@ Writes:
     a_master_equipment        (final unified table)
 """
 
+import re
+from utils.normalization import normalize_text
 from pathlib import Path
 from utils.safe_SQL_caller import q, ql
 
@@ -37,6 +39,7 @@ def build_master_equipment(conn, contextual_mapping, super_cols):
         f"""
         CREATE TABLE a_master_equipment (
             table_name TEXT,
+            url TEXT,
             {col_defs}
         )
         """
@@ -45,6 +48,9 @@ def build_master_equipment(conn, contextual_mapping, super_cols):
     # Get list of all cleaned tables
     table_rows = cursor.execute("SELECT table_name FROM a_meta_table").fetchall()
     all_tables = [r[0] for r in table_rows]
+
+    meta_rows = cursor.execute("SELECT table_name, url FROM a_meta_table").fetchall()
+    table_to_url = {t: url for t, url in meta_rows}
 
     # Filter out meta tables and ignored tables
     tables = [
@@ -57,40 +63,52 @@ def build_master_equipment(conn, contextual_mapping, super_cols):
 
         for table_name in batch:
 
-            # Get raw columns for this table
+            # Get raw columns for this table & normalize
             raw_cols = cursor.execute(
                 f"PRAGMA table_info({q(table_name)})"
             ).fetchall()
-
-            #TODO: this is not normalized
-            raw_col_names = [r[1] for r in raw_cols]
-
+            raw_col_names = [normalize_text(r[1]) for r in raw_cols]
+            
             mapping_for_table = {col: [] for col in super_cols}
 
             for raw_col in raw_col_names:
-                key = (table_name, raw_col)
+                base = re.sub(r'\.\d+$', '', raw_col) #pull any ".x" off of raw_cols that got panda-ed in scrape
+                key = (table_name, base)
+
                 if key in contextual_mapping:
                     super_col, conf, notes = contextual_mapping[key]
                     mapping_for_table[super_col].append(raw_col)
 
+
             # Build SELECT for this table
-            select_parts = [f"'{table_name}' AS table_name"]
-            
+            url = table_to_url.get(table_name)
+            select_parts = [
+                f"'{table_name}' AS table_name",
+                f"'{url}' AS url"
+            ]
+
             for super_col in super_cols:
                 raw_list = mapping_for_table[super_col]
+                # Deduplicate column names while preserving order
+                unique_raws = list(dict.fromkeys(raw_list))
 
-                if len(raw_list) == 0:
+                if len(unique_raws) == 0:
                     select_parts.append(f"NULL AS {q(super_col)}")
 
-                elif len(raw_list) == 1:
-                    raw = raw_list[0]
+                elif len(unique_raws) == 1:
+                    raw = unique_raws[0]
                     select_parts.append(f"{q(raw)} AS {q(super_col)}")
 
                 else:
-                    # Multiple raw columns map to the same super_col → merge them
-                    print(f"WARNING: {table_name} has multiple raw columns for super_col '{super_col}': {raw_list}")
-                    merged = " || '; ' || ".join([q(r) for r in raw_list])
-                    select_parts.append(f"({merged}) AS {q(super_col)}")
+                    # Build SQL that merges values but removes duplicates
+                    # Example output:
+                    # CASE WHEN col1 = col2 THEN col1 ELSE col1 || '; ' || col2 END
+                    expr = q(unique_raws[0])
+                    for r in unique_raws[1:]:
+                        expr = f"CASE WHEN {expr} = {q(r)} THEN {expr} ELSE {expr} || '; ' || {q(r)} END"
+
+                    select_parts.append(f"({expr}) AS {q(super_col)}")
+
 
             select_sql = "SELECT " + ", ".join(select_parts) + f" FROM {q(table_name)}"
 

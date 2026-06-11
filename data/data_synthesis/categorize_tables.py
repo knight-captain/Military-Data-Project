@@ -63,7 +63,6 @@ def classify_table(title, rules):
     return result
 
 
-
 # Main categorization function
 def categorize_all_tables(conn):
     """
@@ -136,7 +135,7 @@ def categorize_all_tables(conn):
 
         # Skip meta tables
         if table_name.startswith("a_"):
-            print(f"ignoring table: {table_name}")
+            print(f"skipping meta-table: {table_name}")
             continue
 
         # Build title string

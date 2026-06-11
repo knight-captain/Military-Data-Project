@@ -6,7 +6,7 @@ def remove_superfluous_columns(df):
         col_lower = str(col).lower()
 
         # 1. Image-like columns
-        if any(x in col_lower for x in ["image", "photo", "thumbnail", "file", "picture", "illustration", "portrait"]):
+        if any(x in col_lower for x in ["image", "photo", "thumbnail", "file", "picture", "illustration", "portrait", "insignia"]):
             drop_cols.append(col)
             continue
 

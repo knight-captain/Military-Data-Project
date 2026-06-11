@@ -14,17 +14,17 @@ from data.data_cleaning.clean_all import clean_all
 from data.data_synthesis.synthesize_equipment import synthesize_equipment
 
 
-RUN_SCRAPER = False #If False, make sure a set of military_equipment_TEST.db exists
-RUN_CLEANING = False
+RUN_SCRAPER = "EDGE" #If False, make sure a set of military_equipment_TEST.db exists; can also be str, and will run edge_case.txt and name the .db after the str
+RUN_CLEANING = True
 RUN_SYNTHESIZER = True
 
 def run_pipeline():
     # Phase I: Scrape or load existing RAW
-    if RUN_SCRAPER:
-        print("\n=== PHASE I: SCRAPING WIKIPEDIA ===")
-        raw_path = scrape_pipe()
+    if RUN_SCRAPER is not False:
+        print("\n=== PHASE I: SCRAPING TABLES ===")
+        raw_path = scrape_pipe(RUN_SCRAPER)
     else:
-        proxy_scrape = Path("data/db/military_equipment_TEST.db")
+        proxy_scrape = Path("data/db/military_equipment_TEST.db") # Make sure this exists & == a raw scrape
         raw_path = Path(str(proxy_scrape).replace("TEST.db", "TEST-RAW.db"))
         if not raw_path.exists():
             raise FileNotFoundError(

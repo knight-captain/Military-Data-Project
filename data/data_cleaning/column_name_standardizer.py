@@ -65,7 +65,7 @@ def parse_multi_element_column(df):
             except Exception:
                 parts = [normalize_text(col)]
 
-        # Case 3: comma-separated <- this shouln't happen, but the AI really likes it for some reason
+        # Case 3: comma-separated <- this shouln't happen, but the bot really likes it for some reason
         else:
             print("CASE 3 HIT - this DEFINITELY shouldn't happen")
             parts = [normalize_text(col)]
@@ -84,6 +84,8 @@ def parse_multi_element_column(df):
         if len(set(row)) == len(row):
             col_names = row
             break
+        else:
+            print(f"FIRST ROW NOT HEADER: {row}")
 
     if col_names is None:
         # fallback: use first row
@@ -95,8 +97,6 @@ def parse_multi_element_column(df):
     for parts in temp_rows:
         leftover = [x for x in parts if x not in col_names]
         new_row.append(", ".join(leftover) if leftover else None)
-
-    # print(f"fixed column names: {col_names} & found row: {new_row}")
 
     return col_names, new_row
 

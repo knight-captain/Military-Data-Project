@@ -31,7 +31,7 @@ def clean_columns(table_name: str, conn=None, db_path="data/db/military_equipmen
     # Step 3: Remove superfluous columns, and skip the table if nothing is left
     df = remove_superfluous_columns(df)
     if df is None:
-        print(f"Skipping table {table_name}: no meaningful columns")
+        # print(f"Skipping table {table_name}: no meaningful columns")
         return  # do NOT continue cleaning
 
     # Save cleaned table

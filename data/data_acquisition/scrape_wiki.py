@@ -1,71 +1,16 @@
 import pandas as pd
-import re
-import requests
 import sqlite3
 import time
-from bs4 import BeautifulSoup
-from urllib.parse import urljoin
+from bs4 import Tag, BeautifulSoup
 from io import StringIO
 
-from utils.normalization import clean_html
+import traceback
+
+#Modules:
 from data.data_acquisition.build_meta_table import insert_meta_row
-
-BASE_URL = "https://en.wikipedia.org"
-MASTER_LIST = "https://en.wikipedia.org/wiki/Lists_of_currently_active_military_equipment_by_country"
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MilitaryDataScraper/1.0; +https://github.com/knight-captain)"
-}
-
-# Utility functions
-def clean_name(name: str) -> str:
-    """Convert a country/page name into a safe SQLite table name."""
-    name = name.lower()
-    name = re.sub(r"[^a-z0-9]+", "_", name)
-    name = re.sub(r"_+", "_", name)
-    return name.strip("_")
-
-def get_soup(url):
-    """Fetch a URL and return a BeautifulSoup object."""
-    response = requests.get(url, headers=HEADERS)
-    response.raise_for_status()
-    html = clean_html(response.text)
-    return BeautifulSoup(html, "lxml")
-
-#TODO: add a module that does this, especially so other pages can be added manually
-def get_country_links():
-    """Extract all relevant links from the master list page."""
-    soup = get_soup(MASTER_LIST)
-    content = soup.find("div", {"class": "mw-parser-output"})
-
-    links = []
-    current_country = None
-
-    # Iterate through all elements in order
-    for element in content.children:
-        # skip whitespace, comment, etc.
-        if not hasattr(element, "name"):
-            continue
-
-        # Detect <div class="mw-heading mw-heading2"><h2>Country</h2></div>. This is a sibpling of the actual <ul>
-        if element.name == "div" and "mw-heading2" in element.get("class", []):
-            h2 = element.find("h2")
-            if h2:
-                current_country = h2.get_text(strip=True)
-
-        # Collect links under <ul>
-        if element.name == "ul" and current_country:
-            for a in element.find_all("a", href=True):
-                href = a["href"]
-
-                # Keep only internal article links, skip namespaces like Category:, File:, Help:, etc. 
-                # this grabs urls that are aren't just "equipment", like "aircraft" & "ships", as well as "Branch" pages
-                if href.startswith("/wiki/") and ":" not in href:
-                    page_title = a.get_text(strip=True)
-                    full_url = urljoin(BASE_URL, href)
-                    links.append((current_country, page_title, full_url))
-
-    return links
+from data.data_acquisition.get_soup import get_soup
+from data.data_acquisition.header_detector import is_header_like, expanded_col_count
+from utils.safe_SQL_caller import clean_name
 
 # Main functions
 def extract_tables_from_page(url):
@@ -78,23 +23,31 @@ def extract_tables_from_page(url):
     for idx, table in enumerate(tables):
         html = str(table)
 
-        # Detect header presence, or a handful of folks that don't know proper html will ruin this whole project /jk
-        first_tr = table.find("tr")
-        first_tr_has_th = bool(first_tr.find("th")) if first_tr else False
-
-        try:
-            if first_tr_has_th:
-                df = pd.read_html(StringIO(html))[0]
-            else:
-                df = pd.read_html(StringIO(html), header=0)[0]
-        except Exception:
-            continue
-
-
         # if it's a Navigation section, skip it, i.e.: <div role="navigation" class="navbox" ...>. These usually get associated with a "references" or "external links" section
-        #TODO: also add the article's meta issues. Prolly "<table class??? role="presentation">" or something like that.
+        #FIXED: don't need the article's meta issues: those get ruled out when checking for empty cols & 1 col tables
         if table.find_parent("div", {"role": "navigation"}) is not None and table.find_parent("div", class_="navbox") is not None:
             continue
+
+        # Detect proper headers, or a handful of folks that don't know proper html will ruin this whole project /jk
+        rows = table.find_all("tr")
+
+        # Compute max column count
+        max_cols = max(expanded_col_count(tr) for tr in rows)
+
+        # Find the first real header row
+        header_row_index = None
+        for i, tr in enumerate(rows):
+            if is_header_like(tr, max_cols):
+                header_row_index = i
+                break
+
+        # Fallback
+        if header_row_index is None:
+            print(f"fallback header in {rows[0]}")
+            header_row_index = 0
+
+        df = pd.read_html(StringIO(html), header=header_row_index)[0]
+
 
         # Find nearest section headers; but now with more hierarchy
         h2 = h3 = h4 = None
@@ -106,10 +59,8 @@ def extract_tables_from_page(url):
 
             if prev.name == "h4" and h4 is None:
                 h4 = prev.get_text(strip=True)
-
             elif prev.name == "h3" and h3 is None:
                 h3 = prev.get_text(strip=True)
-
             elif prev.name == "h2" and h2 is None:
                 h2 = prev.get_text(strip=True)
                 break
@@ -162,21 +113,25 @@ def save_to_sqlite(country, page_title, url, tables, conn):
 
 
 # Main function: Opens DB, runs get_country_links, for each page returned from get_country_links it runs extract_tables_from_page and save_to_sqlite
-def scrape_all_to_sqlite(db_path="data/db/military_equipment.db"):
+def scrape_all_to_sqlite(db_path="data/db/military_equipment.db", links=None):
     """Scrape all equipment tables for all countries and save to SQLite."""
     conn = sqlite3.connect(db_path)
-    country_links = get_country_links()
+    country_links = links
 
-    print(f"Found {len(country_links)} links on MASTER_LIST")
-
+    current_country = None
     for country, page_title, url in country_links:
+        if current_country != country:
+            print(f"Scraping pages for {country}")
+            current_country = country
+        
         try:
             tables = extract_tables_from_page(url)
-            print(f"{country}: {len(tables)} tables found")
+            # print(f"{country}: {len(tables)} tables found")
             if tables:
                 save_to_sqlite(country, page_title, url, tables, conn)
         except Exception as e:
             print(f"Error scraping {country} ({url}): {e}")
+            traceback.print_exc()
 
         time.sleep(1)
 

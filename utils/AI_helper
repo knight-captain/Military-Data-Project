@@ -1,20 +1,10 @@
 architecture cleanup:
-III. COMPOSITE is empty (prolly because of capitalization: see also FORMATION, FUTURE, etc.)
-III. Yeah, it looks like IGNORE tables weren't ignored: "" was made into a super_col, and a bunch of ignored tables were included (it looks like the "" super_col is the values from what should have been ignored tables, with the super_col "")
 III. what if a table has 2 raw_cols that map to the same super_col? (willdo: date <- commissioned/etc. will overwrite many instances. Use Last?) Mission should overwrite role when conflicting (or mission name vs mission); uniform should overwrite color
-III. (just changed) system disappeared? ?!
+II. QTY cols never detected
 
 - class vs model? (no overlap) name (overlaps class), vs system, etc.
 - delete joined tables
-II/III. add page link to data 
 
-junk cols:
-- airport_code, base, runway cover
-- call sign
-II. image (shouldn't have made it) insignia
-- maritime mobile service identity (empty)
-- namesake, name (birth-death)
-- phase in year
 
 missed merged/repeat (or header) rows:
 - 1,003 active, 15 planned (May 6, 2025) – attack helicopters IN united_states_table_02_vehicles_rotary_winged_aircraft_vtol_vstol
@@ -26,6 +16,8 @@ india_table_10_auxiliary_fleet_research_and_survey_vessels
 united_kingdom_table_02_submarine_service
 united_kingdom_table_03_surface_fleet
 united_kingdom_table_04_auxiliary_vessels
+- ukraine_table_01_surface_fleet has multiple raw columns for super_col 'section' (header is 3rd row)
+- ukraine_table_02_auxiliary_fleet has multiple raw columns for super_col 'vessel' (header is 3rd row)
 
 Mis-categorisations:
 - wheeled MRLS IN taiwan_table_07_artillery
@@ -49,3 +41,18 @@ standardization:
 - QTY
 - range (km)
 - "-", "–" & "—" as cell value means it had that column in the wiki
+
+
+FIXED: 
+III. Yeah, it looks like IGNORE tables weren't ignored: "" was made into a super_col, and a bunch of ignored tables were included (it looks like the "" super_col is the values from what should have been ignored tables, with the super_col "")
+III. (just changed) system disappeared? ?!
+III. COMPOSITE is empty (prolly because of capitalization: see also FORMATION, FUTURE, etc.)
+III. FUTURE, etc. columns still appear.
+II/III. add page link to data 
+
+DON'T LEAVE JUNK COLS IN colunm_mapping.csv
+II. image (shouldn't have made it) insignia
+junk cols:
+- airport_code, base, runway cover
+- namesake, name (birth-death)
+- phase in year

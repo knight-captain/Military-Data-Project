@@ -43,12 +43,17 @@ def clean_html(html: str) -> str:
     - Normalizes unicode
     - Removes superscript reference tags
     """
+    
+    #enforce that clean_html() always returns a string
+    if not isinstance(html, str):
+        html = str(html)
 
     # Normalize unicode (important for weird spaces)
     html = unicodedata.normalize("NFKC", html)
 
     # Remove [3], [12], [a], [note 4], etc.
-    html = re.sub(r"\[[^\]]+\]", "", html)
+    # Remove bracketed references, but ONLY if they are short
+    html = re.sub(r"\[[0-9a-zA-Z ]{1,10}\]", "", html)
 
     # Remove superscript reference tags: <sup class="reference">...</sup>
     html = re.sub(r"<sup[^>]*>.*?</sup>", "", html, flags=re.DOTALL)
@@ -62,4 +67,5 @@ def clean_html(html: str) -> str:
     # Remove stray whitespace
     html = re.sub(r"\s+", " ", html)
 
+    html = html or ""  # ensure non-None
     return html.strip()

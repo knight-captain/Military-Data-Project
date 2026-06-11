@@ -20,7 +20,7 @@ Outputs:
 
     super_cols : sorted list of unique super columns
 """
-
+import re
 from pathlib import Path
 from utils import read_csv
 from utils.normalization import normalize_text
@@ -154,27 +154,32 @@ def build_contextual_column_mapping(conn, table_categories):
         # Build context dict (branch/role/domain/etc.)
         context = table_categories.get(table_name, {})
 
-        # Get raw columns for this table from the actual schema
+        # Get raw columns for this table from the actual schema and normalize
         raw_cols = cursor.execute(
             f"PRAGMA table_info({q(table_name)})"
         ).fetchall()
-        raw_col_names = [r[1] for r in raw_cols]
+        raw_col_names = [normalize_text(r[1]) for r in raw_cols]
 
         # Iterate through raw columns from this table
         for raw_col in raw_col_names:
 
-            if raw_col not in base_map:
+            base = re.sub(r'\.\d+$', '', raw_col)
+
+            # If the base name isn't in the mapping, warn and skip
+            if base not in base_map:
                 print(f"{raw_col} from {table_name} not in column_mapping.csv")
                 continue
 
-            if raw_col == "JUNK":
+            if raw_col == "junk":
                 print(f"not adding to context map: {raw_col}")
                 continue
 
-            super_col, conf, notes = map_column(raw_col, base_map, context)
+            # Use the base name for mapping
+            super_col, conf, notes = map_column(base, base_map, context)
             normalized_super = normalize_text(super_col)
-            contextual_map[(table_name, raw_col)] = (normalized_super, conf, notes)
 
+            # Store mapping under the original raw column name
+            contextual_map[(table_name, raw_col)] = (normalized_super, conf, notes)
 
     build_mapping_table(conn, table_categories, contextual_map, super_cols)
 
