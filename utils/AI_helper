@@ -1,8 +1,51 @@
-Method: old code + TODO's = drop-in new code + separate utils. Structure: 
-- synthesize_equipment.py # orchstrates the other synth steps
-- table_categories = categorize_all_tables(conn) # from categorize_tables.py; non-arg inputs: table_regex_rules.csv and a_meta_table table from .db, ignoring "a_" tables
-- contextual_mapping, super_cols = build_contextual_column_mapping(conn, table_categories) (BELOW) #from categorize_columns.py; non-arg inputs: uses column_mapping.csv (raw_col,super_col) to assign each raw_col to a super_col, cross-referencing with the table_categories (dict {table_name : {branch, role, domain, group_1, group_2, platform, ignore}}) to build a confidence of whether that type of table should/shouldn't have that column. It will eventually also split or ignore tagged columns. It also doens't write anything to the .db. 
-- build_master_equipment(conn, contextual_mapping, super_cols) #from build_master_equipment.py; non-arg inputs: the .db; it takes the super_cols list and makes a_master_equipment table from that. Then it reads each (non-a_) table, and maps the raw_cols to the super_cols using contextual_mapping dict. It does this in chunks, and writes to a_master_equipment in the .db
+architecture cleanup:
+III. COMPOSITE is empty (prolly because of capitalization: see also FORMATION, FUTURE, etc.)
+III. Yeah, it looks like IGNORE tables weren't ignored: "" was made into a super_col, and a bunch of ignored tables were included (it looks like the "" super_col is the values from what should have been ignored tables, with the super_col "")
+III. what if a table has 2 raw_cols that map to the same super_col? (willdo: date <- commissioned/etc. will overwrite many instances. Use Last?) Mission should overwrite role when conflicting (or mission name vs mission); uniform should overwrite color
+III. (just changed) system disappeared? ?!
 
-NEXT .py to work on:
+- class vs model? (no overlap) name (overlaps class), vs system, etc.
+- delete joined tables
+II/III. add page link to data 
 
+junk cols:
+- airport_code, base, runway cover
+- call sign
+II. image (shouldn't have made it) insignia
+- maritime mobile service identity (empty)
+- namesake, name (birth-death)
+- phase in year
+
+missed merged/repeat (or header) rows:
+- 1,003 active, 15 planned (May 6, 2025) – attack helicopters IN united_states_table_02_vehicles_rotary_winged_aircraft_vtol_vstol
+- 274 active (May 5, 2025) – VSTOL / VTOL IN Nunited_states_table_02_vehicles_rotary_winged_aircraft_vtol_vstol
+- Shotguns IN brunei_table_03_firearms
+- raw_cols in india_table_01_submarine_fleet
+india_table_03_surface_fleet_amphibious_warfare_ships
+india_table_10_auxiliary_fleet_research_and_survey_vessels
+united_kingdom_table_02_submarine_service
+united_kingdom_table_03_surface_fleet
+united_kingdom_table_04_auxiliary_vessels
+
+Mis-categorisations:
+- wheeled MRLS IN taiwan_table_07_artillery
+- amphibian, biplane, four-engine, Helicopter, Jet, monoplane, Propeller, Rotorcraft (+UAV), Turboprop & UAV shouldn't be in class
+- flying boat & floatplane? in class
+- Class in class
+- qty IN qatar_table_07_qatari_emiri_land_force_air_defence_man_portable_anti_air_missiles IS missile (shift several)
+
+deconflict:
+- QTY/SN in no./number
+- operator: split
+II.  QTY from section (didn't flag)
+- service (raw) Branch vs service dates, though ignoring historical will fix
+- size: ignore airbases
+-  status (vs QTY)
+
+standardization: 
+- displacment (tonnes, vs t vs long tons, etc.)
+- length (meter vs ')
+- nuclear capable -> armament (Unknown   No   Yes)
+- QTY
+- range (km)
+- "-", "–" & "—" as cell value means it had that column in the wiki

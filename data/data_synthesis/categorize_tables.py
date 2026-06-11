@@ -86,7 +86,6 @@ def categorize_all_tables(conn):
     rules_raw = read_csv.to_list_of_dicts(
         Path(__file__).resolve().parents[2] / "ontology" / "table_regex_rules.csv"
     )
-
     if not rules_raw:
         raise ValueError("table_regex_rules.csv is empty or unreadable.")
 
@@ -110,6 +109,7 @@ def categorize_all_tables(conn):
         regex_text = row[header_map["regex"]].strip()
 
         try:
+            #do we need (?i) vs re.IGNORECASE?
             pattern = re.compile(regex_text, re.IGNORECASE)
         except re.error as e:
             print(f"[REGEX ERROR] Invalid regex '{regex_text}': {e}")
@@ -136,6 +136,7 @@ def categorize_all_tables(conn):
 
         # Skip meta tables
         if table_name.startswith("a_"):
+            print(f"ignoring table: {table_name}")
             continue
 
         # Build title string
@@ -146,6 +147,7 @@ def categorize_all_tables(conn):
 
         # Skip ignored tables
         if classification["ignore"]:
+            print(f"ignoring {table_name}")
             continue
 
         table_categories[table_name] = classification

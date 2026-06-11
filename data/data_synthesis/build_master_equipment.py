@@ -33,8 +33,6 @@ def build_master_equipment(conn, contextual_mapping, super_cols):
     # Create empty master table with canonical schema
     col_defs = ", ".join(f"{q(col)} TEXT" for col in super_cols)
 
-    print(super_cols)
-
     cursor.execute(
         f"""
         CREATE TABLE a_master_equipment (
@@ -64,25 +62,35 @@ def build_master_equipment(conn, contextual_mapping, super_cols):
                 f"PRAGMA table_info({q(table_name)})"
             ).fetchall()
 
+            #TODO: this is not normalized
             raw_col_names = [r[1] for r in raw_cols]
+
+            mapping_for_table = {col: [] for col in super_cols}
+
+            for raw_col in raw_col_names:
+                key = (table_name, raw_col)
+                if key in contextual_mapping:
+                    super_col, conf, notes = contextual_mapping[key]
+                    mapping_for_table[super_col].append(raw_col)
 
             # Build SELECT for this table
             select_parts = [f"'{table_name}' AS table_name"]
-
+            
             for super_col in super_cols:
+                raw_list = mapping_for_table[super_col]
 
-                # Find the *first* raw column that maps to this super_col
-                raw = None
-                for candidate in raw_col_names:
-                    if (table_name, candidate) in contextual_mapping:
-                        if contextual_mapping[(table_name, candidate)][0] == super_col:
-                            raw = candidate
-                            break
+                if len(raw_list) == 0:
+                    select_parts.append(f"NULL AS {q(super_col)}")
 
-                if raw is None:
-                    select_parts.append("NULL AS " + q(super_col))
-                else:
+                elif len(raw_list) == 1:
+                    raw = raw_list[0]
                     select_parts.append(f"{q(raw)} AS {q(super_col)}")
+
+                else:
+                    # Multiple raw columns map to the same super_col → merge them
+                    print(f"WARNING: {table_name} has multiple raw columns for super_col '{super_col}': {raw_list}")
+                    merged = " || '; ' || ".join([q(r) for r in raw_list])
+                    select_parts.append(f"({merged}) AS {q(super_col)}")
 
             select_sql = "SELECT " + ", ".join(select_parts) + f" FROM {q(table_name)}"
 

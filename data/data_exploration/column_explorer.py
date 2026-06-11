@@ -14,8 +14,8 @@ def load_mapping():
     with open(MAPPING_PATH, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            raw = row["original_column"].strip()
-            supercol = row["super_column"].strip()
+            raw = row["raw_col"].strip()
+            supercol = row["super_col"].strip()
             mapping[raw] = supercol
     return mapping
 
