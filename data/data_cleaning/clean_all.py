@@ -47,6 +47,7 @@ def clean_all(conn=None, db_path=None):
         for row in cursor.execute("SELECT table_name FROM a_meta_table").fetchall()
         if not row[0].startswith("a_")
     ]
+    print(f"Cleaning {len(tables)} tables")
 
     # Run cleaning steps
     for table in tables:

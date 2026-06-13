@@ -9,116 +9,95 @@ import traceback
 #Modules:
 from data.data_acquisition.build_meta_table import insert_meta_row
 from data.data_acquisition.get_soup import get_soup
-from data.data_acquisition.header_detector import (
-    is_category_row, 
-    expanded_col_count
-)
+from data.data_acquisition.header_detector import header_detector
+from data.data_acquisition.junk_detector import is_junk_table
 from utils.safe_SQL_caller import clean_name
+
+def find_nearest_section(table):
+    h2 = h3 = h4 = None
+    prev = table
+
+    while True:
+        prev = prev.find_previous()
+        if prev is None:
+            break
+
+        if prev.name == "h4" and h4 is None:
+            h4 = prev.get_text(strip=True)
+        elif prev.name == "h3" and h3 is None:
+            h3 = prev.get_text(strip=True)
+        elif prev.name == "h2" and h2 is None:
+            h2 = prev.get_text(strip=True)
+            break
+
+    return h2, h3, h4
+
 
 # Main functions
 def extract_tables_from_page(url):
-    """Extract all tables from a Wikipedia page with section headers."""
     soup = get_soup(url)
     tables = soup.find_all("table")
 
     extracted = []
+    kept_index = 0
 
-    for idx, table in enumerate(tables):
-        html = str(table)
+    for table in tables:
 
-        classes = table.get("class", [])
+        # 1. Find nearest section headers
+        h2, h3, h4 = find_nearest_section(table)
+        
+        # 6. Build metadata/title
+        section_title = "_".join([p for p in [h2, h3, h4] if p]) or "untitled"
 
-        # Skip presentation/layout tables, infoboxes, navboxes, metadata tables, table of contents, and ambox/tmbox/cmbox (cleanup/warning boxes)
-        if table.find_parent("div", {"role": "navigation"}) is not None and table.find_parent("div", class_="navbox") is not None:
+        # 2. Extract metadata needed for junk detection
+        classes = table.get("class", []) or []
+
+        parent = table.find_parent()
+        parent_classes = parent.get("class", []) if parent else []
+
+        # optional: lineage extractor
+        lineage = extract_lineage(table) if "extract_lineage" in globals() else None
+
+        # Extract first row text
+        first_row = table.find("tr")
+        first_text = ""
+        if first_row:
+            cells = first_row.find_all(["th", "td"])
+            if cells:
+                first_text = cells[0].get_text(strip=True).lower()
+
+        # 3. Junk filter
+        if is_junk_table(
+            table=table,
+            section_title=section_title,
+            lineage=lineage,
+            first_text=first_text,
+            classes=classes,
+            parent_classes=parent_classes
+        ):
             continue
-        if table.get("role") == "presentation":
-            continue
-        if "metadata" in classes:
-            continue
-        if "toc" in classes:
-            continue
-        if any(c.endswith("mbox") for c in classes):
-            continue
 
-        # Detect proper headers, or a handful of folks that don't know proper html will ruin this whole project /jk
-        rows = table.find_all("tr")
-        if not rows:
-            # Empty table → skip
-            continue
+        # 4. Header detection + row reordering
+        html_reordered = header_detector(table)
 
-        # Compute max column count safely
-        try:
-            max_cols = max(expanded_col_count(tr) for tr in rows)
-        except Exception:
-            # Malformed HTML → skip table
-            continue
-
-        # Find the first real header row
-        header_row_index = None
-        for i, tr in enumerate(rows):
-            if is_category_row(tr, max_cols):
-                continue
-            header_row_index = i
-            if header_row_index > 3:
-                print(f"WARNING: header row unusually deep ({header_row_index}) in {url}")
-            break
-        # Fallback
-        if header_row_index is None:
-            # print(f"fallback header in {rows[0]}")
-            header_row_index = 0
-
-        # reorder rows so header is first, but keep category rows
-        ordered_rows = []
-
-        # 1. Header row first
-        ordered_rows.append(rows[header_row_index])
-
-        # 2. Category rows BEFORE header
-        for i in range(header_row_index):
-            ordered_rows.append(rows[i])
-
-        # 3. All rows AFTER header
-        for i in range(header_row_index + 1, len(rows)):
-            ordered_rows.append(rows[i])
-
-        # Rebuild HTML
-        html_reordered = "<table>" + "".join(str(tr) for tr in ordered_rows) + "</table>"
-
-        # Parse table safely with header=0
+        # 5. Parse with pandas
         try:
             df = pd.read_html(StringIO(html_reordered), header=0)[0]
         except Exception:
             continue
 
-        # Find nearest section headers; but now with more hierarchy
-        h2 = h3 = h4 = None
-        prev = table
-        while True:
-            prev = prev.find_previous()
-            if prev is None:
-                break
-
-            if prev.name == "h4" and h4 is None:
-                h4 = prev.get_text(strip=True)
-            elif prev.name == "h3" and h3 is None:
-                h3 = prev.get_text(strip=True)
-            elif prev.name == "h2" and h2 is None:
-                h2 = prev.get_text(strip=True)
-                break
-
-        # Build a meaningful title
-        section_title = "_".join([p for p in [h2, h3, h4] if p]) or "untitled"
-
         extracted.append({
-            "index": idx,
+            "index": kept_index,
             "h2": h2,
             "h3": h3,
             "h4": h4,
             "section_title": section_title,
             "data": df
         })
+        kept_index += 1
 
     return extracted
+
 
 
 def save_to_sqlite(country, page_title, url, tables, conn):

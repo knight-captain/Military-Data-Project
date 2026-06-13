@@ -4,19 +4,14 @@ from bs4 import Tag
 
 def _safe_int(value, default=1):
     """
-    Convert a malformed HTML attribute (e.g., '13"', '2[a]', '4†') into an int.
+    Convert malformed HTML attribute (e.g., '13"', '2[a]', '4†') into an int.
     Keeps only digits; falls back to default if nothing usable.
     """
     if value is None:
         return default
 
-    # Strip non-digit characters
     cleaned = "".join(ch for ch in str(value) if ch.isdigit())
-
-    if cleaned.isdigit():
-        return int(cleaned)
-
-    return default
+    return int(cleaned) if cleaned.isdigit() else default
 
 
 def expanded_col_count(tr):
@@ -29,27 +24,70 @@ def expanded_col_count(tr):
         total += _safe_int(raw, default=1)
     return total
 
-#TODO: this will take some fine-tuning:
+
 def is_category_row(tr, max_cols):
     cells = tr.find_all(["td", "th"])
     if not cells:
         return False
 
-    # Extract text values
-    texts = [c.get_text(strip=True) for c in cells]
-
     # Rule 1: Single cell spanning full width
     if len(cells) == 1:
-        raw = cells[0].get("colspan", "1")
-        colspan = _safe_int(raw, default=1)
+        colspan = _safe_int(cells[0].get("colspan", "1"))
         if colspan >= max_cols:
             return True
 
-    # Rule 2: Expanded row where all values are identical
+    # Rule 2: All cell texts identical
+    texts = [c.get_text(strip=True) for c in cells]
     if len(set(texts)) == 1:
         return True
 
     return False
+
+
+def header_detector(table):
+    """
+    Given a BeautifulSoup <table>, detect the correct header row,
+    reorder rows so the header is first, and return clean HTML.
+    """
+    rows = table.find_all("tr")
+    if not rows:
+        return None  # caller will skip
+
+    # Compute max column count
+    try:
+        max_cols = max(expanded_col_count(tr) for tr in rows)
+    except Exception:
+        return None
+
+    # Find first real header row
+    header_row_index = None
+    for i, tr in enumerate(rows):
+        if is_category_row(tr, max_cols):
+            continue
+        header_row_index = i
+        break
+
+    if header_row_index is None:
+        header_row_index = 0
+
+    # Reorder rows
+    ordered_rows = []
+
+    # 1. Header row first
+    ordered_rows.append(rows[header_row_index])
+
+    # 2. Category rows BEFORE header
+    for i in range(header_row_index):
+        ordered_rows.append(rows[i])
+
+    # 3. All rows AFTER header
+    for i in range(header_row_index + 1, len(rows)):
+        ordered_rows.append(rows[i])
+
+    # Rebuild HTML
+    html_reordered = "<table>" + "".join(str(tr) for tr in ordered_rows) + "</table>"
+    return html_reordered
+
 
 '''The Graveyard of Failed Header-selectors'''
 # def is_merged_row(tr):
