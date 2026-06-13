@@ -1,17 +1,6 @@
 import re
 import pandas as pd
 
-# # Patterns that count as "numeric" for quantity rows
-# COUNT_PATTERNS = [
-#     r"active\s*\(\d+\)",
-#     r"in service\s*\(\d+\)",
-#     r"total\s*\d+",
-#     r"\(\d+\)",             # parentheses with numbers
-#     r"^\d+$",               # pure numbers
-#     r"^\d{4}$",             # years
-#     r"^\d+\s*$"             # numeric-only with whitespace
-# ]
-
 def is_quantity_value(val: str) -> bool:
     val = val.lower().strip()
     # pure number
@@ -33,7 +22,7 @@ def detect_row_type(df: pd.DataFrame):
 
     Definitions:
       - Section row:   every cell has the same non-empty value (merged header row)
-      - Quantity row:  every cell has the same numeric-like value (per COUNT_PATTERNS)
+      - Quantity row:  every cell has the same numeric-like value (usually a number in (x))
       - Empty row:     every cell is empty or NaN
 
     Returns:
@@ -64,7 +53,7 @@ def detect_row_type(df: pd.DataFrame):
             # Quantity row?
             if is_quantity_value(val):
                 quantity_rows.append(idx)
-                print(f"Fount QTY col: {set(row)}")
+                # print(f"Found QTY col: {set(row)}")
             else:
                 section_rows.append(idx)
 

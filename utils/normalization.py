@@ -16,6 +16,10 @@ def normalize_text(s: str) -> str:
     s = s.replace("\u2003", " ")  # em space
     s = s.replace("\u202F", " ")  # narrow NBSP
 
+    # Remove zero-width and control characters
+    s = re.sub(r"[\u200b\u200c\u200d\uFEFF\u00ad]", "", s)
+    s = re.sub(r"[\x00-\x1f\x7f]", "", s)
+
     # Strip whitespace
     s = s.strip()
 

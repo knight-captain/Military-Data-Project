@@ -85,7 +85,7 @@ def parse_multi_element_column(df):
             col_names = row
             break
         else:
-            print(f"FIRST ROW NOT HEADER: {row}")
+            print(f"FIRST ROW NOT HEADER: {row}") #I don't think I've ever seen this
 
     if col_names is None:
         # fallback: use first row

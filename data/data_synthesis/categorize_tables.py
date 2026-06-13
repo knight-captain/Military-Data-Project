@@ -108,7 +108,7 @@ def categorize_all_tables(conn):
         regex_text = row[header_map["regex"]].strip()
 
         try:
-            #do we need (?i) vs re.IGNORECASE?
+            #TODO: do we need (?i) vs re.IGNORECASE?
             pattern = re.compile(regex_text, re.IGNORECASE)
         except re.error as e:
             print(f"[REGEX ERROR] Invalid regex '{regex_text}': {e}")
@@ -146,7 +146,7 @@ def categorize_all_tables(conn):
 
         # Skip ignored tables
         if classification["ignore"]:
-            print(f"ignoring {table_name}")
+            # print(f"ignoring {table_name}")
             continue
 
         table_categories[table_name] = classification

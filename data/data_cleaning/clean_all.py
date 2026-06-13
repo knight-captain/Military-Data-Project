@@ -9,10 +9,16 @@ This module loads its own table list from a_meta_table.
 import shutil
 import sqlite3
 from pathlib import Path
+import pandas as pd
 
 from data.data_cleaning.clean_columns import clean_columns
 from data.data_cleaning.clean_rows import clean_rows
 from data.data_cleaning.clean_table import clean_table
+from data.data_cleaning.table_update_meta import (
+    update_meta_table,
+    drop_table,
+    build_list_of_columns
+)
 
 
 def clean_all(conn=None, db_path=None):
@@ -35,7 +41,7 @@ def clean_all(conn=None, db_path=None):
     conn = sqlite3.connect(cleaned_path)
     cursor = conn.cursor()
 
-    # Load table list
+    # Load table list (skip meta tables)
     tables = [
         row[0]
         for row in cursor.execute("SELECT table_name FROM a_meta_table").fetchall()
@@ -44,10 +50,32 @@ def clean_all(conn=None, db_path=None):
 
     # Run cleaning steps
     for table in tables:
-        # print(f"Cleaning {table}")
-        clean_columns(table, conn=conn, db_path=cleaned_path)
-        clean_rows(table, conn=conn, db_path=cleaned_path)
-        clean_table(table, conn=conn, db_path=cleaned_path)
+        # Load table ONCE
+        try:
+            df = pd.read_sql_query(f"SELECT * FROM '{table}'", conn)
+        except Exception:
+            print(f"Skipping table {table}: could not load")
+            continue
+
+        # Run cleaning pipeline IN MEMORY
+        df = clean_columns(df)
+        df = clean_rows(df)
+        df = clean_table(df)
+
+        # If cleaning produced a table with no columns → drop it
+        if df is None or df.shape[1] == 0:
+            print(f"Dropping table {table}: no columns after cleaning")
+            drop_table(conn, table)
+            continue
+
+        # Write cleaned table ONCE
+        df.to_sql(table, conn, if_exists="replace", index=False)
+
+        # Update metadata for this table
+        update_meta_table(conn, table, df)
+
+    # Rebuild list of columns AFTER all tables are processed
+    build_list_of_columns(conn)
 
     conn.close()
 

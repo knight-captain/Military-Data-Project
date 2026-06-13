@@ -1,36 +1,29 @@
 import pandas as pd
-import sqlite3
 
 from data.data_cleaning.rows_detect_type import detect_row_type
 from data.data_cleaning.rows_propagate_sections import propagate_sections
 
-def clean_rows(table_name: str, conn=None, db_path="data/db/military_equipment.db"):
+def clean_rows(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Row-cleaning pipeline.
-    Uses existing DB connection if provided; otherwise opens its own.
+    Row-cleaning pipeline (pure in-memory).
+    - detect row types (section rows, quantity rows, empty rows)
+    - propagate section metadata downward
+    - remove empty rows
+    Always returns a DataFrame (never None).
     """
-
-    own_connection = False
-    if conn is None:
-        conn = sqlite3.connect(db_path)
-        own_connection = True
-
-    df = pd.read_sql_query(f"SELECT * FROM '{table_name}'", conn)
+    
+    if df is None or df.shape[0] == 0:
+        return pd.DataFrame()
 
     # Step 1: Detect row types
     section_rows, quantity_rows, empty_rows = detect_row_type(df)
 
-    # Step 2: Propagate metadata downward, and delete unused rows
+    # Step 2: Propagate metadata downward and remove empty rows
     df = propagate_sections(df, section_rows, quantity_rows, empty_rows)
 
-    # Step 3: refresh column name standardizer
-    #update_meta_columns(conn, table_name, df) <- moved to pipeline so it's not called twice
-
-    # Save cleaned table
-    df.to_sql(table_name, conn, if_exists="replace", index=False)
-
-    if own_connection:
-        conn.close()
+    # Step 3: Guarantee a DataFrame is returned
+    if df is None:
+        return pd.DataFrame()
 
     return df
 

@@ -9,7 +9,10 @@ import traceback
 #Modules:
 from data.data_acquisition.build_meta_table import insert_meta_row
 from data.data_acquisition.get_soup import get_soup
-from data.data_acquisition.header_detector import is_header_like, expanded_col_count
+from data.data_acquisition.header_detector import (
+    is_category_row, 
+    expanded_col_count
+)
 from utils.safe_SQL_caller import clean_name
 
 # Main functions
@@ -23,31 +26,69 @@ def extract_tables_from_page(url):
     for idx, table in enumerate(tables):
         html = str(table)
 
-        # if it's a Navigation section, skip it, i.e.: <div role="navigation" class="navbox" ...>. These usually get associated with a "references" or "external links" section
-        #FIXED: don't need the article's meta issues: those get ruled out when checking for empty cols & 1 col tables
+        classes = table.get("class", [])
+
+        # Skip presentation/layout tables, infoboxes, navboxes, metadata tables, table of contents, and ambox/tmbox/cmbox (cleanup/warning boxes)
         if table.find_parent("div", {"role": "navigation"}) is not None and table.find_parent("div", class_="navbox") is not None:
+            continue
+        if table.get("role") == "presentation":
+            continue
+        if "metadata" in classes:
+            continue
+        if "toc" in classes:
+            continue
+        if any(c.endswith("mbox") for c in classes):
             continue
 
         # Detect proper headers, or a handful of folks that don't know proper html will ruin this whole project /jk
         rows = table.find_all("tr")
+        if not rows:
+            # Empty table → skip
+            continue
 
-        # Compute max column count
-        max_cols = max(expanded_col_count(tr) for tr in rows)
+        # Compute max column count safely
+        try:
+            max_cols = max(expanded_col_count(tr) for tr in rows)
+        except Exception:
+            # Malformed HTML → skip table
+            continue
 
         # Find the first real header row
         header_row_index = None
         for i, tr in enumerate(rows):
-            if is_header_like(tr, max_cols):
-                header_row_index = i
-                break
-
+            if is_category_row(tr, max_cols):
+                continue
+            header_row_index = i
+            if header_row_index > 3:
+                print(f"WARNING: header row unusually deep ({header_row_index}) in {url}")
+            break
         # Fallback
         if header_row_index is None:
-            print(f"fallback header in {rows[0]}")
+            # print(f"fallback header in {rows[0]}")
             header_row_index = 0
 
-        df = pd.read_html(StringIO(html), header=header_row_index)[0]
+        # reorder rows so header is first, but keep category rows
+        ordered_rows = []
 
+        # 1. Header row first
+        ordered_rows.append(rows[header_row_index])
+
+        # 2. Category rows BEFORE header
+        for i in range(header_row_index):
+            ordered_rows.append(rows[i])
+
+        # 3. All rows AFTER header
+        for i in range(header_row_index + 1, len(rows)):
+            ordered_rows.append(rows[i])
+
+        # Rebuild HTML
+        html_reordered = "<table>" + "".join(str(tr) for tr in ordered_rows) + "</table>"
+
+        # Parse table safely with header=0
+        try:
+            df = pd.read_html(StringIO(html_reordered), header=0)[0]
+        except Exception:
+            continue
 
         # Find nearest section headers; but now with more hierarchy
         h2 = h3 = h4 = None

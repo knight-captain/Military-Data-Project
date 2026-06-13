@@ -116,6 +116,10 @@ def build_master_equipment(conn, contextual_mapping, super_cols):
             cursor.execute(
                 f"INSERT INTO a_master_equipment {select_sql}"
             )
+            
+            # Drop the cleaned table now that it's merged
+            cursor.execute(f"DROP TABLE IF EXISTS {q(table_name)}")
 
     conn.commit()
-    print("Created a_master_equipment")
+    cursor.execute("VACUUM")
+    print("Created a_master_equipment and cleaned up after myself.")

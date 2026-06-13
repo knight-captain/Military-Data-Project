@@ -1,3 +1,5 @@
+import re
+
 def split_doublewide(df):
     cols = list(df.columns)
     n = len(cols)
@@ -12,7 +14,7 @@ def split_doublewide(df):
 
     # Normalize for comparison
     # I finally found a use for a lambda function!
-    norm = lambda c: str(c).strip().lower()
+    norm = lambda c: re.sub(r'\.\d+$', '', str(c)).strip().lower()
 
     if all(norm(a) == norm(b) for a, b in zip(left_cols, right_cols)):
         # Split into two DataFrames
