@@ -1,6 +1,7 @@
 ARCHITECTURAL ISSUES:
 - finding the sweet spot (or philosopher's stone) for the scraper to pick the correct header. 
-- also sweet spot for eliminating contents, external links, etc. without killing tiny equipment tables
+- also sweet spot for eliminating contents, external links, etc. without killing tiny equipment tables.
+- delete *just* joined tables
 
 
 
@@ -20,6 +21,9 @@ united_kingdom_table_04_auxiliary_vessels
 
 ONTOLOGICAL ISSUES:
 - class vs model? (no overlap) name (overlaps class), vs system, etc.
+- get counts of items & unique items for each super_col; 
+- then get lists of unique items in section and other object types/properties. 
+- Categorize out data property columns (displacement, etc.)
 
 Mis-categorisations:
 - wheeled MRLS IN taiwan_table_07_artillery
@@ -54,8 +58,9 @@ II/III. add page link to data
 III. what if a table has 2 raw_cols that map to the same super_col? -> merge w/; for now
 II. QTY cols never detected-> fixed 
 - image making it to col_map -> turns out they'd only get dropped as a dataframe; and if the table was tiny, it would stop cleaning in Phase II, but not drop the table. 
-
 - delete joined tables
+- in the case of "Ship Type (#)", split the "Ship Type" to section col so the (#) can remain in quantity
+
 
 
 DON'T LEAVE JUNK COLS IN colunm_mapping.csv
@@ -68,151 +73,3 @@ junk cols:
 Fixed edge cases:
 - <td rowspan="13"">/<td colspan="2"">  <!-- malformed/note the extra quote -->
 - max() arg is an empty sequence
-
-<div role="navigation" class="navbox" aria-labelledby="Lists_of_aircraft10667" style="padding:3px"><table class="nowraplinks mw-collapsible navbox-inner mw-made-collapsible" style="border-spacing:0;background:transparent;color:inherit"><tbody><tr><th scope="col" class="navbox-title" colspan="2"><button type="button" class="mw-collapsible-toggle mw-collapsible-toggle-default mw-collapsible-toggle-expanded" aria-expanded="true" tabindex="0"><span class="mw-collapsible-text">hide</span></button><link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r1333133064"><style data-mw-deduplicate="TemplateStyles:r1239400231">.mw-parser-output .navbar{display:inline;font-size:88%;font-weight:normal}.mw-parser-output .navbar-collapse{float:left;text-align:left}.mw-parser-output .navbar-boxtext{word-spacing:0}.mw-parser-output .navbar ul{display:inline-block;white-space:nowrap;line-height:inherit}.mw-parser-output .navbar-brackets::before{margin-right:-0.125em;content:"[ "}.mw-parser-output .navbar-brackets::after{margin-left:-0.125em;content:" ]"}.mw-parser-output .navbar li{word-spacing:-0.125em}.mw-parser-output .navbar a>span,.mw-parser-output .navbar a>abbr{text-decoration:inherit}.mw-parser-output .navbar-mini abbr{font-variant:small-caps;border-bottom:none;text-decoration:none;cursor:inherit}.mw-parser-output .navbar-ct-full{font-size:114%;margin:0 7em}.mw-parser-output .navbar-ct-mini{font-size:114%;margin:0 4em}html.skin-theme-clientpref-night .mw-parser-output .navbar li a abbr{color:var(--color-base)!important}@media(prefers-color-scheme:dark){html.skin-theme-clientpref-os .mw-parser-output .navbar li a abbr{color:var(--color-base)!important}}@media print{.mw-parser-output .navbar{display:none!important}}</style><div class="navbar plainlinks hlist navbar-mini"><ul><li class="nv-view"><a href="/wiki/Template:Lists_of_aircraft" title="Template:Lists of aircraft"><abbr title="View this template">v</abbr></a></li><li class="nv-talk"><a href="/wiki/Template_talk:Lists_of_aircraft" title="Template talk:Lists of aircraft"><abbr title="Discuss this template">t</abbr></a></li><li class="nv-edit"><a href="/wiki/Special:EditPage/Template:Lists_of_aircraft" title="Special:EditPage/Template:Lists of aircraft"><abbr title="Edit this template">e</abbr></a></li></ul></div><div id="Lists_of_aircraft10667" style="font-size:114%;margin:0 4em"><a href="/wiki/List_of_aircraft" title="List of aircraft">Lists of aircraft</a></div></th></tr><tr><td class="navbox-abovebelow" colspan="2"><div><div class="hlist"><ul><li><a href="/wiki/List_of_aircraft_by_date_and_usage_category" title="List of aircraft by date and usage category">By date and usage</a></li><li><a href="/wiki/List_of_aircraft_by_tail_number" title="List of aircraft by tail number">By tail number</a></li><li><a href="/wiki/List_of_most-produced_aircraft" title="List of most-produced aircraft">Most-produced</a></li></ul></div></div></td></tr><tr><td colspan="2" class="navbox-list navbox-odd hlist" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks mw-collapsible expanded navbox-subgroup mw-made-collapsible" style="border-spacing:0"><tbody><tr><th scope="col" class="navbox-title" colspan="2"><button type="button" class="mw-collapsible-toggle mw-collapsible-toggle-default" aria-expanded="true" tabindex="0"><span class="mw-collapsible-text">hide</span></button><div id="By_name1201" style="font-size:114%;margin:0 4em">By name</div></th></tr><tr><td colspan="2" class="navbox-list navbox-odd" style="width:100%;padding:0"><div style="padding:0 0.25em">
-<ul><li><a href="/wiki/List_of_aircraft_(pre-1914)" title="List of aircraft (pre-1914)">pre-1914</a></li>
-<li><a href="/wiki/List_of_aircraft_(0%E2%80%93Ah)" title="List of aircraft (0–Ah)">0–Ah</a></li>
-<li><a href="/wiki/List_of_aircraft_(Ai%E2%80%93Am)" title="List of aircraft (Ai–Am)">Ai–Am</a></li>
-<li><a href="/wiki/List_of_aircraft_(An%E2%80%93Az)" title="List of aircraft (An–Az)">An–Az</a></li>
-<li><a href="/wiki/List_of_aircraft_(B%E2%80%93Be)" title="List of aircraft (B–Be)">B–Be</a></li>
-<li><a href="/wiki/List_of_aircraft_(Bf%E2%80%93Bo)" title="List of aircraft (Bf–Bo)">Bf–Bo</a></li>
-<li><a href="/wiki/List_of_aircraft_(Br%E2%80%93Bz)" title="List of aircraft (Br–Bz)">Br–Bz</a></li>
-<li><a href="/wiki/List_of_aircraft_(C%E2%80%93Cc)" title="List of aircraft (C–Cc)">C–Cc</a></li>
-<li><a href="/wiki/List_of_aircraft_(Cd%E2%80%93Cn)" title="List of aircraft (Cd–Cn)">Cd–Cn</a></li>
-<li><a href="/wiki/List_of_aircraft_(Co%E2%80%93Cz)" title="List of aircraft (Co–Cz)">Co–Cz</a></li>
-<li><a href="/wiki/List_of_aircraft_(D)" class="mw-redirect" title="List of aircraft (D)">D</a></li>
-<li><a href="/wiki/List_of_aircraft_(E)" title="List of aircraft (E)">E</a></li>
-<li><a href="/wiki/List_of_aircraft_(F)" title="List of aircraft (F)">F</a></li>
-<li><a href="/wiki/List_of_aircraft_(G%E2%80%93Gn)" title="List of aircraft (G–Gn)">G–Gn</a></li>
-<li><a href="/wiki/List_of_aircraft_(Go%E2%80%93Gz)" title="List of aircraft (Go–Gz)">Go–Gz</a></li>
-<li><a href="/wiki/List_of_aircraft_(H)" class="mw-redirect" title="List of aircraft (H)">H</a></li>
-<li><a href="/wiki/List_of_aircraft_(I)" title="List of aircraft (I)">I</a></li>
-<li><a href="/wiki/List_of_aircraft_(J)" title="List of aircraft (J)">J</a></li>
-<li><a href="/wiki/List_of_aircraft_(K)" title="List of aircraft (K)">K</a></li>
-<li><a href="/wiki/List_of_aircraft_(La%E2%80%93Lh)" title="List of aircraft (La–Lh)">La–Lh</a></li>
-<li><a href="/wiki/List_of_aircraft_(Li%E2%80%93Lz)" title="List of aircraft (Li–Lz)">Li–Lz</a></li>
-<li><a href="/wiki/List_of_aircraft_(M)" class="mw-redirect" title="List of aircraft (M)">M</a></li>
-<li><a href="/wiki/List_of_aircraft_(N)" title="List of aircraft (N)">N</a></li>
-<li><a href="/wiki/List_of_aircraft_(O)" title="List of aircraft (O)">O</a></li>
-<li><a href="/wiki/List_of_aircraft_(P)" class="mw-redirect" title="List of aircraft (P)">P</a></li>
-<li><a href="/wiki/List_of_aircraft_(Q)" title="List of aircraft (Q)">Q</a></li>
-<li><a href="/wiki/List_of_aircraft_(R)" title="List of aircraft (R)">R</a></li>
-<li><a href="/wiki/List_of_aircraft_(S)" title="List of aircraft (S)">S</a></li>
-<li><a href="/wiki/List_of_aircraft_(T)" title="List of aircraft (T)">T</a></li>
-<li><a href="/wiki/List_of_aircraft_(U)" title="List of aircraft (U)">U</a></li>
-<li><a href="/wiki/List_of_aircraft_(V)" title="List of aircraft (V)">V</a></li>
-<li><a href="/wiki/List_of_aircraft_(W)" title="List of aircraft (W)">W</a></li>
-<li><a href="/wiki/List_of_aircraft_(X)" title="List of aircraft (X)">X</a></li>
-<li><a href="/wiki/List_of_aircraft_(Y)" title="List of aircraft (Y)">Y</a></li>
-<li><a href="/wiki/List_of_aircraft_(Z)" title="List of aircraft (Z)">Z</a></li></ul>
-</div></td></tr></tbody></table><div></div></td></tr><tr><td colspan="2" class="navbox-list navbox-odd hlist" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks mw-collapsible mw-collapsed navbox-subgroup mw-made-collapsible" style="border-spacing:0"><tbody><tr><th scope="col" class="navbox-title" colspan="2"><button type="button" class="mw-collapsible-toggle mw-collapsible-toggle-default mw-collapsible-toggle-collapsed" aria-expanded="false" tabindex="0"><span class="mw-collapsible-text">show</span></button><div id="Civil_aircraft3694" style="font-size:114%;margin:0 4em"><a href="/wiki/List_of_civil_aircraft" title="List of civil aircraft">Civil aircraft</a></div></th></tr><tr hidden="until-found"><td colspan="2" class="navbox-list navbox-odd" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks navbox-subgroup" style="border-spacing:0"><tbody><tr><th scope="row" class="navbox-group" style="width:1%">By type</th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0"><div style="padding:0 0.25em">
-<ul><li><a href="/wiki/List_of_aerobatic_aircraft" title="List of aerobatic aircraft">Aerobatic</a></li>
-<li><a href="/wiki/Bush_plane" title="Bush plane">Bush planes</a></li>
-<li><a href="/wiki/Business_jet" title="Business jet">Business jets</a></li>
-<li><a href="/wiki/List_of_electric_aircraft" title="List of electric aircraft">Electric aircraft</a></li>
-<li><a href="/wiki/List_of_flying_wings" title="List of flying wings">Flying wings</a></li>
-<li><a href="/wiki/List_of_gliders" title="List of gliders">Gliders</a></li>
-<li><a href="/wiki/List_of_human-powered_aircraft" title="List of human-powered aircraft">Human-powered</a></li>
-<li><a href="/wiki/List_of_jet_airliners" class="mw-redirect" title="List of jet airliners">Jet airliners</a>
-<ul><li><a href="/wiki/Twinjet" title="Twinjet">Twinjets</a></li>
-<li><a href="/wiki/Trijet" title="Trijet">Trijets</a></li>
-<li><a href="/wiki/Four-engined_jet_aircraft" title="Four-engined jet aircraft">Four-engined jet aircraft</a></li></ul></li>
-<li><a href="/wiki/Light-sport_aircraft" title="Light-sport aircraft">Light-sport aircraft</a></li>
-<li><a href="/wiki/Prone_pilot#List_of_prone-pilot_aircraft" title="Prone pilot">Prone-pilot</a></li>
-<li><a href="/wiki/List_of_racing_aircraft" title="List of racing aircraft">Racers</a></li>
-<li><a href="/wiki/List_of_regional_airliners" title="List of regional airliners">Regional airliners</a></li>
-<li><a href="/wiki/List_of_rocket_aircraft" class="mw-redirect" title="List of rocket aircraft">Rocket-powered</a></li>
-<li><a href="/wiki/List_of_rotorcraft" title="List of rotorcraft">Rotorcraft</a>
-<ul><li><a href="/wiki/List_of_utility_helicopters" class="mw-redirect" title="List of utility helicopters">utility</a></li></ul></li>
-<li><a href="/wiki/List_of_flying_boats_and_floatplanes" title="List of flying boats and floatplanes">Flying boats and floatplanes</a></li>
-<li><a href="/wiki/List_of_STOL_aircraft" title="List of STOL aircraft">STOL</a></li>
-<li><a href="/wiki/List_of_supersonic_aircraft" title="List of supersonic aircraft">Supersonic</a></li>
-<li><a href="/wiki/Tiltrotor#List_of_tiltrotor_aircraft" title="Tiltrotor">Tiltrotors</a></li>
-<li><a href="/wiki/Trimotor" title="Trimotor">Trimotors</a></li>
-<li><a href="/wiki/List_of_triplanes" title="List of triplanes">Triplanes</a></li>
-<li><a href="/wiki/List_of_unmanned_aerial_vehicles" title="List of unmanned aerial vehicles">Unmanned</a></li>
-<li><a href="/wiki/List_of_VTOL_aircraft" title="List of VTOL aircraft">VTOL</a></li></ul>
-</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%">By size</th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0"><div style="padding:0 0.25em">
-<ul><li><a href="/wiki/List_of_current_production_certified_light_aircraft" title="List of current production certified light aircraft">Light aircraft</a>
-<ul><li><a href="/wiki/List_of_very_light_jets" class="mw-redirect" title="List of very light jets">very light jets</a></li></ul></li>
-<li><a href="/wiki/List_of_large_aircraft" title="List of large aircraft">Large aircraft</a>
-<ul><li><a href="/wiki/Double-deck_aircraft" title="Double-deck aircraft">Double-deck</a></li>
-<li><a href="/wiki/Narrow-body_aircraft" title="Narrow-body aircraft">Narrow-body</a></li>
-<li><a href="/wiki/Wide-body_aircraft" title="Wide-body aircraft">Wide-body</a></li></ul></li>
-<li><a href="/wiki/List_of_airliners_by_maximum_takeoff_weight" title="List of airliners by maximum takeoff weight">by Maximum takeoff weight</a></li></ul>
-</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%">By manufacturer</th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0"><div style="padding:0 0.25em">
-<ul><li><span class="noviewer" typeof="mw:File"><span title="Template"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/20px-Symbol_template_class_pink.svg.png" decoding="async" width="16" height="16" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/40px-Symbol_template_class_pink.svg.png 2x" data-file-width="180" data-file-height="185"></span></span>&nbsp;<a href="/wiki/Template:Airbus_Group_aircraft" class="mw-redirect" title="Template:Airbus Group aircraft">Airbus</a></li>
-<li><span class="noviewer" typeof="mw:File"><span title="Template"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/20px-Symbol_template_class_pink.svg.png" decoding="async" width="16" height="16" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/40px-Symbol_template_class_pink.svg.png 2x" data-file-width="180" data-file-height="185"></span></span>&nbsp;<a href="/wiki/Template:Antonov_aircraft" title="Template:Antonov aircraft">Antonov</a></li>
-<li><span class="noviewer" typeof="mw:File"><span title="Template"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/20px-Symbol_template_class_pink.svg.png" decoding="async" width="16" height="16" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/40px-Symbol_template_class_pink.svg.png 2x" data-file-width="180" data-file-height="185"></span></span>&nbsp;<a href="/wiki/Template:Boeing_airliners" title="Template:Boeing airliners">Boeing</a></li>
-<li><span class="noviewer" typeof="mw:File"><span title="Template"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/20px-Symbol_template_class_pink.svg.png" decoding="async" width="16" height="16" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/40px-Symbol_template_class_pink.svg.png 2x" data-file-width="180" data-file-height="185"></span></span>&nbsp;<a href="/wiki/Template:Bombardier_aircraft" title="Template:Bombardier aircraft">Bombardier</a></li>
-<li><span class="noviewer" typeof="mw:File"><span title="Template"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/20px-Symbol_template_class_pink.svg.png" decoding="async" width="16" height="16" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/40px-Symbol_template_class_pink.svg.png 2x" data-file-width="180" data-file-height="185"></span></span>&nbsp;<a href="/wiki/Template:Comac_aircraft" title="Template:Comac aircraft">Comac</a></li>
-<li><span class="noviewer" typeof="mw:File"><span title="Template"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/20px-Symbol_template_class_pink.svg.png" decoding="async" width="16" height="16" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/40px-Symbol_template_class_pink.svg.png 2x" data-file-width="180" data-file-height="185"></span></span>&nbsp;<a href="/wiki/Template:Douglas_airliners" title="Template:Douglas airliners">Douglas&nbsp;/ McDonnell Douglas</a></li>
-<li><span class="noviewer" typeof="mw:File"><span title="Template"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/20px-Symbol_template_class_pink.svg.png" decoding="async" width="16" height="16" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/40px-Symbol_template_class_pink.svg.png 2x" data-file-width="180" data-file-height="185"></span></span>&nbsp;<a href="/wiki/Template:Embraer_aircraft" title="Template:Embraer aircraft">Embraer</a></li>
-<li><span class="noviewer" typeof="mw:File"><span title="Template"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/20px-Symbol_template_class_pink.svg.png" decoding="async" width="16" height="16" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/40px-Symbol_template_class_pink.svg.png 2x" data-file-width="180" data-file-height="185"></span></span>&nbsp;<a href="/wiki/Template:Ilyushin_aircraft" title="Template:Ilyushin aircraft">Ilyushin</a></li>
-<li><span class="noviewer" typeof="mw:File"><span title="Template"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/20px-Symbol_template_class_pink.svg.png" decoding="async" width="16" height="16" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symbol_template_class_pink.svg/40px-Symbol_template_class_pink.svg.png 2x" data-file-width="180" data-file-height="185"></span></span>&nbsp;<a href="/wiki/Template:Tupolev_aircraft" title="Template:Tupolev aircraft">Tupolev</a></li></ul>
-</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/List_of_experimental_aircraft" title="List of experimental aircraft">Experimental</a></th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0"><div style="padding:0 0.25em">
-<ul><li><a href="/wiki/Early_flying_machines" title="Early flying machines">Early flying machines</a></li>
-<li><a href="/wiki/Flying_car" title="Flying car">Flying car</a></li>
-<li><a href="/wiki/List_of_X-planes" title="List of X-planes">X-planes</a></li></ul>
-</div></td></tr></tbody></table><div></div></td></tr></tbody></table><div></div></td></tr><tr><td colspan="2" class="navbox-list navbox-odd hlist" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks mw-collapsible uncollapsed navbox-subgroup mw-made-collapsible" style="border-spacing:0"><tbody><tr><th scope="col" class="navbox-title" colspan="2"><button type="button" class="mw-collapsible-toggle mw-collapsible-toggle-default" aria-expanded="true" tabindex="0"><span class="mw-collapsible-text">hide</span></button><div id="Military_aircraft4288" style="font-size:114%;margin:0 4em"><a href="/wiki/Military_aircraft" title="Military aircraft">Military aircraft</a></div></th></tr><tr><td colspan="2" class="navbox-list navbox-odd" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks navbox-subgroup" style="border-spacing:0"><tbody><tr><th scope="row" class="navbox-group" style="width:1%">Role</th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0"><div style="padding:0 0.25em">
-<ul><li><a href="/wiki/List_of_airborne_early_warning_aircraft" title="List of airborne early warning aircraft">AEW</a></li>
-<li><a href="/wiki/List_of_attack_aircraft" title="List of attack aircraft">Attack</a></li>
-<li><a href="/wiki/List_of_bomber_aircraft" title="List of bomber aircraft">Bomber</a>
-<ul><li><a href="/wiki/List_of_torpedo_bombers" title="List of torpedo bombers">Torpedo</a></li></ul></li>
-<li><a href="/wiki/List_of_carrier-based_aircraft" title="List of carrier-based aircraft">Carrier-based</a></li>
-<li><a href="/wiki/List_of_fighter_aircraft" title="List of fighter aircraft">Fighter</a></li>
-<li><a href="/wiki/List_of_maritime_patrol_aircraft" title="List of maritime patrol aircraft">Maritime patrol</a></li>
-<li><a href="/wiki/List_of_submarine-borne_aircraft" title="List of submarine-borne aircraft">Submarine-borne</a></li>
-<li><a href="/wiki/List_of_tanker_aircraft" title="List of tanker aircraft">Tanker</a></li></ul>
-</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/Lists_of_military_aircraft_by_nation" title="Lists of military aircraft by nation">Nation</a></th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks navbox-subgroup" style="border-spacing:0"><tbody><tr><td colspan="2" class="navbox-list navbox-even" style="width:100%;padding:0"><div style="padding:0 0.25em">
-<ul><li><a href="/wiki/List_of_Afghan_Air_Force_aircraft" title="List of Afghan Air Force aircraft">Afghanistan</a></li>
-<li><a href="/wiki/List_of_Albanian_Air_Force_aircraft" title="List of Albanian Air Force aircraft">Albania</a></li>
-<li><a class="mw-selflink selflink">Argentina</a></li>
-<li><a href="/wiki/List_of_current_Royal_Australian_Air_Force_aircraft" title="List of current Royal Australian Air Force aircraft">Australia</a></li>
-<li><a href="/wiki/List_of_active_Bangladesh_military_aircraft" title="List of active Bangladesh military aircraft">Bangladesh</a></li>
-<li><a href="/wiki/List_of_Belize_Defence_Force_Air_Wing_aircraft" class="mw-redirect" title="List of Belize Defence Force Air Wing aircraft">Belize</a></li>
-<li><a href="/wiki/List_of_active_Brazilian_military_aircraft" title="List of active Brazilian military aircraft">Brazil</a></li>
-<li><a href="/wiki/List_of_active_Bulgarian_military_aircraft" class="mw-redirect" title="List of active Bulgarian military aircraft">Bulgaria</a></li>
-<li><a href="/wiki/List_of_aircraft_of_Canada%27s_air_forces" title="List of aircraft of Canada's air forces">Canada</a></li>
-<li><a href="/wiki/List_of_active_Chile_military_aircraft" title="List of active Chile military aircraft">Chile</a></li>
-<li><a href="/wiki/List_of_active_People%27s_Liberation_Army_aircraft" title="List of active People's Liberation Army aircraft">China</a></li>
-<li><a href="/wiki/List_of_military_aircraft_of_the_Czech_Republic" title="List of military aircraft of the Czech Republic">Czech Republic</a></li>
-<li><a href="/wiki/List_of_military_aircraft_of_Denmark" title="List of military aircraft of Denmark">Denmark</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Egyptian_Air_Force" title="List of aircraft of the Egyptian Air Force">Egypt</a></li>
-<li><a href="/wiki/List_of_military_aircraft_of_Finland" title="List of military aircraft of Finland">Finland</a></li>
-<li><a href="/wiki/List_of_military_aircraft_of_France" title="List of military aircraft of France">France</a></li>
-<li><a href="/wiki/List_of_military_aircraft_of_Germany" title="List of military aircraft of Germany">Germany</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Hellenic_Air_Force" class="mw-redirect" title="List of aircraft of the Hellenic Air Force">Greece</a></li>
-<li><a href="/wiki/List_of_active_Indian_military_aircraft" title="List of active Indian military aircraft">India</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Indonesian_National_Armed_Forces" title="List of aircraft of the Indonesian National Armed Forces">Indonesia</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Iranian_Air_Force" title="List of aircraft of the Iranian Air Force">Iran</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Irish_Air_Corps" title="List of aircraft of the Irish Air Corps">Ireland</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Israeli_Air_Force" title="List of aircraft of the Israeli Air Force">Israel</a></li>
-<li><a href="/wiki/List_of_active_Italian_military_aircraft" title="List of active Italian military aircraft">Italy</a></li>
-<li><a href="/wiki/List_of_military_aircraft_of_Japan" title="List of military aircraft of Japan">Japan</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Malaysian_Armed_Forces" title="List of aircraft of the Malaysian Armed Forces">Malaysia</a></li>
-<li><a href="/wiki/List_of_active_Moroccan_military_aircraft" class="mw-redirect" title="List of active Moroccan military aircraft">Morocco</a></li>
-<li><a href="/wiki/List_of_active_New_Zealand_military_aircraft" class="mw-redirect" title="List of active New Zealand military aircraft">New Zealand</a></li>
-<li><a href="/wiki/List_of_military_aircraft_of_Norway" title="List of military aircraft of Norway">Norway</a></li>
-<li><a href="/wiki/List_of_active_Pakistan_military_aircraft" title="List of active Pakistan military aircraft">Pakistan</a></li>
-<li><a href="/wiki/List_of_active_military_aircraft_of_the_Philippines" title="List of active military aircraft of the Philippines">Philippines</a></li>
-<li><a href="/wiki/List_of_retired_Polish_Air_Force_aircraft" title="List of retired Polish Air Force aircraft">Poland</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Portuguese_Air_Force" class="mw-redirect" title="List of aircraft of the Portuguese Air Force">Portugal</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Romanian_Air_Force" title="List of aircraft of the Romanian Air Force">Romania</a></li>
-<li><a href="/wiki/List_of_currently_active_Russian_military_aircraft" class="mw-redirect" title="List of currently active Russian military aircraft">Russia</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_South_African_Air_Force" title="List of aircraft of the South African Air Force">South Africa</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Spanish_Air_and_Space_Force" class="mw-redirect" title="List of aircraft of the Spanish Air and Space Force">Spain</a></li>
-<li><a href="/wiki/List_of_military_aircraft_of_Sri_Lanka" title="List of military aircraft of Sri Lanka">Sri Lanka</a></li>
-<li><a href="/wiki/List_of_military_aircraft_of_Sweden" title="List of military aircraft of Sweden">Sweden</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Swiss_Air_Force" title="List of aircraft of the Swiss Air Force">Switzerland</a></li>
-<li><a href="/wiki/List_of_aircraft_of_the_Royal_Thai_Air_Force" class="mw-redirect" title="List of aircraft of the Royal Thai Air Force">Thailand</a></li>
-<li><a href="/wiki/List_of_active_Turkish_Air_Force_aircraft" class="mw-redirect" title="List of active Turkish Air Force aircraft">Turkey</a></li>
-<li><a href="/wiki/List_of_active_United_Kingdom_military_aircraft" title="List of active United Kingdom military aircraft">United Kingdom</a></li>
-<li><a href="/wiki/List_of_active_United_States_military_aircraft" title="List of active United States military aircraft">United States</a></li></ul>
-</div></td></tr></tbody></table><div></div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%">Era</th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0"><div style="padding:0 0.25em">
-<ul><li><a href="/wiki/List_of_World_War_I_Entente_aircraft" title="List of World War I Entente aircraft">WWI Entente</a></li>
-<li><a href="/wiki/List_of_World_War_I_Central_Powers_aircraft" title="List of World War I Central Powers aircraft">WWI Central Powers</a></li>
-<li><a href="/wiki/List_of_interwar_military_aircraft" title="List of interwar military aircraft">Interwar</a></li>
-<li><a href="/wiki/List_of_aircraft_of_World_War_II" title="List of aircraft of World War II">World War II</a></li>
-<li><a href="/wiki/List_of_jet_aircraft_of_World_War_II" title="List of jet aircraft of World War II">World War II jets</a></li></ul>
-</div></td></tr></tbody></table><div></div></td></tr></tbody></table><div></div></td></tr></tbody></table></div>

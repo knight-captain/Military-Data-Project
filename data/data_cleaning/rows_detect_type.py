@@ -54,8 +54,8 @@ def detect_row_type(df: pd.DataFrame):
             if is_quantity_value(val):
                 quantity_rows.append(idx)
                 # print(f"Found QTY col: {set(row)}")
-            else:
-                section_rows.append(idx)
+            
+            section_rows.append(idx)
 
             continue
 

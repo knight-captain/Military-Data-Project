@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 
 def propagate_sections(df, section_rows, quantity_rows, empty_rows):
     """
@@ -12,6 +13,7 @@ def propagate_sections(df, section_rows, quantity_rows, empty_rows):
     df = df.copy()
 
     # Determine whether we need these columns
+    # technically don't need this, since all equipment gets all super_cols in the end
     has_section = len(section_rows) > 0
     has_quantity = len(quantity_rows) > 0
     if has_section:
@@ -19,7 +21,8 @@ def propagate_sections(df, section_rows, quantity_rows, empty_rows):
     if has_quantity:
         df["quantity"] = None
 
-    value_to_propagate = None
+    qty_to_prop = None
+    sec_to_prop = None
 
     for idx, row in df.iterrows():
 
@@ -27,17 +30,31 @@ def propagate_sections(df, section_rows, quantity_rows, empty_rows):
         values = [str(v).strip() if pd.notna(v) else "" for v in row.tolist()]
         unique_vals = set(values)
 
+        # Extract the non-empty value
+        value_to_propagate = next((v for v in unique_vals if v), "")
+
         # --- META ROWS ---
         if idx in section_rows or idx in quantity_rows:
-            # Extract the non-empty value
-            value_to_propagate = next((v for v in unique_vals if v), "")
+
+            # Extract "(digits)" if present
+            m = re.search(r"\(\d+\)", value_to_propagate)
+            if m:
+                qty_to_prop = m.group(0)   # keep parentheses, e.g. "(5)"
+            else:
+                qty_to_prop = None
+
+            # Remove "(digits)" from the section text
+            sec_to_prop = re.sub(r"\(\d+\)", "", value_to_propagate).strip()
+
+            # Skip writing to df for meta rows (they get removed later)
+            continue
 
         # --- ALL ROWS ---
-        if has_section:
-            df.at[idx, "section"] = value_to_propagate
-
         if has_quantity:
-            df.at[idx, "quantity"] = value_to_propagate
+            df.at[idx, "quantity"] = qty_to_prop 
+
+        if has_section:
+            df.at[idx, "section"] = sec_to_prop
 
 
     # Remove section + quantity rows
