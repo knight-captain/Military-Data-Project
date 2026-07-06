@@ -31,6 +31,15 @@ def normalize_text(s: str) -> str:
 
     return s
 
+def esc_literal(s):
+    if s is None:
+        return ""
+    return s.replace("'", "''")
+
+def esc_ident(s):
+    return s.replace('"', '""')
+
+
 def strip_country_prefix(col, country):
     col_norm = normalize_text(col)
     country_norm = normalize_text(country)

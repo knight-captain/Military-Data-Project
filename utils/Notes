@@ -3,6 +3,8 @@ ARCHITECTURAL ISSUES:
 - also sweet spot for eliminating contents, external links, etc. without killing tiny equipment tables.
 - delete *just* joined tables
 
+silhouettes table can be ignored
+0,11 kg tnt from slovakia_table_02_infantry_weapons_explosives not in column_mapping.csv (no actual header)
 
 
 missed merged/repeat (or header) rows:

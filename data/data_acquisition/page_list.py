@@ -22,36 +22,37 @@ def edge_list():
     return links
 
 def get_links():
-    """Extract all relevant links from the master list page."""
     soup = get_soup(MASTER_LIST)
     content = soup.find("div", {"class": "mw-parser-output"})
 
     links = []
-    current_country = None
 
-    for element in content.children:
+    # Each country is now inside a <section>
+    for section in content.find_all("section", recursive=False):
 
-        # Skip whitespace, comments, NavigableString, etc.
-        if not isinstance(element, Tag):
+        # Find the country name
+        heading = section.find("h2")
+        if not heading:
             continue
 
-        # Detect <div class="mw-heading mw-heading2"><h2>Country</h2></div>. This is a sibpling of the actual <ul>
-        if element.name == "div" and "mw-heading2" in element.get("class", []):
-            h2 = element.find("h2")
-            if h2:
-                current_country = h2.get_text(strip=True)
+        current_country = heading.get_text(strip=True)
 
-        # Collect links under <ul>
-        if element.name == "ul" and current_country:
-            for a in element.find_all("a", href=True):
-                href = a["href"]
+        # Find the <ul> inside the same section
+        ul = section.find("ul")
+        if not ul:
+            print(f"No links in {current_country}")
+            continue
 
-                # Keep only internal article links, skip namespaces
-                # this grabs urls that are aren't just "equipment", like "aircraft" & "ships", as well as "Branch" pages
-                if href.startswith("/wiki/") and ":" not in href:
-                    page_title = a.get_text(strip=True)
-                    full_url = urljoin(BASE_URL, href)
-                    links.append((current_country, page_title, full_url))
+        # Extract links
+        for a in ul.find_all("a", href=True):
+            href = a["href"]
+
+            # Accept both old and new formats
+            if href.startswith("/wiki/") or href.startswith("//en.wikipedia.org/wiki/"):
+                page_title = a.get_text(strip=True)
+                full_url = urljoin(BASE_URL, href)
+                links.append((current_country, page_title, full_url))
 
     print(f"Found {len(links)} links on MASTER_LIST")
     return links
+

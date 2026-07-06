@@ -21,7 +21,7 @@ def is_junk_table(
     # 1. Title-based skip (strongest)
     bad_words = [
         "external links", "references", "reference", "contents",
-        "see also", "bibliography", "sources", "further reading", "notes"
+        "see also", "bibliography", "sources", "further reading", "notes", "silhouettes"
     ]
     if any(bad in section_title for bad in bad_words):
         return True

@@ -15,7 +15,7 @@ from data.data_synthesis.synthesize_equipment import synthesize_equipment
 
 
 RUN_SCRAPER = False #If False, make sure a set of military_equipment_TEST.db exists; can also be str, and will run edge_case.txt and name the .db after the str
-RUN_CLEANING = True
+RUN_CLEANING = False
 RUN_SYNTHESIZER = True
 
 def run_pipeline():

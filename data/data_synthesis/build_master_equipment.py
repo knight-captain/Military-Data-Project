@@ -16,7 +16,7 @@ Writes:
 """
 
 import re
-from utils.normalization import normalize_text
+from utils.normalization import normalize_text, esc_literal, esc_ident
 from pathlib import Path
 from utils.safe_SQL_caller import q, ql
 
@@ -83,8 +83,9 @@ def build_master_equipment(conn, contextual_mapping, super_cols):
             # Build SELECT for this table
             url = table_to_url.get(table_name)
             select_parts = [
-                f"'{table_name}' AS table_name",
-                f"'{url}' AS url"
+                f"'{esc_literal(table_name)}' AS table_name",
+                f"'{esc_literal(url)}' AS url"
+
             ]
 
             for super_col in super_cols:
@@ -93,24 +94,30 @@ def build_master_equipment(conn, contextual_mapping, super_cols):
                 unique_raws = list(dict.fromkeys(raw_list))
 
                 if len(unique_raws) == 0:
-                    select_parts.append(f"NULL AS {q(super_col)}")
+                    select_parts.append(f"NULL AS \"{esc_ident(super_col)}\"")
 
                 elif len(unique_raws) == 1:
                     raw = unique_raws[0]
-                    select_parts.append(f"{q(raw)} AS {q(super_col)}")
+                    select_parts.append(f'"{esc_ident(raw)}" AS "{esc_ident(super_col)}"')
 
                 else:
                     # Build SQL that merges values but removes duplicates
                     # Example output:
                     # CASE WHEN col1 = col2 THEN col1 ELSE col1 || '; ' || col2 END
-                    expr = q(unique_raws[0])
+                    expr = f'"{esc_ident(unique_raws[0])}"'
                     for r in unique_raws[1:]:
-                        expr = f"CASE WHEN {expr} = {q(r)} THEN {expr} ELSE {expr} || '; ' || {q(r)} END"
+                        expr = (
+                            f"CASE WHEN {expr} = \"{esc_ident(r)}\" "
+                            f"THEN {expr} ELSE {expr} || '; ' || \"{esc_ident(r)}\" END"
+                        )
 
                     select_parts.append(f"({expr}) AS {q(super_col)}")
 
 
-            select_sql = "SELECT " + ", ".join(select_parts) + f" FROM {q(table_name)}"
+            select_sql = (
+                "SELECT " + ", ".join(select_parts) +
+                f" FROM \"{esc_ident(table_name)}\""
+            )
 
             # Insert into master table
             cursor.execute(
