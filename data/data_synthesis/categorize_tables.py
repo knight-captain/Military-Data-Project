@@ -49,6 +49,7 @@ def classify_table(title, rules):
     result["ignore"] = False
 
     # Apply rules
+    #TODO: make sure this can hit miltiple categories
     for rule in rules:
         if rule["pattern"].search(title):
             t = rule["type"]

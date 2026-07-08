@@ -15,7 +15,6 @@ def is_quantity_value(val: str) -> bool:
     return False
 
 
-
 def detect_row_type(df: pd.DataFrame):
     """
     Detects special row types in a cleaned Wikipedia table.

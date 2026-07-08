@@ -90,6 +90,7 @@ def header_detector(table):
 
 
 '''The Graveyard of Failed Header-selectors'''
+'''Alot of future categorization and analysis depends on the proper selection of the header row, so here are some funtions that didn't work quite right:'''
 # def is_merged_row(tr):
 #     if not isinstance(tr, Tag):
 #         return False

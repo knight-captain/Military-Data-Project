@@ -99,7 +99,6 @@ def extract_tables_from_page(url):
     return extracted
 
 
-
 def save_to_sqlite(country, page_title, url, tables, conn):
     """Save all tables for a country/page into SQLite and update a_meta_table."""
     base_name = clean_name(country)

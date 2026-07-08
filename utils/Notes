@@ -1,24 +1,36 @@
+NEXT PHASE GOAL: 
+- the above should make creating country equipment lists trivial
+- this should also make de-duplicating a master list trivial
+
 ARCHITECTURAL ISSUES:
-- finding the sweet spot (or philosopher's stone) for the scraper to pick the correct header. 
+categorize_tables.py & table_regex_rules.csv are missing some things: 
+- titles with "air" are not getting categorized in that domain
+- silhouettes shouldn't make it this far, but should get ignored if they do
+
 - also sweet spot for eliminating contents, external links, etc. without killing tiny equipment tables.
 - delete *just* joined tables
 
-silhouettes table can be ignored
-0,11 kg tnt from slovakia_table_02_infantry_weapons_explosives not in column_mapping.csv (no actual header)
+- silhouettes tables can be ignored
+- 0,11 kg tnt from slovakia_table_02_infantry_weapons_explosives not in column_mapping.csv (no actual header)
+- delete rows that are just repeat headers
 
 
 missed merged/repeat (or header) rows:
-- 1,003 active, 15 planned (May 6, 2025) – attack helicopters IN united_states_table_02_vehicles_rotary_winged_aircraft_vtol_vstol
-- 274 active (May 5, 2025) – VSTOL / VTOL IN Nunited_states_table_02_vehicles_rotary_winged_aircraft_vtol_vstol
-- Shotguns IN brunei_table_03_firearms
+united_states_table_02_vehicles_rotary_winged_aircraft_vtol_vstol ha
+- has QTY & sec in Section super_col. eg:
+- 1,003 active, 15 planned (May 6, 2025) – attack helicopters 
+- 274 active (May 5, 2025) – VSTOL / VTOL 
+- so these need to be split by the "-" and the QTY discarded (there is already a QTY col)
+Check for number-like parts in the sec: 
+- "Mine warfare (1+5)" should put the "(1+5)" in the QTY col
+
+- Shotguns IN brunei_table_03_firearms (a line of repeated "shotguns" with "Machine guns" as the sec)
 - raw_cols in india_table_01_submarine_fleet
 india_table_03_surface_fleet_amphibious_warfare_ships
 india_table_10_auxiliary_fleet_research_and_survey_vessels
 united_kingdom_table_02_submarine_service
 united_kingdom_table_03_surface_fleet
 united_kingdom_table_04_auxiliary_vessels
-- ukraine_table_01_surface_fleet has multiple raw columns for super_col 'section' (header is 3rd row)
-- ukraine_table_02_auxiliary_fleet has multiple raw columns for super_col 'vessel' (header is 3rd row)
 
 
 ONTOLOGICAL ISSUES:
@@ -36,8 +48,8 @@ Mis-categorisations:
 
 deconflict:
 - QTY/SN in no./number
-- operator: split
-II.  QTY from section (didn't flag)
+- operator: split country from manufacturer
+II.  QTY from section (didn't flag) <-fixed some, but needs to catch "thing (1+5)", etc.
 - service (raw) Branch vs service dates, though ignoring historical will fix
 - size: ignore airbases
 -  status (vs QTY)
@@ -63,7 +75,8 @@ II. QTY cols never detected-> fixed
 - delete joined tables
 - in the case of "Ship Type (#)", split the "Ship Type" to section col so the (#) can remain in quantity
 
-
+- ukraine_table_01_surface_fleet has multiple raw columns for super_col 'section' (header is 3rd row)
+- ukraine_table_02_auxiliary_fleet has multiple raw columns for super_col 'vessel' (header is 3rd row)
 
 DON'T LEAVE JUNK COLS IN colunm_mapping.csv
 II. image (shouldn't have made it) insignia
@@ -75,3 +88,5 @@ junk cols:
 Fixed edge cases:
 - <td rowspan="13"">/<td colspan="2"">  <!-- malformed/note the extra quote -->
 - max() arg is an empty sequence
+
+- finding the sweet spot (or philosopher's stone) for the scraper to pick the correct header. <- looking pretty good 
