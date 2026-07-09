@@ -39,6 +39,8 @@ def esc_literal(s):
 def esc_ident(s):
     return s.replace('"', '""')
 
+def singularize(label):
+    return label[:-1] if label.endswith("s") and not label.endswith("ss") else label
 
 def strip_country_prefix(col, country):
     col_norm = normalize_text(col)

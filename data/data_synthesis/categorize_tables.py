@@ -20,6 +20,9 @@ This module DOES NOT write anything to the database.
 
 import re
 from pathlib import Path
+
+from data.data_synthesis.cluster_tables import cluster_tables
+from data.data_synthesis.derive_hierarchy import derive_hierarchy
 from utils import read_csv
 from utils.normalization import normalize_text
 
@@ -27,10 +30,7 @@ from utils.normalization import normalize_text
 # Classification of a single table title
 def classify_table(title, rules):
     """
-    Apply regex rules to a table title.
-
-    Dynamically builds the classification schema based on the rule types
-    present in the CSV. Only "ignore" is treated as a special case.
+    Apply regex rules to a table via <h2/3/4>.
 
     Returns:
         dict with keys dynamically derived from rules, plus "ignore".
@@ -69,17 +69,6 @@ def categorize_all_tables(conn):
     """
     Classify all cleaned tables using regex rules.
 
-    Returns:
-        table_categories : dict {
-            table_name : {
-                branch, role, domain, group_1, group_2, platform, ignore
-            }
-        }
-
-    Notes:
-        - DOES NOT write to the DB.
-        - Skips tables starting with "a_".
-        - Skips tables classified as ignore=True.
     """
 
     # Load raw rules from CSV
@@ -130,6 +119,7 @@ def categorize_all_tables(conn):
     rows = cursor.execute(sql).fetchall()
 
     table_categories = {}
+    table_categories_w_h234 = {}
 
     # Classify each table
     for table_name, h2, h3, h4 in rows:
@@ -151,6 +141,11 @@ def categorize_all_tables(conn):
             continue
 
         table_categories[table_name] = classification
+        table_categories_w_h234[table_name] = (classification, h2, h3, h4)
+
+    #now group tables by the <h2/3/4> as well as the regexed categories from those <h2/3/4>
+    clusters = cluster_tables(conn, table_categories_w_h234)
+    roots = derive_hierarchy(conn, clusters, table_categories_w_h234)
 
     print(f"Categorized {len(table_categories)} tables")
     return table_categories

@@ -33,6 +33,7 @@ def synthesize_equipment(db_path=None):
 
     # STEP 1: Categorize tables via regexed table_name (which came from the <h2/3/4>'s)
     #dict table_categories[table_name] = classification
+    # now with grouping and hierarchy!
     print("\n[1/4] Categorizing tables...")
     table_categories = categorize_all_tables(conn) 
 
