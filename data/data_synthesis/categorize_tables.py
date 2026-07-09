@@ -21,6 +21,7 @@ This module DOES NOT write anything to the database.
 import re
 from pathlib import Path
 
+from data.data_synthesis.calculate_confidence import calculate_confidence
 from data.data_synthesis.cluster_tables import cluster_tables
 from data.data_synthesis.derive_hierarchy import derive_hierarchy
 from utils import read_csv
@@ -62,6 +63,28 @@ def classify_table(title, rules):
             result[t] = rule["category"]
 
     return result
+
+'''FOR debugging'''
+def report_cluster_stats(clusters, roots):
+    """Prints summary statistics about the clustering results."""
+
+    num_clusters = len(clusters)
+    num_roots = len(roots)
+
+    # cluster strength
+    strengths = [c.get("strength", 0.0) for c in clusters]
+    avg_strength = sum(strengths) / num_clusters if num_clusters else 0.0
+
+    # parent strength
+    parent_strengths = [c.get("parent_strength", 0.0) for c in clusters]
+    avg_parent_strength = sum(parent_strengths) / num_clusters if num_clusters else 0.0
+
+    print("\n=== CLUSTER REPORT ===")
+    print(f"Total clusters: {num_clusters}")
+    print(f"Root clusters: {num_roots}")
+    print(f"Average cluster strength: {avg_strength:.2f}")
+    print(f"Average parent strength: {avg_parent_strength:.2f}")
+    print("======================\n")
 
 
 # Main categorization function
@@ -131,7 +154,7 @@ def categorize_all_tables(conn):
 
         # Build title string
         title = " ".join([h2 or "", h3 or "", h4 or ""])
-        title = normalize_text(title)
+        title = (title)
 
         classification = classify_table(title, rules)
 
@@ -143,9 +166,14 @@ def categorize_all_tables(conn):
         table_categories[table_name] = classification
         table_categories_w_h234[table_name] = (classification, h2, h3, h4)
 
-    #now group tables by the <h2/3/4> as well as the regexed categories from those <h2/3/4>
-    clusters = cluster_tables(conn, table_categories_w_h234)
-    roots = derive_hierarchy(conn, clusters, table_categories_w_h234)
-
     print(f"Categorized {len(table_categories)} tables")
+
+    #now group tables by the <h2/3/4> as well as the regexed categories from those <h2/3/4>
+    clusters, fingerprints = cluster_tables(conn, table_categories_w_h234)
+    nodes = derive_hierarchy(conn, clusters, table_categories_w_h234)
+    smart_table_categories = calculate_confidence(fingerprints, nodes)
+
+    print("FROM CAT_TABLES")
+    # report_cluster_stats(clusters, nodes) #for fine-tuning
+    print(f"Categorized {len(smart_table_categories)} smart_tables")
     return table_categories

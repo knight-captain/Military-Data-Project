@@ -1,12 +1,9 @@
 from collections import defaultdict, Counter
+from utils.jaccard_idx import calc_diff
 from utils.normalization import singularize
 
-STRICT_THRESHOLD = 0.5   # Higher = more groups
+STRICT_THRESHOLD = 0.50   # Higher = more groups
 LOOSE_THRESHOLD  = 0.35    # Lower = merges easier
-HEADER_WEIGHT = 0.4
-PARENT_WEIGHT = 0.1
-CAT_WEIGHT = 0.4
-RAW_COL_WEIGHT = 0.1     # Higher = countries clump to themselves more since tables within the same country were likely written by the same author. Keep low!
 
 #STEP 1
 def get_raw_cols(conn, allowed_tables):
@@ -56,7 +53,7 @@ def build_fingerprints(table_categories_w_h234, raw_cols):
 
         fingerprints[table] = {
             "headers": headers,
-            "parents": parents,     # ALWAYS present
+            "parents": parents, 
             "cats": cats,
             "cols": cols,
         }
@@ -65,22 +62,6 @@ def build_fingerprints(table_categories_w_h234, raw_cols):
 
 
 #STEP 3
-#for Step 3.1
-def jaccard(a, b):
-    if not a and not b:
-        return 0.0
-    return len(a & b) / len(a | b)
-
-def table_similarity(fpA, fpB):
-    sim_h = jaccard(fpA["headers"], fpB["headers"])
-    sim_p = jaccard(fpA["parents"], fpB["parents"])
-    sim_c = jaccard(fpA["cats"],    fpB["cats"])
-    sim_r = jaccard(fpA["cols"],    fpB["cols"])
-
-    return (HEADER_WEIGHT * sim_h +
-            PARENT_WEIGHT * sim_p +
-            CAT_WEIGHT    * sim_c +
-            RAW_COL_WEIGHT * sim_r)
 
 #STEP 3.1
 def strict_pass(fingerprints):
@@ -101,7 +82,7 @@ def strict_pass(fingerprints):
             if u in used:
                 continue
 
-            sim = table_similarity(fingerprints[t], fingerprints[u])
+            sim = calc_diff(fingerprints[t], fingerprints[u])
 
             if sim >= STRICT_THRESHOLD:
                 # this table *might* belong here, but we skip it for now
@@ -109,7 +90,6 @@ def strict_pass(fingerprints):
                 used.add(u)
 
         clusters.append(cluster)
-    print(len(clusters))
     return clusters, skipped
 
 #for Step 3.2
@@ -117,7 +97,7 @@ def merge_fingerprints(cluster, fingerprints):
     """Union the fingerprints of all tables in a cluster."""
     merged = {
         "headers": set(),
-        "parents": set(),   # <-- ADD THIS
+        "parents": set(),
         "cats": set(),
         "cols": set(),
     }
@@ -125,7 +105,7 @@ def merge_fingerprints(cluster, fingerprints):
     for table in cluster:
         fp = fingerprints[table]
         merged["headers"] |= fp["headers"]
-        merged["parents"] |= fp["parents"]   # <-- AND THIS
+        merged["parents"] |= fp["parents"] 
         merged["cats"]    |= fp["cats"]
         merged["cols"]    |= fp["cols"]
 
@@ -140,7 +120,7 @@ def assign_skipped_tables(clusters, skipped, fingerprints):
         fp = fingerprints[table]
 
         # compute similarity to each cluster
-        sims = [table_similarity(fp, cfp) for cfp in cluster_fps]
+        sims = [calc_diff(fp, cfp) for cfp in cluster_fps]
         best_idx = max(range(len(sims)), key=lambda i: sims[i])
         best_sim = sims[best_idx]
 
@@ -165,19 +145,19 @@ def label_and_strength(cluster, fingerprints):
         return "unknown", 0.0
 
     counts = Counter(leafs)
-    label, freq = counts.most_common(1)[0]
+    cluster_name, freq = counts.most_common(1)[0]
     strength = freq / len(cluster)
 
-    return label, strength
+    return cluster_name, strength
 
 def build_cluster_objects(clusters, fingerprints):
     cluster_objects = []
 
     for cl in clusters:
-        label, strength = label_and_strength(cl, fingerprints)
+        cluster_name, strength = label_and_strength(cl, fingerprints)
         cluster_objects.append({
             "tables": cl,
-            "label": label,
+            "cluster_name": cluster_name,
             "strength": strength
         })
 
@@ -200,7 +180,7 @@ def strategy_b_cluster(fingerprints):
 def print_clusters(cluster_objects):
     print("\n=== Table Clusters (DEBUG) ===")
     for idx, obj in enumerate(cluster_objects):
-        print(f"{obj['label']}: {idx} ({len(obj['tables'])} tables) strength: {obj['strength']:.2f}")
+        print(f"{obj['cluster_name']}: {idx} ({len(obj['tables'])} tables) strength: {obj['strength']:.2f}")
         for t in obj["tables"][:10]:
             print("   ", t)
     print("\n=== End Clusters ===\n")
@@ -211,9 +191,9 @@ def cluster_tables(conn, table_categories_w_h234):
 
     fingerprints = build_fingerprints(table_categories_w_h234, raw_cols)
 
-    # Strategy B instead of greedy_cluster
     cluster_objects = strategy_b_cluster(fingerprints)
-
-    print_clusters(cluster_objects)
-    return cluster_objects
+    print("FROM cluster_tables")
+    print(f"cluster_objects: {len(cluster_objects)}")
+    # print_clusters(cluster_objects)
+    return cluster_objects, fingerprints
 
