@@ -11,6 +11,7 @@ from utils.update_path import update_path
 
 # Submodules
 from data.data_synthesis.categorize_tables import categorize_all_tables
+from data.data_synthesis.classify_tables import classify_table
 from data.data_synthesis.categorize_columns import categorize_columns
 from data.data_synthesis.recategorize_ontologically import recategorize_ontologically
 from data.data_synthesis.build_master_equipment import build_master_equipment
