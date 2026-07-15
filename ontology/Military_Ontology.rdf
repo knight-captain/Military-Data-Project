@@ -5,8 +5,28 @@
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:untitled-ontology-25="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#">
     <owl:Ontology rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac -->
+
+    <owl:AnnotationProperty rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac">
+        <rdfs:label xml:lang="en">hasRegex</rdfs:label>
+    </owl:AnnotationProperty>
     
 
 
@@ -56,6 +76,14 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_06c75a44_9ddc_407d_a7c7_43b5f68471c8"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_72cc884e_1ca7_4998_b2af_25af344751dc"/>
         <rdfs:label xml:lang="en">hasOrigin</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLObjectProperty_a33816e3_3f57_40c9_96ea_93baed9d637c -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLObjectProperty_a33816e3_3f57_40c9_96ea_93baed9d637c">
+        <rdfs:label xml:lang="en">hasRegex</rdfs:label>
     </owl:ObjectProperty>
     
 
@@ -372,6 +400,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_00efea39_8c00_46f4_91f5_cc13a9027797">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_47cd978d_a319_427d_8d5b_d6a239829de9"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(anti-armor)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">anti-armor</rdfs:label>
     </owl:Class>
     
@@ -389,6 +418,7 @@
     <!-- http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_06c75a44_9ddc_407d_a7c7_43b5f68471c8 -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_06c75a44_9ddc_407d_a7c7_43b5f68471c8">
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(equipment)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Equipment</rdfs:label>
     </owl:Class>
     
@@ -416,6 +446,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_1291c96c_9825_4ad6_863a_edd17dd39491">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_3575981b_4d02_4bea_8dcb_0ab82ec559c5"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(dock)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">dock</rdfs:label>
     </owl:Class>
     
@@ -434,6 +465,8 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_132bc790_0019_4166_8649_8033ed9d7dd5">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_8a01cf14_4418_476b_bc33_90f545ffb781"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_68e392a8_69e0_4137_8d12_3c2427f21e6c"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(armor|armour|protect)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">ArmoredVehicle</rdfs:label>
     </owl:Class>
     
@@ -443,6 +476,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_13d3b914_90bf_4a9e_89e6_110fd82bdb22">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6011772e_ff3d_4cc3_a60e_86c5225f839b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(boat)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Boat</rdfs:label>
     </owl:Class>
     
@@ -470,6 +504,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_19eb1186_ec3d_46ec_904b_b664ff50c90d">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_06c75a44_9ddc_407d_a7c7_43b5f68471c8"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(aircraft|aviation|aeropla|pilot|wing)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Aircraft</rdfs:label>
     </owl:Class>
     
@@ -479,6 +514,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_1a59ca89_13c4_494b_a4d3_69bd1284d755">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_4ffd82b0_0bb1_4679_919d_cc14155b0994"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(animal)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Animal</rdfs:label>
     </owl:Class>
     
@@ -488,6 +524,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_1ff922dd_3844_49d5_9c89_d736dc31af2e">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_19eb1186_ec3d_46ec_904b_b664ff50c90d"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(glider|balloon)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Glider</rdfs:label>
     </owl:Class>
     
@@ -506,6 +543,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_21825c60_3de0_456c_83b7_c0b53702166d">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_2f9d2aea_a812_4012_a402_153f08f9444b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(communicat|command |signal)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">communication</rdfs:label>
     </owl:Class>
     
@@ -515,6 +553,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_225a575f_4179_4fda_b370_72c689b3293f">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_8a01cf14_4418_476b_bc33_90f545ffb781"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(artillery|indirect|mortar|howitzer)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Artillery</rdfs:label>
     </owl:Class>
     
@@ -524,6 +563,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_24b8d842_623b_450b_b1cc_07fb1d7fe213">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_978b6cf9_0b78_4cf9_9df1_1a8e9da30ec8"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(anti-ship)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">anti-ship</rdfs:label>
     </owl:Class>
     
@@ -560,6 +600,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_2beaa03d_33b5_44d6_8142_2c8282388b3f">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_748ddeed_348a_4a54_9a42_6873092808d9"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(accessor|attachment|magazine|personnalisation|sights|lights)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">accessory</rdfs:label>
     </owl:Class>
     
@@ -578,6 +619,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_2ebdbb83_3aa2_4c86_85a8_2ffc4dfa6b26">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_68e392a8_69e0_4137_8d12_3c2427f21e6c"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(truck)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Truck</rdfs:label>
     </owl:Class>
     
@@ -640,7 +682,8 @@
     <!-- http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_38e6a1ab_e07e_46c7_8ddb_ea30a481aef7 -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_38e6a1ab_e07e_46c7_8ddb_ea30a481aef7">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6011772e_ff3d_4cc3_a60e_86c5225f839b"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_70e5f25a_a5e2_4955_9743_c45727d792d6"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(amphib|ferries)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">AmphibiousVessel</rdfs:label>
     </owl:Class>
     
@@ -650,6 +693,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_3ae99d7f_dcf2_417d_8773_bd25229f5356">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_978b6cf9_0b78_4cf9_9df1_1a8e9da30ec8"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(manpad|shorad)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">anti-aircraft</rdfs:label>
     </owl:Class>
     
@@ -659,6 +703,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_3c2b1889_3784_4a81_b916_b2557d5281b4">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9ec4e24b_f6e6_4b3d_a34c_e6373dc21d4f"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(frigate)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Frigate</rdfs:label>
     </owl:Class>
     
@@ -676,6 +721,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_3ea7f194_10a0_4ba4_9cad_9865374e3e23">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_00efea39_8c00_46f4_91f5_cc13a9027797"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(anti-tank)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">anti-tank</rdfs:label>
     </owl:Class>
     
@@ -685,6 +731,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_4062ce8f_da88_4e27_806f_0418f35ce686">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_19eb1186_ec3d_46ec_904b_b664ff50c90d"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(tiltwing)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">TiltWing</rdfs:label>
     </owl:Class>
     
@@ -694,6 +741,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_410946e1_5405_410f_92cf_7d7c05209be9">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_748ddeed_348a_4a54_9a42_6873092808d9"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(shotgun)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Shotgun</rdfs:label>
     </owl:Class>
     
@@ -721,6 +769,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_47cd978d_a319_427d_8d5b_d6a239829de9">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_978b6cf9_0b78_4cf9_9df1_1a8e9da30ec8"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(anti-vehicle)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">anti-vehicle</rdfs:label>
     </owl:Class>
     
@@ -739,6 +788,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_4873b581_ca32_429f_9699_75383ab8aaca">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6011772e_ff3d_4cc3_a60e_86c5225f839b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(unmanned surface)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">UnmannedSurfaceVessel</rdfs:label>
     </owl:Class>
     
@@ -748,6 +798,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_4a23ed67_f27d_4ddd_894b_87f764a68928">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_748ddeed_348a_4a54_9a42_6873092808d9"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(machine ?gun)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">MachineGun</rdfs:label>
     </owl:Class>
     
@@ -765,6 +816,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_565ab571_b71c_4e08_a64d_b30f8c913462">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_748ddeed_348a_4a54_9a42_6873092808d9"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(bayonet|knife|knives|blade)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">blade</rdfs:label>
     </owl:Class>
     
@@ -774,7 +826,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_5881a371_32f2_48df_813e_9a83ac892b64">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9801704c_6b49_44fc_972c_1fb8c2a0daf5"/>
-        <rdfs:label xml:lang="en">carrier</rdfs:label>
+        <rdfs:label xml:lang="en">Carrier</rdfs:label>
     </owl:Class>
     
 
@@ -783,6 +835,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_58e26cf2_35cb_40a6_bea9_a30ab8773273">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_2f9d2aea_a812_4012_a402_153f08f9444b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(surveillance|observation|intelli)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">intelligence</rdfs:label>
     </owl:Class>
     
@@ -792,6 +845,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6011772e_ff3d_4cc3_a60e_86c5225f839b">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_06c75a44_9ddc_407d_a7c7_43b5f68471c8"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(ship|vessel|(?&lt;!air)craft|fleet|tender|cutter|fleet|class)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Vessel</rdfs:label>
     </owl:Class>
     
@@ -800,7 +854,8 @@
     <!-- http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_62553a43_3fd5_4fc2_bc37_ee8ff9900ded -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_62553a43_3fd5_4fc2_bc37_ee8ff9900ded">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_8a01cf14_4418_476b_bc33_90f545ffb781"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_132bc790_0019_4166_8649_8033ed9d7dd5"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(tank|cavalry)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Tank</rdfs:label>
     </owl:Class>
     
@@ -810,6 +865,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_62a52db2_3254_47af_a0c6_5515e09d46a1">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_e29bd70b_40f9_454c_9dea_c01ee4c1048c"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(icebreaker)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">icebreaker</rdfs:label>
     </owl:Class>
     
@@ -819,6 +875,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_65570418_ff3a_44de_afe1_57a4211cdcea">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_132bc790_0019_4166_8649_8033ed9d7dd5"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(infantryfightingvehicle)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">InfantryFightingVehicle</rdfs:label>
     </owl:Class>
     
@@ -837,6 +894,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_68e392a8_69e0_4137_8d12_3c2427f21e6c">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_8a01cf14_4418_476b_bc33_90f545ffb781"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>unarmoredvehicle</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">UnarmoredVehicle</rdfs:label>
     </owl:Class>
     
@@ -846,6 +904,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_69ede238_682a_4d29_a150_5565c4a8352e">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_8a01cf14_4418_476b_bc33_90f545ffb781"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(utilityvehicle)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">UtilityVehicle</rdfs:label>
     </owl:Class>
     
@@ -864,6 +923,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6e1e9824_b5dd_42ad_a4c8_0496bbce022d">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_19eb1186_ec3d_46ec_904b_b664ff50c90d"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(helicopt)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">RotorWing</rdfs:label>
     </owl:Class>
     
@@ -882,6 +942,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_70e5f25a_a5e2_4955_9743_c45727d792d6">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6011772e_ff3d_4cc3_a60e_86c5225f839b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(aircraft carrier)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">AircraftCarrier</rdfs:label>
     </owl:Class>
     
@@ -908,6 +969,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_736e0b40_1139_4013_a82c_446bbb6893e4">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6011772e_ff3d_4cc3_a60e_86c5225f839b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(unmanned underwater)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">UnmannedUnderwaterVessel</rdfs:label>
     </owl:Class>
     
@@ -917,6 +979,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_748ddeed_348a_4a54_9a42_6873092808d9">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_06c75a44_9ddc_407d_a7c7_43b5f68471c8"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(firearm|small ?arm|infantry|person(?:al|nel)|individual|soldier|troop|manpad)|</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">SmallArm</rdfs:label>
     </owl:Class>
     
@@ -927,6 +990,16 @@
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_749ad6f9_c631_4183_b36c_5d8a78d22df1">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6b74aaef_8420_45a1_9616_7ff6809a3e38"/>
         <rdfs:label xml:lang="en">fast-attack</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_7c577927_f21a_4ad8_94a1_5e89102754f7 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_7c577927_f21a_4ad8_94a1_5e89102754f7">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_748ddeed_348a_4a54_9a42_6873092808d9"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>REGEX:(rifle|car(?:a)?bine)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
+        <rdfs:label xml:lang="en">Rifle</rdfs:label>
     </owl:Class>
     
 
@@ -944,6 +1017,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_7e4f460b_4b24_44e7_ad82_e1076e4f751d">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_748ddeed_348a_4a54_9a42_6873092808d9"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(handgun|pistol|sidearm)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Pistol</rdfs:label>
     </owl:Class>
     
@@ -962,6 +1036,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_833dc582_780a_4541_b3e0_91ca149515bc">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9ec4e24b_f6e6_4b3d_a34c_e6373dc21d4f"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(destroyer)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Destroyer</rdfs:label>
     </owl:Class>
     
@@ -971,6 +1046,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_838f05c8_3dbd_4b9b_b8ea_8f94d86fb5ac">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_f387249f_383a_41b9_94b2_264f01ae97c0"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(gun)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Gun</rdfs:label>
     </owl:Class>
     
@@ -989,6 +1065,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_8a01cf14_4418_476b_bc33_90f545ffb781">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_06c75a44_9ddc_407d_a7c7_43b5f68471c8"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(vehicle|truck|\bcar(s)?\b|motor|buses|vans|wheel|trac[k|t]|trailer|material)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Vehicle</rdfs:label>
     </owl:Class>
     
@@ -998,6 +1075,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_8a21de68_e2f8_4606_aa11_250ddeca39bd">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_abbd4d36_1205_4a12_a30f_9efed07d7417"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(torpedo)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">torpedo</rdfs:label>
     </owl:Class>
     
@@ -1025,6 +1103,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_94068c70_bac4_449f_8216_198f899098c4">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6011772e_ff3d_4cc3_a60e_86c5225f839b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(auxiliary vessel)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">AuxiliaryVessel</rdfs:label>
     </owl:Class>
     
@@ -1034,6 +1113,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_94b78571_1988_4a24_b01b_88540bea61a9">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_f387249f_383a_41b9_94b2_264f01ae97c0"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(radar|sensor|radiat|vision|optic)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">sensor</rdfs:label>
     </owl:Class>
     
@@ -1052,6 +1132,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_978b6cf9_0b78_4cf9_9df1_1a8e9da30ec8">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9801704c_6b49_44fc_972c_1fb8c2a0daf5"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(defen[cs]e|anti|hazmat|disposal|eod)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">target</rdfs:label>
     </owl:Class>
     
@@ -1070,6 +1151,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9865fc28_0dd2_4d9b_9adf_d47dd8159b51">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_70e5f25a_a5e2_4955_9743_c45727d792d6"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(super carrier)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">SuperCarrier</rdfs:label>
     </owl:Class>
     
@@ -1079,6 +1161,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9a9f19ac_a71e_482e_8a27_6a6855f83cda">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9ec4e24b_f6e6_4b3d_a34c_e6373dc21d4f"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(cruiser)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Cruiser</rdfs:label>
     </owl:Class>
     
@@ -1097,6 +1180,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9e711f89_86f3_4054_a8f7_0e1983cb75d2">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9ec4e24b_f6e6_4b3d_a34c_e6373dc21d4f"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(corvette)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Corvette</rdfs:label>
     </owl:Class>
     
@@ -1106,6 +1190,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9ec4e24b_f6e6_4b3d_a34c_e6373dc21d4f">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6011772e_ff3d_4cc3_a60e_86c5225f839b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(warship)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Warship</rdfs:label>
     </owl:Class>
     
@@ -1115,6 +1200,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9faa3fc7_6e58_472a_8878_a38e8d3517a7">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_748ddeed_348a_4a54_9a42_6873092808d9"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(grenade( |)launcher)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">GrenadeLauncher</rdfs:label>
     </owl:Class>
     
@@ -1124,6 +1210,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9fed55b9_1956_4cad_977e_eafb0430b1bb">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_f387249f_383a_41b9_94b2_264f01ae97c0"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(ammunition)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Ammunition</rdfs:label>
     </owl:Class>
     
@@ -1142,6 +1229,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_abbd4d36_1205_4a12_a30f_9efed07d7417">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_f387249f_383a_41b9_94b2_264f01ae97c0"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(grenade(?&lt;! launch)|bomb|charge|explo|eod)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">explosive</rdfs:label>
     </owl:Class>
     
@@ -1151,6 +1239,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_ae3e9463_e0d0_42fa_a96e_fc672c46cbab">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_2f9d2aea_a812_4012_a402_153f08f9444b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(electr|countermeasur|pod)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">EW</rdfs:label>
     </owl:Class>
     
@@ -1159,7 +1248,7 @@
     <!-- http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_ae6cf51b_e16c_4ca5_b724_2de721024994 -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_ae6cf51b_e16c_4ca5_b724_2de721024994">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_8a01cf14_4418_476b_bc33_90f545ffb781"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_5881a371_32f2_48df_813e_9a83ac892b64"/>
         <rdfs:label xml:lang="en">PersonnelCarrier</rdfs:label>
     </owl:Class>
     
@@ -1187,6 +1276,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_b6dda57f_f7ea_4a92_89f7_289cded6f89d">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_abbd4d36_1205_4a12_a30f_9efed07d7417"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(rocket|manpad)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Rocket</rdfs:label>
     </owl:Class>
     
@@ -1196,16 +1286,8 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_b6ed8618_6d16_4ee8_b491_d25aef6d30a5">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_abbd4d36_1205_4a12_a30f_9efed07d7417"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(missile)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Missile</rdfs:label>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_ba24080a_1746_42e8_bbda_d49e0620786f -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_ba24080a_1746_42e8_bbda_d49e0620786f">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_748ddeed_348a_4a54_9a42_6873092808d9"/>
-        <rdfs:label xml:lang="en">Rifle</rdfs:label>
     </owl:Class>
     
 
@@ -1215,6 +1297,16 @@
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_c18a53a9_a330_4f9d_a589_3b59870e2cdb">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6b74aaef_8420_45a1_9616_7ff6809a3e38"/>
         <rdfs:label xml:lang="en">MineWarfare</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_c8e30f1d_12a9_475f_90f2_982a96a2da96 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_c8e30f1d_12a9_475f_90f2_982a96a2da96">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_748ddeed_348a_4a54_9a42_6873092808d9"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(manpad)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
+        <rdfs:label xml:lang="en">ManPADS</rdfs:label>
     </owl:Class>
     
 
@@ -1232,6 +1324,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_cb930105_0d5c_45e0_a8f2_8aa194d9e6ad">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_19eb1186_ec3d_46ec_904b_b664ff50c90d"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(drone|uav|unman|robot)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Unmanned</rdfs:label>
     </owl:Class>
     
@@ -1259,6 +1352,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_cfe6aa2b_fae8_4436_8592_aa6bedacf20b">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_19eb1186_ec3d_46ec_904b_b664ff50c90d"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>fixed</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">FixedWing</rdfs:label>
     </owl:Class>
     
@@ -1268,6 +1362,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_d15792d9_aa00_4bb2_b328_3adac801c6a6">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_3575981b_4d02_4bea_8dcb_0ab82ec559c5"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(landing|hovercraft)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">landing</rdfs:label>
     </owl:Class>
     
@@ -1313,6 +1408,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_d9ac1b04_cf7f_4fbb_8a69_efcfb97fd38c">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_abbd4d36_1205_4a12_a30f_9efed07d7417"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(mine)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">mine</rdfs:label>
     </owl:Class>
     
@@ -1322,6 +1418,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_dd2eb139_dae9_4a46_9d49_1c52ad5c2e2d">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_6011772e_ff3d_4cc3_a60e_86c5225f839b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(sub(?:marine|mersible))</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Submarine</rdfs:label>
     </owl:Class>
     
@@ -1331,6 +1428,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_e29bd70b_40f9_454c_9dea_c01ee4c1048c">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9801704c_6b49_44fc_972c_1fb8c2a0daf5"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(auxiliar|logistic|suppl(y|ies)|support|tug(?:boat)?s|repair|engineer|bridging|tool|utility|dredger|machine|pontoon|cable layer|bridgeing|tug(?:boat)?s)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">support</rdfs:label>
     </owl:Class>
     
@@ -1340,6 +1438,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_e3806ce5_0ae1_4219_8ae8_dfec93c67517">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9ec4e24b_f6e6_4b3d_a34c_e6373dc21d4f"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(battleship)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">Battleship</rdfs:label>
     </owl:Class>
     
@@ -1358,6 +1457,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_e5852ed0_60c1_48f4_bca2_638286268d72">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_e29bd70b_40f9_454c_9dea_c01ee4c1048c"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(medic|ambulance|emergency)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">emergency</rdfs:label>
     </owl:Class>
     
@@ -1367,6 +1467,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_edb1cc93_5fef_4087_9ec1_f9a2b9cc6aa7">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_978b6cf9_0b78_4cf9_9df1_1a8e9da30ec8"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(anti-submarine)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">anti-submarine</rdfs:label>
     </owl:Class>
     
@@ -1376,6 +1477,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_f387249f_383a_41b9_94b2_264f01ae97c0">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_06c75a44_9ddc_407d_a7c7_43b5f68471c8"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(weapon|munition|armament|ordnance|arms|equip|system)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">System</rdfs:label>
     </owl:Class>
     
@@ -1402,6 +1504,7 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_fd93e435_9e32_4e23_9307_1de3070a2848">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_2f9d2aea_a812_4012_a402_153f08f9444b"/>
+        <untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>(recon|patrol)</untitled-ontology-25:OWLAnnotationProperty_ffc7ead9_0a40_4c6a_9671_d089282131ac>
         <rdfs:label xml:lang="en">patrol</rdfs:label>
     </owl:Class>
     
@@ -1424,19 +1527,6 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_132bc790_0019_4166_8649_8033ed9d7dd5"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_225a575f_4179_4fda_b370_72c689b3293f"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_2ebdbb83_3aa2_4c86_85a8_2ffc4dfa6b26"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_62553a43_3fd5_4fc2_bc37_ee8ff9900ded"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_65570418_ff3a_44de_afe1_57a4211cdcea"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_68e392a8_69e0_4137_8d12_3c2427f21e6c"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_69ede238_682a_4d29_a150_5565c4a8352e"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_ae6cf51b_e16c_4ca5_b724_2de721024994"/>
-        </owl:members>
-    </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <owl:members rdf:parseType="Collection">
@@ -1471,15 +1561,6 @@
             <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_31828dad_e690_4176_89ff_019b508d9fe8"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9801704c_6b49_44fc_972c_1fb8c2a0daf5"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_d5899855_bba5_48ca_b626_8fa6b2e1d621"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_4a23ed67_f27d_4ddd_894b_87f764a68928"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_7e4f460b_4b24_44e7_ad82_e1076e4f751d"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_9faa3fc7_6e58_472a_8878_a38e8d3517a7"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mckay/ontologies/2026/6/untitled-ontology-25#OWLClass_ba24080a_1746_42e8_bbda_d49e0620786f"/>
         </owl:members>
     </rdf:Description>
     <rdf:Description>

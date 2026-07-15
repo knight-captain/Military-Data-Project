@@ -1,5 +1,5 @@
 import pandas as pd
-from utils.get_country_for_table import get_country_for_table
+from utils.execute_SQL import get_country_for_table
 from utils.normalization import normalize_text, strip_country_prefix
 
 def table_exists(conn, table_name):
