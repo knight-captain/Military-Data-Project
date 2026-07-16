@@ -196,8 +196,9 @@ def derive_hierarchy(conn, clusters, table_categories_w_h234):
     new_nodes = promote_unreachable_nodes(pruned_roots, nodes) #accepts list, dict of dicts, updates nodes
     roots = link_nodes(new_nodes) #don't really need to rebuild the tree, as we don't use it after this unless it's to print, but it's fun
 
-    print_tree(roots, indent="")
+
     print("FROM hierarchy")
+    # print_tree(roots, indent="")
     print(f"nodes: {len(nodes)}")
     # print(f"raw_roots/roots: {len(raw_roots)}/{len(roots)}")
 

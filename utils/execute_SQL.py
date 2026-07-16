@@ -19,6 +19,26 @@ def get_a_meta_table(conn):
 
     return a_meta_table
 
+def get_a_meta_table_of_columns(conn):
+    cursor = conn.cursor()
+    sql = "SELECT * FROM a_meta_table_of_columns"
+    rows = cursor.execute(sql).fetchall()
+
+    # Get column names from cursor description
+    colnames = [desc[0] for desc in cursor.description]
+
+    # First column is table_name, rest are raw column names
+    a_meta_table_of_columns = {}
+
+    for row in rows:
+        table_name = row[0]
+        raw_cols = [col for col in row[1:] if col not in (None, "", "null")]
+
+        a_meta_table_of_columns[table_name] = {
+            "raw_cols": raw_cols
+        }
+
+    return a_meta_table_of_columns
 
 def get_country_for_table(conn, table_name):
     cursor = conn.cursor()

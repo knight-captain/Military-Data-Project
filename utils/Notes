@@ -1,3 +1,5 @@
+shipclass tables that are split: one of the tables is the class stats, the other is a list of instances in that class. need to be joined
+
 NEXT PHASE GOAL: 
 - the above should make creating country equipment lists trivial
 - this should also make de-duplicating a master list trivial
@@ -5,14 +7,11 @@ NEXT PHASE GOAL:
 ARCHITECTURAL ISSUES:
 categorize_tables.py & table_regex_rules.csv are missing some things: 
 - titles with "air" are not getting categorized in that domain
-- silhouettes shouldn't make it this far, but should get ignored if they do
 
 - also sweet spot for eliminating contents, external links, etc. without killing tiny equipment tables.
 - delete *just* joined tables
 
-- silhouettes tables can be ignored
 - 0,11 kg tnt from slovakia_table_02_infantry_weapons_explosives not in column_mapping.csv (no actual header)
-- delete rows that are just repeat headers
 
 
 missed merged/repeat (or header) rows:
@@ -25,6 +24,7 @@ Check for number-like parts in the sec:
 - "Mine warfare (1+5)" should put the "(1+5)" in the QTY col
 
 - Shotguns IN brunei_table_03_firearms (a line of repeated "shotguns" with "Machine guns" as the sec)
+- delete rows that are just repeat headers
 - raw_cols in india_table_01_submarine_fleet
 india_table_03_surface_fleet_amphibious_warfare_ships
 india_table_10_auxiliary_fleet_research_and_survey_vessels
@@ -90,3 +90,4 @@ Fixed edge cases:
 - max() arg is an empty sequence
 
 - finding the sweet spot (or philosopher's stone) for the scraper to pick the correct header. <- looking pretty good 
+- silhouettes tables can be ignored

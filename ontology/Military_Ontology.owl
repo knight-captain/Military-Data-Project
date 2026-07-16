@@ -1,0 +1,1718 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://military.org/ontology#"
+     xml:base="http://military.org/ontology"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://military.org/ontology"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://military.org/ontology#OWLAnnotationProperty_3d5950e2_a7db_4714_a57c_81ec665e0ddd -->
+
+    <owl:AnnotationProperty rdf:about="http://military.org/ontology#OWLAnnotationProperty_3d5950e2_a7db_4714_a57c_81ec665e0ddd">
+        <rdfs:label xml:lang="en">expected_columns</rdfs:label>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- http://military.org/ontology#hasRegex -->
+
+    <owl:AnnotationProperty rdf:about="http://military.org/ontology#hasRegex"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://military.org/ontology#HasArmament -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#HasArmament">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#HasRelationship"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Armament"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#System"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasCapability -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#HasCapability">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#HasMission"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#Capability"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasCarrier -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#HasCarrier">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#HasRelationship"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Armament"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasMission -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#HasMission">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#EquipMission"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasOrigin -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#HasOrigin">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#Country"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasPropulsion -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#HasPropulsion">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#HasMission"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#Propulsion"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasRelationship -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#HasRelationship">
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasRole -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#HasRole">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#HasMission"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#Role"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://military.org/ontology#InventoryEquipment -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#InventoryEquipment">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Inventory_Relationship"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Inventory"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://military.org/ontology#Inventory_Relationship -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#Inventory_Relationship"/>
+    
+
+
+    <!-- http://military.org/ontology#OwnerCountry -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#OwnerCountry">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Inventory_Relationship"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Inventory"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#Country"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://military.org/ontology#CoreID -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#CoreID">
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#Dimensions -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#Dimensions">
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasCaliber -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasCaliber">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#HasWidth"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasCost -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasCost">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#OriginData"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasDate -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasDate">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#OriginData"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasDisplacement -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasDisplacement">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#HasWeight"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasLength -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasLength">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Dimensions"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasNote -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasNote"/>
+    
+
+
+    <!-- http://military.org/ontology#HasOtherNames -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasOtherNames">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#CoreID"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasQuantity -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasQuantity">
+        <rdfs:domain rdf:resource="http://military.org/ontology#Inventory"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasRange -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasRange">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Dimensions"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasSpeed -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasSpeed">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Dimensions"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasStatus -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasStatus">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#OriginData"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasWeight -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasWeight">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Dimensions"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasWidth -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasWidth">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Dimensions"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#IsType -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#IsType">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#CoreID"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#IsVariant -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#IsVariant">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#IsType"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://military.org/ontology#OriginData -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#OriginData"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://military.org/ontology#Accessory -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Accessory">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCarrier"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#SmallArm"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(accessor|attachment|magazine|personnalisation|sights|lights)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Air_to_air -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Air_to_air">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#DomainTransition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Air_to_surface -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Air_to_surface">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#DomainTransition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Aircraft -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Aircraft">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasPropulsion"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Flight"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(aircraft|aviation|aeropla|pilot|wing)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#AircraftCarrier -->
+
+    <owl:Class rdf:about="http://military.org/ontology#AircraftCarrier">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vessel"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasRole"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Aircraft_carrier"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasRole"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Helecopter_carrier"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(aircraft carrier)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Aircraft_carrier -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Aircraft_carrier">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Carrier"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#FixedWing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#RotorWing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#TiltWing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Ammunition -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Ammunition">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#System"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCarrier"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Gun"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(ammunition)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Amphibious -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Amphibious">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#DomainTransition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#AmphibiousVessel -->
+
+    <owl:Class rdf:about="http://military.org/ontology#AmphibiousVessel">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#AircraftCarrier"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Amphibious"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(amphib|ferries)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Animal -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Animal">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Being"/>
+        <hasRegex>REGEX:(animal)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Anti_aircraft -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Anti_aircraft">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Target"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_air"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Surface_to_air"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(manpad|shorad)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Anti_armor -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Anti_armor">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Anti_vehicle"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Armor_piercing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(anti-armor)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Anti_ship -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Anti_ship">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Target"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_surface"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Surface_to_surface"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(anti-ship)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Anti_submarine -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Anti_submarine">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Target"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_surface"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Surface_to_surface"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(anti-submarine)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Anti_tank -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Anti_tank">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Anti_armor"/>
+        <hasRegex>REGEX:(anti-tank)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Anti_vehicle -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Anti_vehicle">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Target"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_surface"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Surface_to_surface"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(anti-vehicle)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Armament -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Armament">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#QTY"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Equipment"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCarrier"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Equipment"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Armor_piercing -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Armor_piercing">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Capability"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#ArmoredVehicle -->
+
+    <owl:Class rdf:about="http://military.org/ontology#ArmoredVehicle">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vehicle"/>
+        <hasRegex>REGEX:(armor|armour|protect)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Artillery -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Artillery">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vehicle"/>
+        <hasRegex>REGEX:(artillery|indirect|mortar|howitzer)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Attack -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Attack">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Combat"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_surface"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#AuxiliaryVessel -->
+
+    <owl:Class rdf:about="http://military.org/ontology#AuxiliaryVessel">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vessel"/>
+        <hasRegex>REGEX:(auxiliary vessel)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Ballistic -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Ballistic">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Flight"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Battleship -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Battleship">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Warship"/>
+        <hasRegex>REGEX:(battleship)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Being -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Being">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasOrigin"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Country"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Blade -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Blade">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
+        <hasRegex>REGEX:(bayonet|knife|knives|blade)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Boat -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Boat">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vessel"/>
+        <hasRegex>REGEX:(boat)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Bomber -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Bomber">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Combat"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_surface"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Capability -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Capability">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#EquipMission"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Cargo -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Cargo">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Carrier"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Carrier -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Carrier">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Carrier_bourne -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Carrier_bourne">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#DomainTransition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Civilian -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Civilian">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Being"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Combat -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Combat">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Role"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#System"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Communication -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Communication">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#InformationManagement"/>
+        <hasRegex>REGEX:(communicat|command |signal)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Conventional -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Conventional">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Powerplant"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Corvette -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Corvette">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Warship"/>
+        <hasRegex>REGEX:(corvette)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Country -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Country">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Cruise -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Cruise">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Flight"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Cruiser -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Cruiser">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Warship"/>
+        <hasRegex>REGEX:(cruiser)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Destroyer -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Destroyer">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Warship"/>
+        <hasRegex>REGEX:(destroyer)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Dock -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Dock">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Amphibious"/>
+        <hasRegex>REGEX:(dock)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#DomainTransition -->
+
+    <owl:Class rdf:about="http://military.org/ontology#DomainTransition">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Capability"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#EW -->
+
+    <owl:Class rdf:about="http://military.org/ontology#EW">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#InformationManagement"/>
+        <hasRegex>REGEX:(electr|countermeasur|pod)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Emergency -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Emergency">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Support"/>
+        <hasRegex>REGEX:(medic|ambulance|emergency)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#EquipMission -->
+
+    <owl:Class rdf:about="http://military.org/ontology#EquipMission">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Equipment -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Equipment">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Capability"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasMission"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#EquipMission"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasOrigin"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Country"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasRole"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Role"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(equipment)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Explosive -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Explosive">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#System"/>
+        <hasRegex>REGEX:(grenade(?&lt;! launch)|bomb|charge|explo|eod)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Fast_attack -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Fast_attack">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Combat"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Fighter -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Fighter">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Combat"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Gun"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Missile"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_air"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Fighting -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Fighting">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Combat"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#FixedWing -->
+
+    <owl:Class rdf:about="http://military.org/ontology#FixedWing">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Aircraft"/>
+        <hasRegex>REGEX:fixed</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Flight -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Flight">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Propulsion"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Frigate -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Frigate">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Warship"/>
+        <hasRegex>REGEX:(frigate)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Glide -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Glide">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Flight"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Glider -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Glider">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Aircraft"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasPropulsion"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Glide"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(glider|balloon)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#GrenadeLauncher -->
+
+    <owl:Class rdf:about="http://military.org/ontology#GrenadeLauncher">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Explosive"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(grenade( |)launcher)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#GroundMovement -->
+
+    <owl:Class rdf:about="http://military.org/ontology#GroundMovement">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Propulsion"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Gun -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Gun">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#System"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Ammunition"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(gun)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Helecopter_carrier -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Helecopter_carrier">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Carrier"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#RotorWing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#TiltWing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Icebreaker -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Icebreaker">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Support"/>
+        <hasRegex>REGEX:(icebreaker)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Incendiary -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Incendiary">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Capability"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#InfantryFightingVehicle -->
+
+    <owl:Class rdf:about="http://military.org/ontology#InfantryFightingVehicle">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#ArmoredVehicle"/>
+        <hasRegex>REGEX:(infantryfightingvehicle)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#InformationManagement -->
+
+    <owl:Class rdf:about="http://military.org/ontology#InformationManagement">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Intelligence -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Intelligence">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#InformationManagement"/>
+        <hasRegex>REGEX:(surveillance|observation|intelli)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Inventory -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Inventory">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#QTY"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#InventoryEquipment"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Equipment"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#OwnerCountry"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Country"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Jet -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Jet">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Flight"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Landing -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Landing">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Amphibious"/>
+        <hasRegex>REGEX:(landing|hovercraft)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#MachineGun -->
+
+    <owl:Class rdf:about="http://military.org/ontology#MachineGun">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
+        <hasRegex>REGEX:(machine ?gun)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#ManPADS -->
+
+    <owl:Class rdf:about="http://military.org/ontology#ManPADS">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Missile"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(manpad)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Mine -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Mine">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Explosive"/>
+        <hasRegex>REGEX:(mine)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#MineWarfare -->
+
+    <owl:Class rdf:about="http://military.org/ontology#MineWarfare">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Combat"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Mine"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Missile -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Missile">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Explosive"/>
+        <hasRegex>REGEX:(missile)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Multi_role -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Multi_role">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Role"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#System"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_air"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCapability"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_surface"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Nuclear -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Nuclear">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Powerplant"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#OWLClass_0acafdb8_0fda_4f86_8a16_7f47fbe91b10 -->
+
+    <owl:Class rdf:about="http://military.org/ontology#OWLClass_0acafdb8_0fda_4f86_8a16_7f47fbe91b10">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Artillery"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasPropulsion"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Self_propelled"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="http://military.org/ontology#OWLClass_12b345cf_fdf4_4e4f_a8c6_c032b9630574"/>
+        <rdfs:label xml:lang="en">SelfPropelled</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#OWLClass_12b345cf_fdf4_4e4f_a8c6_c032b9630574 -->
+
+    <owl:Class rdf:about="http://military.org/ontology#OWLClass_12b345cf_fdf4_4e4f_a8c6_c032b9630574">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Artillery"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasPropulsion"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Towed"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label xml:lang="en">Towed</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Patrol -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Patrol">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#InformationManagement"/>
+        <hasRegex>REGEX:(recon|patrol)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Personnel -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Personnel">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Being"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Personnel_carrier -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Personnel_carrier">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Carrier"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Personnel"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Pistol -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Pistol">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
+        <hasRegex>REGEX:(handgun|pistol|sidearm)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Powerplant -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Powerplant">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Propulsion"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Propeller -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Propeller">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Flight"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Propulsion -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Propulsion">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#EquipMission"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#QTY -->
+
+    <owl:Class rdf:about="http://military.org/ontology#QTY">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Replenishment_refueling -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Replenishment_refueling">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Support"/>
+        <hasRegex>REGEX:(logistic|suppl(y|ies))</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Rifle -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Rifle">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
+        <hasRegex>REGEX:REGEX:(rifle|car(?:a)?bine)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Rocket -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Rocket">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Explosive"/>
+        <hasRegex>REGEX:(rocket|manpad)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Role -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Role">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#EquipMission"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#RotorWing -->
+
+    <owl:Class rdf:about="http://military.org/ontology#RotorWing">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Aircraft"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasPropulsion"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Propeller"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(helicopt)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Self_propelled -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Self_propelled">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#GroundMovement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Sensor -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Sensor">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#System"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasRole"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#InformationManagement"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(radar|sensor|radiat|vision|optic)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Shotgun -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Shotgun">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
+        <hasRegex>REGEX:(shotgun)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#SmallArm -->
+
+    <owl:Class rdf:about="http://military.org/ontology#SmallArm">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Ammunition"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCarrier"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Personnel"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(firearm|small ?arm|individual|soldier|troop)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Submarine -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Submarine">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vessel"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Torpedo"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasMission"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Powerplant"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(sub(?:marine|mersible))</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#SuperCarrier -->
+
+    <owl:Class rdf:about="http://military.org/ontology#SuperCarrier">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#AircraftCarrier"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasRole"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Super_carrier"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(super carrier)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Super_carrier -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Super_carrier">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Carrier"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#FixedWing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#RotorWing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#TiltWing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Support -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Support">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Role"/>
+        <hasRegex>REGEX:(auxiliar|support|tug(?:boat)?s|repair|engineer|bridging|tool|dredger|machine|pontoon|cable layer|bridgeing|tug(?:boat)?s)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Surface_to_air -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Surface_to_air">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#DomainTransition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Surface_to_surface -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Surface_to_surface">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#DomainTransition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#System -->
+
+    <owl:Class rdf:about="http://military.org/ontology#System">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasCarrier"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Equipment"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(weapon|munition|armament|ordnance|arms|equip|system)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Tank -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Tank">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#ArmoredVehicle"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasPropulsion"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Tracked"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(tank|cavalry)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Target -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Target">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Role"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#System"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(defen[cs]e|anti|hazmat|disposal|eod)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#TiltWing -->
+
+    <owl:Class rdf:about="http://military.org/ontology#TiltWing">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Aircraft"/>
+        <hasRegex>REGEX:(tiltwing)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Torpedo -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Torpedo">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Explosive"/>
+        <hasRegex>REGEX:(torpedo)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Towed -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Towed">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#GroundMovement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Tracked -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Tracked">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#GroundMovement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Training -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Training">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Support"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Truck -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Truck">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#UnarmoredVehicle"/>
+        <hasRegex>REGEX:(truck)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#UnarmoredVehicle -->
+
+    <owl:Class rdf:about="http://military.org/ontology#UnarmoredVehicle">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vehicle"/>
+        <hasRegex>REGEX:unarmoredvehicle</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Unmanned -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Unmanned">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Aircraft"/>
+        <hasRegex>REGEX:(drone|uav|unman|robot)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#UnmannedSurfaceVessel -->
+
+    <owl:Class rdf:about="http://military.org/ontology#UnmannedSurfaceVessel">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vessel"/>
+        <hasRegex>REGEX:(unmanned surface)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#UnmannedUnderwaterVessel -->
+
+    <owl:Class rdf:about="http://military.org/ontology#UnmannedUnderwaterVessel">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vessel"/>
+        <hasRegex>REGEX:(unmanned underwater)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Utility -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Utility">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Support"/>
+        <hasRegex>REGEX:(utility)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#UtilityVehicle -->
+
+    <owl:Class rdf:about="http://military.org/ontology#UtilityVehicle">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vehicle"/>
+        <hasRegex>REGEX:(utilityvehicle)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Vehicle -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Vehicle">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasPropulsion"/>
+                <owl:someValuesFrom rdf:resource="http://military.org/ontology#GroundMovement"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(vehicle|truck|\bcar(s)?\b|motor|buses|vans|wheel|trac[k|t]|trailer|material)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Vessel -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Vessel">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Equipment"/>
+        <hasRegex>REGEX:(ship|vessel|(?&lt;!air)craft|fleet|tender|cutter|fleet|class|surface)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Warship -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Warship">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Vessel"/>
+        <hasRegex>REGEX:(warship)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Wheeled -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Wheeled">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#GroundMovement"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+

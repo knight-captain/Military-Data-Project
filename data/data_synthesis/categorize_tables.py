@@ -168,12 +168,12 @@ def categorize_all_tables(conn):
 
     print(f"Categorized {len(table_categories)} tables")
 
-    #now group tables by the <h2/3/4> as well as the regexed categories from those <h2/3/4>
-    clusters, fingerprints = cluster_tables(conn, table_categories_w_h234)
-    nodes = derive_hierarchy(conn, clusters, table_categories_w_h234)
-    smart_table_categories = calculate_confidence(fingerprints, nodes)
+    # #now group tables by the <h2/3/4> as well as the regexed categories from those <h2/3/4>
+    # clusters, fingerprints = cluster_tables(conn, table_categories_w_h234)
+    # nodes = derive_hierarchy(conn, clusters, table_categories_w_h234)
+    # smart_table_categories = calculate_confidence(fingerprints, nodes)
 
-    print("FROM CAT_TABLES")
-    # report_cluster_stats(clusters, nodes) #for fine-tuning
-    print(f"Categorized {len(smart_table_categories)} smart_tables")
+    # print("FROM CAT_TABLES")
+    # # report_cluster_stats(clusters, nodes) #for fine-tuning
+    # print(f"Categorized {len(smart_table_categories)} smart_tables")
     return table_categories
