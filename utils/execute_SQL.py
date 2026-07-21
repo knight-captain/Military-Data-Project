@@ -1,3 +1,5 @@
+# import re
+
 def get_a_meta_table(conn):
     cursor = conn.cursor()
     sql = """
@@ -45,3 +47,61 @@ def get_country_for_table(conn, table_name):
     cursor.execute("SELECT country FROM a_meta_table WHERE table_name = ?", (table_name,))
     row = cursor.fetchone()
     return row[0].lower() if row else None
+
+def build_mapping_table(conn, table_classes, contextual_mapping, super_cols_list):
+    cursor = conn.cursor()
+
+    cursor.execute("DROP TABLE IF EXISTS a_mapping_table")
+
+    # Build dynamic CREATE TABLE with one column per super_col
+    cols_sql = ",\n".join([f'"{col}" TEXT' for col in super_cols_list])
+
+    cursor.execute(f"""
+        CREATE TABLE a_mapping_table (
+            table_name TEXT,
+            equipment_class TEXT,
+            other_classes TEXT,
+            confidence REAL,
+            {cols_sql}
+        )
+    """)
+
+    # Iterate over all tables in table_classes
+    for table_name, class_info in table_classes.items():
+
+        # Skip meta tables
+        if table_name.startswith("a_"):
+            continue
+
+        # Extract classification info
+        equipment_class = class_info.get("equipment_class")
+        other_classes = ", ".join(class_info.get("other_classes", []))
+        confidence = class_info.get("confidence")
+
+        # Extract contextual mapping for this table
+        mapping_for_table = contextual_mapping.get(table_name, {})
+
+        # Convert lists to comma-separated strings
+        row_values = []
+        for col in super_cols_list:
+            values = mapping_for_table.get(col, [])
+            if not values:
+                row_values.append(None)
+            else:
+                # Filter out None and convert everything to string
+                clean_values = [str(v) for v in values if v is not None]
+                row_values.append(", ".join(clean_values) if clean_values else None)
+
+
+        cursor.execute(
+            f"""
+            INSERT INTO a_mapping_table
+            (table_name, equipment_class, other_classes, confidence,
+             {", ".join([f'"{c}"' for c in super_cols_list])})
+            VALUES (?, ?, ?, ?, {", ".join(["?"] * len(super_cols_list))})
+            """,
+            [table_name, equipment_class, other_classes, confidence] + row_values
+        )
+
+    conn.commit()
+    print("Created wide-format a_mapping_table")

@@ -21,17 +21,15 @@
     
 
 
-    <!-- http://military.org/ontology#OWLAnnotationProperty_3d5950e2_a7db_4714_a57c_81ec665e0ddd -->
-
-    <owl:AnnotationProperty rdf:about="http://military.org/ontology#OWLAnnotationProperty_3d5950e2_a7db_4714_a57c_81ec665e0ddd">
-        <rdfs:label xml:lang="en">expected_columns</rdfs:label>
-    </owl:AnnotationProperty>
-    
-
-
     <!-- http://military.org/ontology#hasRegex -->
 
     <owl:AnnotationProperty rdf:about="http://military.org/ontology#hasRegex"/>
+    
+
+
+    <!-- http://military.org/ontology#super_col -->
+
+    <owl:AnnotationProperty rdf:about="http://military.org/ontology#super_col"/>
     
 
 
@@ -54,6 +52,8 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Armament"/>
         <rdfs:range rdf:resource="http://military.org/ontology#System"/>
+        <hasRegex>REGEX:(armament|^munition|nuclear capable|payload|warhead|capacity)</hasRegex>
+        <super_col>armament</super_col>
     </owl:ObjectProperty>
     
 
@@ -66,6 +66,8 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
         <rdfs:range rdf:resource="http://military.org/ontology#Capability"/>
+        <hasRegex>REGEX:(mission|tasks)</hasRegex>
+        <super_col>capability</super_col>
     </owl:ObjectProperty>
     
 
@@ -78,6 +80,8 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Armament"/>
         <rdfs:range rdf:resource="http://military.org/ontology#Equipment"/>
+        <hasRegex>REGEX:(platform|launch|mounted on|used (by|with))</hasRegex>
+        <super_col>carrier</super_col>
     </owl:ObjectProperty>
     
 
@@ -100,6 +104,8 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
         <rdfs:range rdf:resource="http://military.org/ontology#Country"/>
+        <hasRegex>REGEX:(origin|builder|contractor|manufacturer|west germany|produced)</hasRegex>
+        <super_col>origin</super_col>
     </owl:ObjectProperty>
     
 
@@ -112,6 +118,8 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
         <rdfs:range rdf:resource="http://military.org/ontology#Propulsion"/>
+        <hasRegex>REGEX:(propulsion)</hasRegex>
+        <super_col>propulsion</super_col>
     </owl:ObjectProperty>
     
 
@@ -133,6 +141,21 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
         <rdfs:range rdf:resource="http://military.org/ontology#Role"/>
+        <hasRegex>REGEX:(role)</hasRegex>
+        <super_col>role</super_col>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://military.org/ontology#HasStatus -->
+
+    <owl:ObjectProperty rdf:about="http://military.org/ontology#HasStatus">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#HasOrigin"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ReflexiveProperty"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://military.org/ontology#Status"/>
+        <super_col>status</super_col>
     </owl:ObjectProperty>
     
 
@@ -176,9 +199,7 @@
 
     <!-- http://military.org/ontology#CoreID -->
 
-    <owl:DatatypeProperty rdf:about="http://military.org/ontology#CoreID">
-        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
-    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#CoreID"/>
     
 
 
@@ -186,6 +207,8 @@
 
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#Dimensions">
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <hasRegex>(spec(ifications|s)|size)</hasRegex>
+        <super_col>dimensions</super_col>
     </owl:DatatypeProperty>
     
 
@@ -194,6 +217,15 @@
 
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasCaliber">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#HasWidth"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Ammunition"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Gun"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#MachineGun"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Pistol"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Rifle"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Shotgun"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>REGEX:(calib(er|re)|car(liber|tridge)|45mm|ammunition|^charge$|detonation|diameter|explosives)</hasRegex>
+        <super_col>caliber</super_col>
     </owl:DatatypeProperty>
     
 
@@ -203,6 +235,9 @@
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasCost">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#OriginData"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>REGEX:(cost)</hasRegex>
+        <super_col>cost</super_col>
     </owl:DatatypeProperty>
     
 
@@ -212,6 +247,9 @@
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasDate">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#OriginData"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>REGEX:(date|adopted|comm(\.|$|ission)|deployment|since|introduc(ed|tion)|laid down|launched|year|deliver(ed|y)|entered service)</hasRegex>
+        <super_col>dates</super_col>
     </owl:DatatypeProperty>
     
 
@@ -220,6 +258,10 @@
 
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasDisplacement">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#HasWeight"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Vessel"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>REGEX:(d(is|e)placement|disp(\.|$)|dp|tonn(age|erre))</hasRegex>
+        <super_col>displacement</super_col>
     </owl:DatatypeProperty>
     
 
@@ -228,13 +270,22 @@
 
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasLength">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Dimensions"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>(length)</hasRegex>
+        <super_col>length</super_col>
     </owl:DatatypeProperty>
     
 
 
     <!-- http://military.org/ontology#HasNote -->
 
-    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasNote"/>
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasNote">
+        <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>REGEX:(note|attire|color|pattern|camouflage|colour|comment|description|detail|environment|example|extended content|guidance|info|mmsi|other features|protection|protection level|ref|ref\.|reference|refs|waffenfarbe)</hasRegex>
+        <super_col>note</super_col>
+    </owl:DatatypeProperty>
     
 
 
@@ -243,6 +294,9 @@
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasOtherNames">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#CoreID"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>REGEX:(designat(ion|or)|badge|des\.|emblem|nato (code|designation)|pennant|meaning|english|namesake|serial|(hull|imo|side) number|prefix)</hasRegex>
+        <super_col>other_names</super_col>
     </owl:DatatypeProperty>
     
 
@@ -251,6 +305,9 @@
 
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasQuantity">
         <rdfs:domain rdf:resource="http://military.org/ontology#Inventory"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+        <hasRegex>REGEX:(qty|quantity|#|in service|accepted|active|in reserve|inventory|no\. (operated|used)|number(s| of| used)|total|operational|acquired)</hasRegex>
+        <super_col>quantity</super_col>
     </owl:DatatypeProperty>
     
 
@@ -259,6 +316,10 @@
 
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasRange">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Dimensions"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>REGEX:(range|altitude)</hasRegex>
+        <super_col>range</super_col>
     </owl:DatatypeProperty>
     
 
@@ -267,15 +328,12 @@
 
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasSpeed">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Dimensions"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://military.org/ontology#HasStatus -->
-
-    <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasStatus">
-        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#OriginData"/>
-        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Aircraft"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Vehicle"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Vessel"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>(speed)</hasRegex>
+        <super_col>speed</super_col>
     </owl:DatatypeProperty>
     
 
@@ -284,6 +342,13 @@
 
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasWeight">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Dimensions"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Aircraft"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#SmallArm"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#System"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Vehicle"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>(weight)</hasRegex>
+        <super_col>weight</super_col>
     </owl:DatatypeProperty>
     
 
@@ -292,6 +357,10 @@
 
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#HasWidth">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#Dimensions"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>(width)</hasRegex>
+        <super_col>width</super_col>
     </owl:DatatypeProperty>
     
 
@@ -301,6 +370,9 @@
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#IsType">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#CoreID"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>REGEX:(system|aircraft|artillery|vehicle|boat|ship|howitzer|intelligence|research|vessel|tanks|watercraft|radar|arms|firearm|gun|missile|mistral|mortars|weapon)</hasRegex>
+        <super_col>equip_type</super_col>
     </owl:DatatypeProperty>
     
 
@@ -310,6 +382,9 @@
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#IsVariant">
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#IsType"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>REGEX:(variant|hk33|version)</hasRegex>
+        <super_col>variant</super_col>
     </owl:DatatypeProperty>
     
 
@@ -317,6 +392,21 @@
     <!-- http://military.org/ontology#OriginData -->
 
     <owl:DatatypeProperty rdf:about="http://military.org/ontology#OriginData"/>
+    
+
+
+    <!-- http://military.org/ontology#ship_name -->
+
+    <owl:DatatypeProperty rdf:about="http://military.org/ontology#ship_name">
+        <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#IsVariant"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#AircraftCarrier"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#AuxiliaryVessel"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Submarine"/>
+        <rdfs:domain rdf:resource="http://military.org/ontology#Warship"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <hasRegex>REGEX:(ship name|chinese|hangul|hanja|han 中文|greek)</hasRegex>
+        <super_col>ship_name</super_col>
+    </owl:DatatypeProperty>
     
 
 
@@ -342,6 +432,24 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <hasRegex>REGEX:(accessor|attachment|magazine|personnalisation|sights|lights)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Active -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Active">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Status"/>
+        <hasRegex>REGEX:(active|current|Post-1990)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Air_force -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Air_force">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Branch"/>
+        <hasRegex>REGEX:((air|aerospace) (force|corps))</hasRegex>
     </owl:Class>
     
 
@@ -372,7 +480,7 @@
                 <owl:someValuesFrom rdf:resource="http://military.org/ontology#Flight"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <hasRegex>REGEX:(aircraft|aviation|aeropla|pilot|wing)</hasRegex>
+        <hasRegex>REGEX:(air(craft|plane)|aviation|aeropla|pilot|wing|aeronautics)</hasRegex>
     </owl:Class>
     
 
@@ -616,6 +724,15 @@
     
 
 
+    <!-- http://military.org/ontology#Army -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Army">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Branch"/>
+        <hasRegex>REGEX:(army|ground forces)</hasRegex>
+    </owl:Class>
+    
+
+
     <!-- http://military.org/ontology#Artillery -->
 
     <owl:Class rdf:about="http://military.org/ontology#Artillery">
@@ -635,6 +752,7 @@
                 <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_surface"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <hasRegex>REGEX:(attack|strike)</hasRegex>
     </owl:Class>
     
 
@@ -652,6 +770,7 @@
 
     <owl:Class rdf:about="http://military.org/ontology#Ballistic">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#Flight"/>
+        <hasRegex>REGEX:(ICBM)</hasRegex>
     </owl:Class>
     
 
@@ -711,6 +830,15 @@
     
 
 
+    <!-- http://military.org/ontology#Branch -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Branch">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Country"/>
+        <hasRegex>REGEX:(carabinieri|Guardia di Finanza|Truppengattungen)</hasRegex>
+    </owl:Class>
+    
+
+
     <!-- http://military.org/ontology#Capability -->
 
     <owl:Class rdf:about="http://military.org/ontology#Capability">
@@ -747,6 +875,15 @@
 
     <owl:Class rdf:about="http://military.org/ontology#Civilian">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#Being"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Coast_guard -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Coast_guard">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Navy"/>
+        <hasRegex>REGEX:(coast guard|riverine service)</hasRegex>
     </owl:Class>
     
 
@@ -795,6 +932,7 @@
 
     <owl:Class rdf:about="http://military.org/ontology#Country">
         <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+        <super_col>country</super_col>
     </owl:Class>
     
 
@@ -838,6 +976,15 @@
 
     <owl:Class rdf:about="http://military.org/ontology#DomainTransition">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#Capability"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#ECM -->
+
+    <owl:Class rdf:about="http://military.org/ontology#ECM">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#System"/>
+        <hasRegex>REGEX:(decoy)</hasRegex>
     </owl:Class>
     
 
@@ -978,6 +1125,15 @@
     
 
 
+    <!-- http://military.org/ontology#Future -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Future">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Status"/>
+        <hasRegex>REGEX:(future|proposed|procurement|prototype|acquisition|planned|prospective|construction)</hasRegex>
+    </owl:Class>
+    
+
+
     <!-- http://military.org/ontology#Glide -->
 
     <owl:Class rdf:about="http://military.org/ontology#Glide">
@@ -1004,7 +1160,7 @@
     <!-- http://military.org/ontology#GrenadeLauncher -->
 
     <owl:Class rdf:about="http://military.org/ontology#GrenadeLauncher">
-        <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Heavy_weap"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
@@ -1024,6 +1180,15 @@
     
 
 
+    <!-- http://military.org/ontology#Guard -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Guard">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Branch"/>
+        <hasRegex>REGEX:((national|republican) guard)</hasRegex>
+    </owl:Class>
+    
+
+
     <!-- http://military.org/ontology#Gun -->
 
     <owl:Class rdf:about="http://military.org/ontology#Gun">
@@ -1035,6 +1200,14 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <hasRegex>REGEX:(gun)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Heavy_weap -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Heavy_weap">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Infantry_equip"/>
     </owl:Class>
     
 
@@ -1085,10 +1258,27 @@
     
 
 
+    <!-- http://military.org/ontology#Infantry_equip -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Infantry_equip">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Equipment"/>
+        <hasRegex>REGEX:(infantry gear)</hasRegex>
+    </owl:Class>
+    
+
+
     <!-- http://military.org/ontology#InformationManagement -->
 
     <owl:Class rdf:about="http://military.org/ontology#InformationManagement">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Infrastructure -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Infrastructure">
+        <hasRegex>REGEX:(facilities|bases)</hasRegex>
     </owl:Class>
     
 
@@ -1151,7 +1341,7 @@
     <!-- http://military.org/ontology#ManPADS -->
 
     <owl:Class rdf:about="http://military.org/ontology#ManPADS">
-        <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Heavy_weap"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
@@ -1190,7 +1380,7 @@
 
     <owl:Class rdf:about="http://military.org/ontology#Missile">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#Explosive"/>
-        <hasRegex>REGEX:(missile)</hasRegex>
+        <hasRegex>REGEX:(missile|ICBM)</hasRegex>
     </owl:Class>
     
 
@@ -1217,6 +1407,15 @@
                 <owl:someValuesFrom rdf:resource="http://military.org/ontology#Air_to_surface"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Navy -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Navy">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Branch"/>
+        <hasRegex>REGEX:(nav(y|al))</hasRegex>
     </owl:Class>
     
 
@@ -1256,6 +1455,15 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:label xml:lang="en">Towed</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Past -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Past">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Status"/>
+        <hasRegex>REGEX:(former|World War (I|II)|Cold War|Inter(|-)war|histor(ic|y)|1945)</hasRegex>
     </owl:Class>
     
 
@@ -1332,6 +1540,14 @@
     
 
 
+    <!-- http://military.org/ontology#Rank -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Rank">
+        <hasRegex>REGEX:(rank|organi(z|s)ation|commander|structure|tradition|insignia|^unit(s|$)|chief)</hasRegex>
+    </owl:Class>
+    
+
+
     <!-- http://military.org/ontology#Replenishment_refueling -->
 
     <owl:Class rdf:about="http://military.org/ontology#Replenishment_refueling">
@@ -1341,11 +1557,20 @@
     
 
 
+    <!-- http://military.org/ontology#Reserved -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Reserved">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Status"/>
+        <hasRegex>REGEX:(reserve)</hasRegex>
+    </owl:Class>
+    
+
+
     <!-- http://military.org/ontology#Rifle -->
 
     <owl:Class rdf:about="http://military.org/ontology#Rifle">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#SmallArm"/>
-        <hasRegex>REGEX:REGEX:(rifle|car(?:a)?bine)</hasRegex>
+        <hasRegex>REGEX:(rifle|car(?:a)?bine)</hasRegex>
     </owl:Class>
     
 
@@ -1378,6 +1603,15 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <hasRegex>REGEX:(helicopt)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Satellite -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Satellite">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#System"/>
+        <hasRegex>REGEX:(satellite)</hasRegex>
     </owl:Class>
     
 
@@ -1417,7 +1651,7 @@
     <!-- http://military.org/ontology#SmallArm -->
 
     <owl:Class rdf:about="http://military.org/ontology#SmallArm">
-        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Equipment"/>
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Infantry_equip"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://military.org/ontology#HasArmament"/>
@@ -1431,6 +1665,23 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <hasRegex>REGEX:(firearm|small ?arm|individual|soldier|troop)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Space_force -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Space_force">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Air_force"/>
+        <hasRegex>REGEX:(space force)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Status -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Status">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#EquipMission"/>
     </owl:Class>
     
 
@@ -1501,7 +1752,7 @@
 
     <owl:Class rdf:about="http://military.org/ontology#Support">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#Role"/>
-        <hasRegex>REGEX:(auxiliar|support|tug(?:boat)?s|repair|engineer|bridging|tool|dredger|machine|pontoon|cable layer|bridgeing|tug(?:boat)?s)</hasRegex>
+        <hasRegex>REGEX:(auxiliar|support|repair|engineer|bridging|tool|dredger|machine|pontoon|cable layer|bridgeing)</hasRegex>
     </owl:Class>
     
 
@@ -1605,6 +1856,7 @@
 
     <owl:Class rdf:about="http://military.org/ontology#Training">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#Support"/>
+        <hasRegex>REGEX:(trainer)</hasRegex>
     </owl:Class>
     
 
@@ -1614,6 +1866,15 @@
     <owl:Class rdf:about="http://military.org/ontology#Truck">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#UnarmoredVehicle"/>
         <hasRegex>REGEX:(truck)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Tug_boat -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Tug_boat">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Support"/>
+        <hasRegex>REGEX:(tug(?:boat)?s)</hasRegex>
     </owl:Class>
     
 
@@ -1691,7 +1952,14 @@
 
     <owl:Class rdf:about="http://military.org/ontology#Vessel">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#Equipment"/>
-        <hasRegex>REGEX:(ship|vessel|(?&lt;!air)craft|fleet|tender|cutter|fleet|class|surface)</hasRegex>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://military.org/ontology#HasDisplacement"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <hasRegex>REGEX:(ship|vessel|(?&lt;!air)craft|fleet|tender|cutter|fleet|class|surface|water transport|oceanic)</hasRegex>
     </owl:Class>
     
 
@@ -1709,6 +1977,15 @@
 
     <owl:Class rdf:about="http://military.org/ontology#Wheeled">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#GroundMovement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#Worn -->
+
+    <owl:Class rdf:about="http://military.org/ontology#Worn">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Infantry_equip"/>
+        <hasRegex>REGEX:(attire|uniform)</hasRegex>
     </owl:Class>
 </rdf:RDF>
 

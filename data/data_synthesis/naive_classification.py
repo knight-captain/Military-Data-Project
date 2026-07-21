@@ -1,28 +1,6 @@
 from utils.nav_tree import *
+from utils.regex_match import regex_match_to_ontology
 import re
-
-def naive_match(header):
-    """
-    Return all ontology classes whose regex patterns match the header.
-    Uses nav_tree.get_regex() dynamically.
-    """
-    header = header.lower()
-    matched = []
-
-    # Iterate over all ontology classes
-    for cls_label in get_all_class_labels():
-        cls = get_class(cls_label)
-        if cls is None:
-            print(f"somehow got a non-class: {cls_label}")
-            continue
-        for pattern in get_regex(cls):
-            try:
-                if re.search(pattern, header, re.IGNORECASE):
-                    matched.append(cls_label)
-            except re.error as e:
-                print(f"[REGEX ERROR] {cls_label}: '{pattern}' → {e}")
-    return matched
-
 
 def classify_naively(headers):
     """
@@ -30,7 +8,6 @@ def classify_naively(headers):
     Collapse hierarchical matches using get_descendants().
     Identify equipment classes using get_ancestor().
     """
-
     h2, h3, h4 = headers
     header_hierarchy = [h4, h3, h2]
 
@@ -39,7 +16,7 @@ def classify_naively(headers):
     for header in header_hierarchy:
         if not header:
             continue
-        matches = naive_match(header)
+        matches = regex_match_to_ontology(header)
         all_matches.extend(matches)
 
     if not all_matches:
@@ -58,7 +35,7 @@ def classify_naively(headers):
     for match in other_classes:
         cls = get_class(match)
         if cls is None:
-            print(f"Somehow, naive_match returned a non-class: {match}")
+            print(f"Somehow, regex_match_to_ontology returned a non-class: {match}")
             continue #this shouldn't happen
 
         # Root = get_ancestor(cls, 0) → "Equipment"

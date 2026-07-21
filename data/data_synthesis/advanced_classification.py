@@ -91,7 +91,12 @@ def classify_advanced(table_classes):
             table_fp = table_fps[table_name]
 
             # Find best matching group
-            best_group_label, score = find_best_group(table_fp, groups)
+            if table_classes[table_name]["confidence"] == 1.0:
+                #assign
+                best_group_label = table_classes[table_name]["equipment_class"]
+                score = 1.0
+            else:
+                best_group_label, score = find_best_group(table_fp, groups)
 
             # Assign if similarity is high enough
             if score >= threshold:
@@ -110,9 +115,10 @@ def classify_advanced(table_classes):
         # Remove assigned tables
         waiting = [t for t in waiting if t not in newly_assigned]
 
-        if threshold <= 0.1 and waiting:
+        if threshold <= 0.2 and waiting:
             print(f"Consider adding the following to the Ontology: {waiting}")
 
-        threshold -= 0.1
+        threshold -= 0.2
+        print(f"Tables remaining to classify: {len(waiting)}")
 
     return table_classes

@@ -31,32 +31,22 @@ def synthesize_equipment(db_path=None):
     shutil.copy(db_path, synthed_path)
     conn = sqlite3.connect(synthed_path)
 
-    # STEP 1: Categorize tables via regexed table_name (which came from the <h2/3/4>'s)
-    #dict table_categories[table_name] = classification
-    # now with grouping and hierarchy!
-    # print("\n[1/4] Categorizing tables...")
-    # table_categories = categorize_all_tables(conn) 
-
     print("\n[1/4] Classifying tables...")
     table_classes = classify_tables(conn) 
-
-    # STEP 2: Categorize columns
-    #dict super_col_map [raw_cols] = super_cols
-    # print("\n[2/4] Categorizing columns...")
-    # super_col_map = categorize_columns(conn)
     
-    print("\n[2/4] Categorizing columns...")
-    smart_col_mapping, smart_col_list = classify_columns(conn, table_classes)
+    print("\n[2/4] Classifying columns...")
+    contextual_mapping, smart_col_list = classify_columns(conn, table_classes)
+    # print(smart_col_mapping)
 
     # STEP 3: Re-categorize the tables using a_mapping_table's info
     #dict contextual_mapping [(table_name,raw_col)] = super_col
     #list new_super_cols [super_col1,super_col2...]
     print("\n[3/4] Recategorizing tables...")
-    contextual_mapping = recategorize_ontologically(conn, smart_col_mapping, smart_col_list)
+    raw_col_map = recategorize_ontologically(conn, contextual_mapping, smart_col_list)
 
     # STEP 4: Build master equipment table
     print("\n[4/4] Building master equipment table...")
-    build_master_equipment(conn, contextual_mapping, smart_col_list)
+    build_master_equipment(conn, raw_col_map, smart_col_list)
 
     conn.close()
     print("\nEquipment synthesis pipeline completed successfully.")

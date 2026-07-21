@@ -1,3 +1,17 @@
+SUPER_COL STATUS:
+- country: trivial and complete, but not being added to final table
+- quantity: like section we need to add the merged/repeated rows that identified table sections; we need any with numbers that aren't dates or variants, but it might actually be the case that all numbers in this column are actually quantity (even if they are in the format "Frigates (5 + 1)"). We also need to identify any other quantity-like columns, and differentiate them from non-quantities (particularly difficult case: raw_cols "no." or "number" might be a quantity or serial number, and map to quantity or other_names respectively; there may be some other "qty-look-alikes")
+- origin super_cols (origin, cost, dates, status): not vital right now. Will be useful when deduplicating for a master equipment list later. Only assign if they are un-ambiguous.
+- ancestral_class: trivial if classify_tables is fine-tuned. No raw_cols should be mapped here: this should be derived from sub_class. ancestral_class isn't being saved properly: I want to change it to ancestral path for sorting reasons
+- sub-class: again, derived from table_classification and combined with section column. this will need to be collasped (SmallArm, Shotguns) -> (Shotgun) where the ontology supports a more-leaf class, and flag those that it doesn't for ontological development. (i.e. "SmallArm, section": raw_col "section" is getting correctly mapped, but there isn't a raw_col "Small_arm": that is a value that should be added to the value of section when they are put into the super_col "sub_class")
+- mission cols (role, capability, propulsion): same as sub_class & quantity: add other_classes to the appropriate columns, and combine with any obvious raw_cols
+- equip_type: vital. I'm not sure how to tease that out right now from ambiguous raw_col names
+- other type cols (other_names, variant, ship_name): sort if obvious, set aside for disambiguation with equip_type. eventually, variant will take on the old equip_types as that is deduplicated in Phase IV
+- dimentions cols: assign raw_cols if obvious
+- note: gets unambiguous "note"/"notes" raw_cols along with any un-assigned raw_cols
+
+PLAN:
+
 shipclass tables that are split: one of the tables is the class stats, the other is a list of instances in that class. need to be joined
 
 NEXT PHASE GOAL: 
@@ -5,14 +19,8 @@ NEXT PHASE GOAL:
 - this should also make de-duplicating a master list trivial
 
 ARCHITECTURAL ISSUES:
-categorize_tables.py & table_regex_rules.csv are missing some things: 
-- titles with "air" are not getting categorized in that domain
-
-- also sweet spot for eliminating contents, external links, etc. without killing tiny equipment tables.
 - delete *just* joined tables
-
 - 0,11 kg tnt from slovakia_table_02_infantry_weapons_explosives not in column_mapping.csv (no actual header)
-
 
 missed merged/repeat (or header) rows:
 united_states_table_02_vehicles_rotary_winged_aircraft_vtol_vstol ha
@@ -91,3 +99,11 @@ Fixed edge cases:
 
 - finding the sweet spot (or philosopher's stone) for the scraper to pick the correct header. <- looking pretty good 
 - silhouettes tables can be ignored
+
+categorize_tables.py & table_regex_rules.csv are missing some things: 
+- titles with "air" are not getting categorized in that domain
+
+- also sweet spot for eliminating contents, external links, etc. without killing tiny equipment tables.
+
+- add expected_super_col annotation to ontology
+- build super_col_regex.csv

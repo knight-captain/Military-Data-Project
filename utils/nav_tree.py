@@ -1,4 +1,4 @@
-from owlready2 import get_ontology
+from owlready2 import get_ontology, ThingClass
 
 _ONTO = None
 _CLASS_INDEX = {}      # label/name -> class
@@ -6,16 +6,6 @@ _PARENTS = {}          # class -> parent class (single, for now)
 _CHILDREN = {}         # class -> list of children
 _REGEX = {}            # class -> list of regex strings
 
-def get_class(input_):
-    _create_tree()  # ensure tree exists
-
-    if not isinstance(input_, str):
-        return input_
-
-    cls = _CLASS_INDEX.get(input_)
-    if cls is None:
-        print(f"[NAV WARNING] Class '{input_}' not found in ontology")
-    return cls
 
 def _create_tree(path="ontology/Military_Ontology.owl"):
     global _ONTO, _CLASS_INDEX, _PARENTS, _CHILDREN, _REGEX
@@ -51,6 +41,18 @@ def _create_tree(path="ontology/Military_Ontology.owl"):
 
     print("Loaded classes:", len(_CLASS_INDEX))
 
+def get_class(input_, warn=False):
+    _create_tree()  # ensure tree exists
+
+    if not isinstance(input_, str):
+        return input_
+
+    cls = _CLASS_INDEX.get(input_)
+    if cls is None and warn:
+        print(f"[NAV WARNING] Class '{input_}' not found in ontology")
+    return cls
+
+
 def get_all_classes():
     _create_tree()
     return list(_CLASS_INDEX.values())
@@ -59,9 +61,28 @@ def get_all_class_labels():
     _create_tree()
     return list(_CLASS_INDEX.keys())
 
+def get_all_ontology_entities():
+    """
+    Return all ontology classes + object properties + data properties.
+    """
+    _create_tree()
+
+    entities = []
+    # Classes
+    entities.extend(_CLASS_INDEX.values())
+    # Object properties
+    for prop in _ONTO.object_properties():
+        entities.append(prop)
+    # Data properties
+    for prop in _ONTO.data_properties():
+        entities.append(prop)
+
+    return entities
+
+
 def get_parent(input_):
     _create_tree()
-    cls = get_class(input_)
+    cls = get_class(input_,True)
     if cls is None:
         return None
     return _PARENTS.get(cls)
@@ -69,7 +90,7 @@ def get_parent(input_):
 
 def get_children(input_):
     _create_tree()
-    cls = get_class(input_)
+    cls = get_class(input_,True)
     if cls is None:
         return []
     return _CHILDREN.get(cls, [])
@@ -82,7 +103,7 @@ def get_ancestor(input_, depth_from_root):
       ...
     """
     _create_tree()
-    cls = get_class(input_)
+    cls = get_class(input_,True)
     if cls is None:
         return None
 
@@ -132,10 +153,60 @@ def get_descendants(inputs):
     # Return labels
     return [c.label[0] if getattr(c, "label", []) else c.name for c in leaf_classes]
 
-def get_regex(input_):
-    _create_tree()
-    cls = get_class(input_)
+def get_regex(entity):
+    patterns = []
 
-    if cls is None:
+    # Case 1: direct attribute (Owlready2 annotation)
+    if hasattr(entity, "hasRegex"):
+        for val in entity.hasRegex:
+            val = str(val).strip()
+            if val.lower().startswith("regex:"):
+                patterns.append(val[6:].strip())
+            else:
+                patterns.append(val)
+
+    # Case 2: regex stored inside super_col
+    if hasattr(entity, "super_col"):
+        for val in entity.super_col:
+            val = str(val).strip()
+            if val.lower().startswith("regex:"):
+                patterns.append(val[6:].strip())
+
+    return patterns
+
+def get_super_col(entity):
+    if hasattr(entity, "super_col"):
+        for val in entity.super_col:
+            val = str(val).strip()
+            if not val.lower().startswith("regex:"):
+                return val
+    return None
+
+def get_property(name):
+    """
+    Return an ontology object or data property by its name.
+    """
+    # Object properties
+    for prop in _ONTO.object_properties():
+        if prop.name == name:
+            return prop
+
+    # Data properties
+    for prop in _ONTO.data_properties():
+        if prop.name == name:
+            return prop
+
+    return None
+
+def get_all_properties_of_class(cls):
+    """
+    Return all object + data properties applicable to a class,
+    including inherited ones.
+    """
+    if not isinstance(cls, ThingClass):
         return []
-    return _REGEX.get(cls, [])
+
+    try:
+        return list(cls.get_properties())
+    except Exception:
+        return []
