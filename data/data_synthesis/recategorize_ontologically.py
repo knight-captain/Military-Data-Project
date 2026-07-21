@@ -3,105 +3,110 @@ from utils.normalization import normalize_text
 from utils.safe_SQL_caller import q
 
 #TODO: TEMP! (not necessary, but useful) IDK: maybe I'll just have build_master_equip work off of this?
-def build_mapping_table(conn, table_categories, contextual_mapping, super_cols):
+def build_mapping_table(conn, table_classes, contextual_mapping, super_cols_list):
     cursor = conn.cursor()
 
     cursor.execute("DROP TABLE IF EXISTS a_mapping_table")
 
     # Build dynamic CREATE TABLE with one column per super_col
-    cols_sql = ",\n".join([f'"{col}" TEXT' for col in super_cols])
+    cols_sql = ",\n".join([f'"{col}" TEXT' for col in super_cols_list])
 
     cursor.execute(f"""
         CREATE TABLE a_mapping_table (
             table_name TEXT,
-            classification TEXT,
+            equipment_class TEXT,
+            other_classes TEXT,
+            confidence REAL,
             {cols_sql}
         )
     """)
 
-    # Only process tables that categorize_tables approved
-    table_names = [
-        t for t in table_categories.keys()
-        if not t.startswith("a_")
-        and not table_categories[t].get("ignore", False)
-    ]
+    # Iterate over all tables in table_classes
+    for table_name, class_info in table_classes.items():
 
-    for table_name in table_names:
+        # Skip meta tables
+        if table_name.startswith("a_"):
+            continue
 
-        # Classification string
-        class_info = table_categories.get(table_name, {})
-        classification = " | ".join(
-            f"{k}:{v}" for k, v in class_info.items()
-            if v not in (None, "", False)
-        )
+        # Extract classification info
+        equipment_class = class_info.get("equipment_class")
+        other_classes = ", ".join(class_info.get("other_classes", []))
+        confidence = class_info.get("confidence")
 
-        # Build a dict: super_col → list of raw_cols
-        mapping_for_table = {col: [] for col in super_cols}
-
-        for (tbl, raw_col), (super_col) in contextual_mapping.items():
-            if tbl == table_name:
-                mapping_for_table[super_col].append(raw_col)
+        # Extract contextual mapping for this table
+        mapping_for_table = contextual_mapping.get(table_name, {})
 
         # Convert lists to comma-separated strings
-        row_values = [
-            ", ".join(mapping_for_table[col]) if mapping_for_table[col] else None
-            for col in super_cols
-        ]
+        row_values = []
+        for col in super_cols_list:
+            values = mapping_for_table.get(col, [])
+            if not values:
+                row_values.append(None)
+            else:
+                # Filter out None and convert everything to string
+                clean_values = [str(v) for v in values if v is not None]
+                row_values.append(", ".join(clean_values) if clean_values else None)
+
 
         cursor.execute(
             f"""
             INSERT INTO a_mapping_table
-            (table_name, classification, {", ".join([f'"{c}"' for c in super_cols])})
-            VALUES (?, ?, {", ".join(["?"] * len(super_cols))})
+            (table_name, equipment_class, other_classes, confidence,
+             {", ".join([f'"{c}"' for c in super_cols_list])})
+            VALUES (?, ?, ?, ?, {", ".join(["?"] * len(super_cols_list))})
             """,
-            [table_name, classification] + row_values
+            [table_name, equipment_class, other_classes, confidence] + row_values
         )
 
     conn.commit()
     print("Created wide-format a_mapping_table")
 
-def recategorize_ontologically(conn, table_categories, super_col_map):
+def recategorize_ontologically(conn, smart_col_mapping, smart_col_list):
     """
-    Step 3: Ontological Re-Categorization (expanded skeleton)
+    Convert dict-of-dicts column mapping into the flat
+    (table_name, raw_col) -> super_col mapping required by
+    build_master_equipment.
 
-    This version:
-      - builds contextual_mapping from PRAGMA + super_col_map
-      - strips conf/notes
-      - builds a_mapping_table
-      - returns contextual_mapping + super_cols
+    Input:
+        smart_col_mapping = {
+            table_name: {
+                super_col: [raw_cols]
+            }
+        }
+
+        smart_col_list = canonical list of super_cols
+
+    Output:
+        contextual_mapping = {
+            (table_name, raw_col): super_col
+        }
     """
 
-    cursor = conn.cursor()
-
-    # --- 1. Build contextual_mapping ---
     contextual_mapping = {}
-    table_names = [
-        t for t in table_categories.keys()
-        if not t.startswith("a_")
-        and not table_categories[t].get("ignore", False)
-    ]
 
-    for table_name in table_names:
-        context = table_categories.get(table_name, {})
+    for table_name, mapping in smart_col_mapping.items():
 
-        raw_cols = cursor.execute(
-            f"PRAGMA table_info({q(table_name)})"
-        ).fetchall()
-        raw_col_names = [normalize_text(r[1]) for r in raw_cols]
+        for super_col, raw_cols in mapping.items():
 
-        for raw_col in raw_col_names:
-            base = re.sub(r'\.\d+$', '', raw_col)
-
-            if base not in super_col_map:
+            # Skip unexpected super_cols
+            if super_col not in smart_col_list:
+                print(f"WARNING: Unexpected super_col '{super_col}' in table {table_name}")
                 continue
 
-            super_col = super_col_map[base]
-            contextual_mapping[(table_name, raw_col)] = super_col
+            # Clean raw_cols: remove None, empty strings, duplicates
+            safe_raw_cols = [
+                str(v).strip()
+                for v in raw_cols
+                if v is not None and str(v).strip() != ""
+            ]
 
-    # --- 2. Build super_cols list ---
-    super_cols = sorted(set(super_col_map.values()))
+            # Skip empty lists
+            if not safe_raw_cols:
+                continue
 
-    # --- 3. Build a_mapping_table ---
-    build_mapping_table(conn, table_categories, contextual_mapping, super_cols)
+            # Convert dict-of-dicts → flat mapping
+            for raw_col in safe_raw_cols:
+                contextual_mapping[(table_name, raw_col)] = super_col
 
-    return contextual_mapping, super_cols
+    return contextual_mapping
+

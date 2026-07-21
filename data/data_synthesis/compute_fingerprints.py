@@ -1,29 +1,29 @@
-def compute_group_fingerprint(group, paths):
-    """
-    Build a frequency-weighted fingerprint for a group.
-    Each feature gets a weight = (# tables containing feature) / (group size)
-    """
+from utils.nav_tree import *
 
-    freq = {
-        "classes": {},
-        "ancestors": {},
-        "children": {},
-        "raw_cols": {},
-        "leaf_headers": {}
-    }
+def compute_group_fingerprint(group):
+    """
+    Normalize group fingerprint if tables exist.
+    Starter fingerprint stays intact.
+    """
 
     tables = group["tables_included"]
     n = len(tables)
 
     if n == 0:
-        group["fingerprint"] = freq
-        return freq
+        return group["fingerprint"]
+
+    freq = {
+        "classes": {},
+        "parent": {},
+        "children": {},
+        "raw_cols": {},
+        "leaf_headers": {}
+    }
 
     for table_name, table_info in tables.items():
-        fp = compute_table_fingerprint(table_name, table_info, paths)
+        fp = compute_table_fingerprint(table_name, table_info)
 
-        # Count frequencies
-        for key in ["classes", "ancestors", "children", "raw_cols"]:
+        for key in ["classes", "parent", "children", "raw_cols"]:
             for item in fp[key]:
                 freq[key][item] = freq[key].get(item, 0) + 1
 
@@ -31,58 +31,76 @@ def compute_group_fingerprint(group, paths):
             lh = fp["leaf_header"]
             freq["leaf_headers"][lh] = freq["leaf_headers"].get(lh, 0) + 1
 
-    # Normalize frequencies
+    # Normalize
     for key in freq:
         for item in freq[key]:
             freq[key][item] /= n
 
-    group["fingerprint"] = freq
-    return freq
+    group["fingerprint"]["freq"] = freq
+    return group["fingerprint"]
 
-
-def compute_table_fingerprint(table_name, table_info, paths):
+def compute_table_fingerprint(table_name, table_info):
     """
     Build a fingerprint for a single table.
-    Binary features:
-      - classes
-      - ancestors
-      - children
-      - raw_cols
-      - leaf_header
+    Uses direct parent, not ancestor.
     """
 
     fp = {
         "classes": set(),
-        "ancestors": set(),
+        "parent": set(),
         "children": set(),
         "raw_cols": set(table_info["raw_cols"]),
-        "leaf_header": table_info["leaf_header"]
+        "leaf_header": table_info["leaf_header"],
+        "regex": set()
     }
 
-    eq_class = table_info["equipment_class"]
-    other_classes = table_info["other_classes"]
+    eq_label = table_info["equipment_class"]
+    other_labels = table_info["other_classes"]
 
     # 1. Equipment class
-    if eq_class:
-        fp["classes"].add(eq_class)
+    if eq_label:
+        eq_obj = get_class(eq_label)
+        fp["classes"].add(eq_label)
 
-        # 2. Parent of equipment class
-        if eq_class in paths and len(paths[eq_class]) > 1:
-            fp["ancestors"].add(paths[eq_class][1])
+        # DIRECT PARENT
+        parent_obj = get_parent(eq_obj)
+        if parent_obj:
+            parent_label = parent_obj.label[0] if parent_obj.label else parent_obj.name
+            fp["parent"].add(parent_label)
 
-        # 3. Children of equipment class
-        for cls, path in paths.items():
-            if len(path) > 1 and path[-2] == eq_class:
-                fp["children"].add(cls)
+        # Children
+        for child in get_children(eq_obj):
+            child_label = child.label[0] if child.label else child.name
+            fp["children"].add(child_label)
 
-    # 4. Other classes
-    for oc in other_classes:
-        fp["classes"].add(oc)
+        # Regex patterns
+        for pattern in get_regex(eq_obj):
+            fp["regex"].add(pattern)
 
-        # 5. Parents of other classes
-        if oc in paths and len(paths[oc]) > 1:
-            fp["ancestors"].add(paths[oc][1])
+    # 2. Other classes
+    for oc_label in other_labels:
+        oc_obj = get_class(oc_label)
+        fp["classes"].add(oc_label)
+
+        parent_obj = get_parent(oc_obj)
+        if parent_obj:
+            parent_label = parent_obj.label[0] if parent_obj.label else parent_obj.name
+            fp["parent"].add(parent_label)
+
+        for pattern in get_regex(oc_obj):
+            fp["regex"].add(pattern)
 
     return fp
 
+def merge_fingerprints(group_fp, table_fp):
+    """
+    Merge table fingerprint into group fingerprint.
+    """
 
+    for key in ["classes", "parent", "children", "raw_cols", "regex"]:
+        group_fp[key].update(table_fp[key])
+
+    if table_fp["leaf_header"]:
+        if "leaf_headers" not in group_fp:
+            group_fp["leaf_headers"] = set()
+        group_fp["leaf_headers"].add(table_fp["leaf_header"])

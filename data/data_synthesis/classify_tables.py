@@ -1,7 +1,7 @@
 from data.data_synthesis.naive_classification import classify_naively
 from data.data_synthesis.advanced_classification import classify_advanced
 from utils.execute_SQL import get_a_meta_table, get_a_meta_table_of_columns
-from utils.nav_tree import *
+from utils.nav_tree import get_ancestor
 import re
 
 def classify_tables(conn):
@@ -16,28 +16,47 @@ def classify_tables(conn):
             "section_h2": meta["section_h2"],
             "section_h3": meta["section_h3"],
             "section_h4": meta["section_h4"],
-            "raw_cols": a_meta_table_of_columns.get(table_name, [])
+            "country": meta.get("country"),
+            "raw_cols": a_meta_table_of_columns.get(table_name, {}).get("raw_cols", [])
         }
 
-    # 3. Load ontology relationships
-    parents, children, paths, rules = get_relationships("ontology/Military_Ontology.owl")
-
-    # 4. Naive classification
+    # 3. Naive classification (no more get_relationships)
     table_classes = {}
     equipment_assigned = 0
 
     for table_name, meta in a_meta_table.items():
+
         headers = (
             meta["section_h2"],
             meta["section_h3"],
             meta["section_h4"]
         )
 
-        result = classify_naively(headers, rules, paths)
+        # classify_naively uses nav_tree internally
+        result = classify_naively(headers)
 
         # Attach metadata needed for fingerprints
         result["raw_cols"] = SQL_table_info[table_name]["raw_cols"]
-        result["leaf_header"] = SQL_table_info[table_name]["section_h4"]
+        result["country"] = SQL_table_info[table_name]["country"]
+
+        # Compute leaf header
+        headers_ordered = [
+            SQL_table_info[table_name]["section_h4"],
+            SQL_table_info[table_name]["section_h3"],
+            SQL_table_info[table_name]["section_h2"]
+        ]
+        for header in headers_ordered:
+            if header:
+                result["leaf_header"] = header
+                break
+
+        # Compute ancestral_class using nav_tree
+        eq_class = result["equipment_class"]
+        if eq_class:
+            # 0 = Equipment, 1 = Aircraft/Vessel/Vehicle/System/SmallArm
+            result["ancestral_class"] = get_ancestor(eq_class, 1)
+        else:
+            result["ancestral_class"] = None
 
         table_classes[table_name] = result
 
@@ -46,29 +65,29 @@ def classify_tables(conn):
 
     print(f"Naive: {equipment_assigned}/{len(a_meta_table)} tables classified")
 
-    # 5. Advanced classification (run ONCE)
-    table_classes = classify_advanced(table_classes, paths)
+    # 4. Advanced classification (uses nav_tree internally)
+    table_classes = classify_advanced(table_classes)
 
-    # 6. Count final equipment assignments
+    # 5. Count final equipment assignments
     final_equipment_assigned = sum(
         1 for t in table_classes.values()
         if t["equipment_class"] is not None
     )
 
     print(f"Advanced: {final_equipment_assigned}/{len(a_meta_table)} tables classified")
+    # print(table_classes)
 
-    return table_classes #dict[table_name] = single_class_from_ontology
-
+    return table_classes
+'''
+table_classes = {
+    table_name: TableClassInfo,
+    ...
+}
+'''
 '''
 TableClassInfo = {
     "equipment_class": str,        # exactly one class
     "other_classes": list[str],    # zero or many
     "confidence": float | None     # optional
-}
-'''
-'''
-table_classes = {
-    table_name: TableClassInfo,
-    ...
 }
 '''

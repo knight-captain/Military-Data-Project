@@ -21,9 +21,9 @@ This module DOES NOT write anything to the database.
 import re
 from pathlib import Path
 
-from data.data_synthesis.calculate_confidence import calculate_confidence
-from data.data_synthesis.cluster_tables import cluster_tables
-from data.data_synthesis.derive_hierarchy import derive_hierarchy
+from data.data_synthesis.old.calculate_confidence import calculate_confidence
+from data.data_synthesis.old.cluster_tables import cluster_tables
+from data.data_synthesis.old.derive_hierarchy import derive_hierarchy
 from utils import read_csv
 from utils.normalization import normalize_text
 

@@ -6,6 +6,7 @@ if RUN_PHASE:
 else:
     this_phase_path = path to military_equipment_TEST-PHASE.DB
 '''
+from datetime import datetime
 from pathlib import Path
 
 # --- Modules ---
@@ -19,6 +20,9 @@ RUN_CLEANING = False
 RUN_SYNTHESIZER = True
 
 def run_pipeline():
+    stamp = datetime.now().strftime("%H%M%S")
+    print(f"Started Pipe: {stamp}")
+
     # Phase I: Scrape or load existing RAW
     if RUN_SCRAPER is not False:
         print("\n=== PHASE I: SCRAPING TABLES ===")
@@ -56,6 +60,8 @@ def run_pipeline():
             )
 
     print("\n=== PIPELINE COMPLETE ===")
+    stamp = datetime.now().strftime("%H%M%S")
+    print(f"Finished Pipe: {stamp}")
 
 if __name__ == "__main__":
     run_pipeline()

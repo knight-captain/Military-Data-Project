@@ -10,9 +10,8 @@ import sqlite3
 from utils.update_path import update_path
 
 # Submodules
-from data.data_synthesis.categorize_tables import categorize_all_tables
 from data.data_synthesis.classify_tables import classify_tables
-from data.data_synthesis.categorize_columns import categorize_columns
+from data.data_synthesis.classify_columns import classify_columns
 from data.data_synthesis.recategorize_ontologically import recategorize_ontologically
 from data.data_synthesis.build_master_equipment import build_master_equipment
 
@@ -35,26 +34,29 @@ def synthesize_equipment(db_path=None):
     # STEP 1: Categorize tables via regexed table_name (which came from the <h2/3/4>'s)
     #dict table_categories[table_name] = classification
     # now with grouping and hierarchy!
-    print("\n[1/4] Categorizing tables...")
-    table_categories = categorize_all_tables(conn) 
+    # print("\n[1/4] Categorizing tables...")
+    # table_categories = categorize_all_tables(conn) 
 
     print("\n[1/4] Classifying tables...")
     table_classes = classify_tables(conn) 
 
     # STEP 2: Categorize columns
     #dict super_col_map [raw_cols] = super_cols
+    # print("\n[2/4] Categorizing columns...")
+    # super_col_map = categorize_columns(conn)
+    
     print("\n[2/4] Categorizing columns...")
-    super_col_map = categorize_columns(conn)
+    smart_col_mapping, smart_col_list = classify_columns(conn, table_classes)
 
     # STEP 3: Re-categorize the tables using a_mapping_table's info
     #dict contextual_mapping [(table_name,raw_col)] = super_col
     #list new_super_cols [super_col1,super_col2...]
     print("\n[3/4] Recategorizing tables...")
-    contextual_mapping, new_super_cols = recategorize_ontologically(conn, table_categories, super_col_map)
+    contextual_mapping = recategorize_ontologically(conn, smart_col_mapping, smart_col_list)
 
     # STEP 4: Build master equipment table
     print("\n[4/4] Building master equipment table...")
-    build_master_equipment(conn, contextual_mapping, new_super_cols)
+    build_master_equipment(conn, contextual_mapping, smart_col_list)
 
     conn.close()
     print("\nEquipment synthesis pipeline completed successfully.")

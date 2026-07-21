@@ -1532,7 +1532,7 @@
                 <owl:someValuesFrom rdf:resource="http://military.org/ontology#Equipment"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <hasRegex>REGEX:(weapon|munition|armament|ordnance|arms|equip|system)</hasRegex>
+        <hasRegex>REGEX:(weapon|munition|armament|ordnance|equip|system)</hasRegex>
     </owl:Class>
     
 
