@@ -21,6 +21,8 @@ def clean_rows(df: pd.DataFrame) -> pd.DataFrame:
     # Step 2: Propagate metadata downward and remove empty rows
     df = propagate_sections(df, section_rows, quantity_rows, empty_rows)
 
+    #TODO: if row = 90% headers or something, remove (i.e. repeat header row)
+
     # Step 3: Guarantee a DataFrame is returned
     if df is None:
         return pd.DataFrame()

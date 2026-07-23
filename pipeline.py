@@ -13,17 +13,19 @@ from pathlib import Path
 from data.data_acquisition.scrape_pipe import scrape_pipe
 from data.data_cleaning.clean_all import clean_all
 from data.data_synthesis.synthesize_equipment import synthesize_equipment
+from data.data_refining.refine_pipe import refine_pipe
 
 
 RUN_SCRAPER = False #If False, make sure a set of military_equipment_TEST.db exists; can also be str, and will run edge_case.txt and name the .db after the str
 RUN_CLEANING = False
-RUN_SYNTHESIZER = True
+RUN_SYNTHESIZER = False
+RUN_REFINER = True
 
 def run_pipeline():
     stamp = datetime.now().strftime("%H%M%S")
     print(f"Started Pipe: {stamp}")
 
-    # Phase I: Scrape or load existing RAW
+    # Phase I: Scrape
     if RUN_SCRAPER is not False:
         print("\n=== PHASE I: SCRAPING TABLES ===")
         raw_path = scrape_pipe(RUN_SCRAPER)
@@ -35,7 +37,7 @@ def run_pipeline():
                 f"Skipping cleaning, but CLEANED DB not found: {raw_path}"
             )
 
-    # Phase II: Clean or load existing CLEANED
+    # Phase II: Clean
     if RUN_CLEANING:
         print("\n=== PHASE II: CLEANING TABLES ===")
         cleaned_path = clean_all(db_path=raw_path)
@@ -47,7 +49,7 @@ def run_pipeline():
                 f"Skipping cleaning, but CLEANED DB not found: {cleaned_path}"
             )
 
-    # Phase III: Synthesis or load existing SYNTHED
+    # Phase III: Synthesis
     if RUN_SYNTHESIZER:
         print("\n=== PHASE III: SYNTHESIZING DATA ===")
         synthed_path = synthesize_equipment(db_path=cleaned_path)
@@ -57,6 +59,18 @@ def run_pipeline():
         if not synthed_path.exists():
             raise FileNotFoundError(
                 f"Skipping synthesis, but SYNTHED DB not found: {synthed_path}"
+            )
+
+    # Phase IV: Refine
+    if RUN_REFINER:
+        print("\n=== PHASE IV: REFINING DATA ===")
+        refined_path = refine_pipe(db_path=synthed_path)
+    else:
+        # Load previously synthesized DB
+        refined_path = Path(str(synthed_path).replace("-SYNTHED.db", "-REFINED.db"))
+        if not synthed_path.exists():
+            raise FileNotFoundError(
+                f"Skipping synthesis, but SYNTHED DB not found: {refined_path}"
             )
 
     print("\n=== PIPELINE COMPLETE ===")

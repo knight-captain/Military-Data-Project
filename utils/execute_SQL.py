@@ -1,5 +1,15 @@
 # import re
 
+import pandas as pd
+
+def get_table(conn, table_name):
+    """
+    Load a SQL table into a pandas DataFrame.
+    """
+    query = f"SELECT * FROM {table_name}"
+    return pd.read_sql_query(query, conn)
+
+
 def get_a_meta_table(conn):
     cursor = conn.cursor()
     sql = """

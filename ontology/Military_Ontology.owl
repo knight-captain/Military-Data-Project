@@ -371,7 +371,7 @@
         <rdfs:subPropertyOf rdf:resource="http://military.org/ontology#CoreID"/>
         <rdfs:domain rdf:resource="http://military.org/ontology#Equipment"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <hasRegex>REGEX:(system|aircraft|artillery|vehicle|boat|ship|howitzer|intelligence|research|vessel|tanks|watercraft|radar|arms|firearm|gun|missile|mistral|mortars|weapon)</hasRegex>
+        <hasRegex>REGEX:(system|aircraft|artillery|vehicle|class|howitzer|intelligence|research|vessel|tanks|watercraft|radar|arms|firearm|gun|missile|mistral|mortars|weapon)</hasRegex>
         <super_col>equip_type</super_col>
     </owl:DatatypeProperty>
     
@@ -1428,37 +1428,6 @@
     
 
 
-    <!-- http://military.org/ontology#OWLClass_0acafdb8_0fda_4f86_8a16_7f47fbe91b10 -->
-
-    <owl:Class rdf:about="http://military.org/ontology#OWLClass_0acafdb8_0fda_4f86_8a16_7f47fbe91b10">
-        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Artillery"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://military.org/ontology#HasPropulsion"/>
-                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Self_propelled"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <owl:disjointWith rdf:resource="http://military.org/ontology#OWLClass_12b345cf_fdf4_4e4f_a8c6_c032b9630574"/>
-        <rdfs:label xml:lang="en">SelfPropelled</rdfs:label>
-    </owl:Class>
-    
-
-
-    <!-- http://military.org/ontology#OWLClass_12b345cf_fdf4_4e4f_a8c6_c032b9630574 -->
-
-    <owl:Class rdf:about="http://military.org/ontology#OWLClass_12b345cf_fdf4_4e4f_a8c6_c032b9630574">
-        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Artillery"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://military.org/ontology#HasPropulsion"/>
-                <owl:someValuesFrom rdf:resource="http://military.org/ontology#Towed"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:label xml:lang="en">Towed</rdfs:label>
-    </owl:Class>
-    
-
-
     <!-- http://military.org/ontology#Past -->
 
     <owl:Class rdf:about="http://military.org/ontology#Past">
@@ -1612,6 +1581,15 @@
     <owl:Class rdf:about="http://military.org/ontology#Satellite">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#System"/>
         <hasRegex>REGEX:(satellite)</hasRegex>
+    </owl:Class>
+    
+
+
+    <!-- http://military.org/ontology#SelfPropelled -->
+
+    <owl:Class rdf:about="http://military.org/ontology#SelfPropelled">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Artillery"/>
+        <hasRegex>REGEX:(self(-| )propel)</hasRegex>
     </owl:Class>
     
 
@@ -1839,7 +1817,9 @@
     <!-- http://military.org/ontology#Towed -->
 
     <owl:Class rdf:about="http://military.org/ontology#Towed">
+        <rdfs:subClassOf rdf:resource="http://military.org/ontology#Artillery"/>
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#GroundMovement"/>
+        <hasRegex>REGEX:(towed)</hasRegex>
     </owl:Class>
     
 

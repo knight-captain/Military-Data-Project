@@ -116,7 +116,6 @@ def get_ancestor(input_, depth_from_root):
 
     if depth_from_root < 0 or depth_from_root >= len(path):
         return None
-
     return path[depth_from_root]
 
 def get_descendants(inputs):
@@ -165,12 +164,12 @@ def get_regex(entity):
             else:
                 patterns.append(val)
 
-    # Case 2: regex stored inside super_col
-    if hasattr(entity, "super_col"):
-        for val in entity.super_col:
-            val = str(val).strip()
-            if val.lower().startswith("regex:"):
-                patterns.append(val[6:].strip())
+    # # Case 2: regex stored inside super_col
+    # if hasattr(entity, "super_col"):
+    #     for val in entity.super_col:
+    #         val = str(val).strip()
+    #         if val.lower().startswith("regex:"):
+    #             patterns.append(val[6:].strip())
 
     return patterns
 

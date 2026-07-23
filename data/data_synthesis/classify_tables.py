@@ -16,6 +16,7 @@ def classify_tables(conn):
             "section_h2": meta["section_h2"],
             "section_h3": meta["section_h3"],
             "section_h4": meta["section_h4"],
+            "url": meta["url"],
             "country": meta.get("country"),
             "raw_cols": a_meta_table_of_columns.get(table_name, {}).get("raw_cols", [])
         }
@@ -38,6 +39,7 @@ def classify_tables(conn):
         # Attach metadata needed for fingerprints
         result["raw_cols"] = SQL_table_info[table_name]["raw_cols"]
         result["country"] = SQL_table_info[table_name]["country"]
+        result["url"] = SQL_table_info[table_name]["url"]
 
         # Compute leaf header
         headers_ordered = [
@@ -50,13 +52,13 @@ def classify_tables(conn):
                 result["leaf_header"] = header
                 break
 
-        # Compute ancestral_class using nav_tree
+        # Compute class_path using nav_tree
         eq_class = result["equipment_class"]
         if eq_class:
             # 0 = Equipment, 1 = Aircraft/Vessel/Vehicle/System/SmallArm
-            result["ancestral_class"] = get_ancestor(eq_class, 1)
+            result["class_path"] = get_ancestor(eq_class, 1)
         else:
-            result["ancestral_class"] = None
+            result["class_path"] = None
 
         table_classes[table_name] = result
 

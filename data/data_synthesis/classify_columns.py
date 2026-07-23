@@ -1,5 +1,7 @@
+import re
 from data.data_synthesis.column_classification_helper import *
 from utils.execute_SQL import build_mapping_table
+from utils.normalization import normalize_text
 
 CANONICAL_COLUMNS = [
 	"country", #WE HAVE: the country that owns this equipment. this is in a_meta_table
@@ -10,7 +12,7 @@ CANONICAL_COLUMNS = [
 	"dates", #list of dates with type, like [Commissioned: 1941/12/07, Retired: 2026/7/16]. If it looks like a date, put it with the raw_col name and combine them all 
 	"status", 
 	#ONTOLOGY STUFF
-	"ancestral_class", #"Equipment->[Aircraft, Smallarm, System, Vehicle, Vessel]" else: NOT_EQUIPMENT = 
+	"class_path", #"Equipment->[Aircraft, Smallarm, System, Vehicle, Vessel]" else: NOT_EQUIPMENT = 
 	"sub_class", #actual ontological class as well as "section" raw_col from merged/repeaded rows
 	"role", #mostly other_classes, specifically non-equipment ones
 	"capability", #for things like role 
@@ -32,7 +34,7 @@ CANONICAL_COLUMNS = [
 	"armament",
 	"carrier",
 	"note"
-	]  # your list
+	]  # this list is *almost* big enough to warrant a .csv
 
 
 def classify_columns(conn, table_classes):
@@ -49,51 +51,43 @@ def classify_columns(conn, table_classes):
 	"""
 
 	# 0. Initialize data structures
-	'''
-	contextual_mapping = dict of dicts:
-	  table_name -> {super_col: []}
-	canonical_columns = your fixed list
-	ontology_columns = optional: expectedColumns per class (later)
-	'''
-
 	contextual_mapping = {}
 	super_cols_list = CANONICAL_COLUMNS #to clean out notes and stale super_cols
 	# ontology_columns = {}      # TODO: load expectedColumns from ontology
 
 	for table_name, info in table_classes.items():
 
-		# 1. For each table, initialize empty super_col buckets
+		# 1. For each table, initialize empty super_col buckets and a bucket for unassigned raw_cols
+		raw_cols = info["raw_cols"]
+		unassigned_matched_cols = {raw_col: [] for raw_col in raw_cols} 	
 		contextual_mapping[table_name] = {col: [] for col in super_cols_list}
 
-		raw_cols = info["raw_cols"]
-
-		# 2. Assign known non-raw-col values (from classify_tables)
-		'''
-		These come from earlier pipeline stages:
-		- country
-		- ancestral_class (equipment sub_class)
-		- sub_class (leaf ontological class)
-		'''
+		# 2. Assign known non-raw-col values (from classify_tables) as metadata (i.e.: country, etc.)
 		table_metadata = {
 			"country": table_classes[table_name]["country"],
-			"ancestral_class": table_classes[table_name]["ancestral_class"],
+			"class_path": table_classes[table_name]["class_path"],
 			"sub_class": table_classes[table_name]["equipment_class"],
+			"url": table_classes[table_name]["url"],
 		}
 		contextual_mapping[table_name]["__metadata__"] = table_metadata
 
 
-		# 3. Assign raw_cols that match canonical columns directly
-		'''		
-		Strategy:
-		- regex
-		''' 	
-		column_matches = []
+		# 3. Assign raw_cols that match canonical columns directly via regex or previous architecture
 		for raw_col in raw_cols:
 			column_matches = classify_raw_col(raw_col)
-			if len(column_matches) == 1:
-				contextual_mapping[table_name][column_matches[0]].append(raw_col)
+			unassigned_matched_cols[raw_col] = column_matches
 			
-
+			#assign easy ones while we're here
+			if raw_col == "section":
+				contextual_mapping[table_name]["sub_class"].append(raw_col)
+				unassigned_matched_cols.pop(raw_col)
+			elif len(set(column_matches)) == 1:
+				contextual_mapping[table_name][column_matches[0]].append(raw_col)
+				unassigned_matched_cols.pop(raw_col)
+			elif raw_col == "quantity":
+				contextual_mapping[table_name]["quantity"].append(raw_col)
+				unassigned_matched_cols.pop(raw_col)
+		
 		# TODO: detect date columns and append to contextual_mapping[table_name]["dates"]
 		# 4. Assign date-like raw_cols to "dates"
 		'''
@@ -111,9 +105,60 @@ def classify_columns(conn, table_classes):
 		'''
 		other_classes = info["other_classes"]
 
+		# 6. Ensure required super_cols exist for ALL tables
+		'''
+		Required:
+		- equip_type
+		If missing:
+		- see if any remaining raw_cols have [...,equip_type,...] -> if only one, assign & win
+		- find any raw_cols matching the ambiguous ^(class|model|type|make|family|name)$ -> if only one, assign & win
+		- assign placeholder values ("variant" or "other names" raw_col for equip_type if there is one
+		- cry: None or "" otherwise for now)
+		'''
+		if not contextual_mapping[table_name]["equip_type"]:
+			candidates = []
 
-		# TODO: fallback ambiguous raw_cols → "note"
-		# 6. Assign ambiguous raw_cols later (Phase IV)
+			# 6.1 Look at unassigned raw_cols for good equip_type candidates
+			for raw_col in unassigned_matched_cols:
+				matches = unassigned_matched_cols[raw_col]
+				# ontology/regex already thinks this might be equip_type
+				if "equip_type" in matches or re.search(r"^(name|ship$|model|make|family)$", raw_col, re.IGNORECASE): #Still to ambiguous: type
+					candidates.append(raw_col)
+
+			# 6.2 If exactly one candidate → promote it to equip_type
+			if len(candidates) == 1:
+				chosen_one = candidates[0]
+				contextual_mapping[table_name]["equip_type"].append(chosen_one)
+				unassigned_matched_cols.pop(chosen_one, None)
+
+			# 6.3 If no candidates → try reassigning from other_names / variant
+			elif len(candidates) == 0:
+				# simple heuristic: if other_names has exactly one raw_col, promote it
+				if len(contextual_mapping[table_name]["other_names"]) == 1:
+					chosen_one = contextual_mapping[table_name]["other_names"][0]
+					contextual_mapping[table_name]["equip_type"].append(chosen_one)
+					contextual_mapping[table_name]["other_names"].remove(chosen_one)
+					unassigned_matched_cols.pop(chosen_one, None)
+				elif len(contextual_mapping[table_name]["variant"]) == 1:
+					chosen_one = contextual_mapping[table_name]["variant"][0]
+					contextual_mapping[table_name]["equip_type"].append(chosen_one)
+					contextual_mapping[table_name]["variant"].remove(chosen_one)
+					unassigned_matched_cols.pop(chosen_one, None)
+
+				else:
+					candidates.extend(contextual_mapping[table_name]["other_names"])
+					candidates.extend(contextual_mapping[table_name]["variant"])
+				# if still nothing, Phase IV can cry later
+
+			# 6.4 Multiple candidates → strongest match (placeholder for now)
+			else:
+				#TODO: For now, pick the first;
+				chosen_one = candidates[0]
+				contextual_mapping[table_name]["equip_type"].append(chosen_one)
+				unassigned_matched_cols.pop(chosen_one, None)
+
+
+		# 7. Assign ambiguous raw_cols later (Phase IV)
 		'''
 		Examples:
 		- equip_type vs variant vs ship_name
@@ -124,25 +169,13 @@ def classify_columns(conn, table_classes):
 		- leave ambiguous raw_cols unassigned
 		- or assign them to "note"
 		'''
-		#TODO: We don't have this; this is the most important column and we need to fugure out a system to classify it
-		# contextual_mapping[table_name]["equip_type"].append(info["equip_type"]) 
-
-
-		# TODO: enforce required super_cols
-		# 7. Ensure required super_cols exist for ALL tables
-		'''
-		Required:
-		- country
-		- quantity
-		- ancestral_class
-		- sub_class
-		- equip_type
+		for raw_col in unassigned_matched_cols:
+			contextual_mapping[table_name]["note"].append(raw_col)
 		
-		If missing:
-		- assign placeholder values ("variant" raw_col for equip_type if there is one, None or "" otherwise for now)
-		'''
+		if len(list(contextual_mapping)) % 500 == 0:
+			print(f"Columns classified: {len(list(contextual_mapping))}")
 
-	# print(contextual_mapping)
+	print(f"Columns classified: {len(list(contextual_mapping))}")
 	# 8. Return contextual_mapping and canonical_columns
 	build_mapping_table(conn, table_classes, contextual_mapping, super_cols_list)
 

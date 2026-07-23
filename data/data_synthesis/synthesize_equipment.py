@@ -31,22 +31,21 @@ def synthesize_equipment(db_path=None):
     shutil.copy(db_path, synthed_path)
     conn = sqlite3.connect(synthed_path)
 
-    print("\n[1/4] Classifying tables...")
+    print("\n[1/3] Classifying tables...")
     table_classes = classify_tables(conn) 
     
-    print("\n[2/4] Classifying columns...")
+    print("\n[2/3] Classifying columns...")
     contextual_mapping, smart_col_list = classify_columns(conn, table_classes)
     # print(smart_col_mapping)
 
     # STEP 3: Re-categorize the tables using a_mapping_table's info
-    #dict contextual_mapping [(table_name,raw_col)] = super_col
-    #list new_super_cols [super_col1,super_col2...]
-    print("\n[3/4] Recategorizing tables...")
-    raw_col_map = recategorize_ontologically(conn, contextual_mapping, smart_col_list)
+    #dict raw_col_map [(table_name,raw_col)] = super_col
+    # but build master needed a dict of super_cols after all
+    # raw_col_map = recategorize_ontologically(conn, contextual_mapping, smart_col_list)
 
-    # STEP 4: Build master equipment table
-    print("\n[4/4] Building master equipment table...")
-    build_master_equipment(conn, raw_col_map, smart_col_list)
+    # STEP 3: Build master equipment table
+    print("\n[3/3] Building master equipment table...")
+    build_master_equipment(conn, contextual_mapping, smart_col_list)
 
     conn.close()
     print("\nEquipment synthesis pipeline completed successfully.")

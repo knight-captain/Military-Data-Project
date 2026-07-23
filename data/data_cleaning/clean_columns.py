@@ -18,6 +18,8 @@ def clean_columns(df: pd.DataFrame) -> pd.DataFrame:
     if len(dfs) > 1:
         df = pd.concat(dfs, ignore_index=True)
 
+    #TODO: there are split tables that need to be merged; i.e.: australia_table_00_submarines_collinsclass & australia_table_01_submarines_collinsclass
+
     # 2. Standardize column names
     df = column_name_standardizer(df)
 
