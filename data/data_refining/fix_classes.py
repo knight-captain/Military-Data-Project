@@ -1,60 +1,38 @@
+from utils.edit_df import add_to_cell
 from utils.nav_tree import *
-from utils.normalization import normalize_text
+from utils.normalization import normalize_text, singularize
 from utils.regex_match import regex_match_to_ontology
 
+from owlready2 import ThingClass
 
-def evaluate_class(match):
-    """
-    Return:
-      True  → match is an Equipment class
-      False → match is not in ontology or maps to nothing
-      super_col → match maps to a non-equipment ontology root (status, etc.)
-    """
-    try:
-        ancestor = get_ancestor(match, 0)
-        if ancestor == get_class("Equipment"):
-            return True
-
-        # Non-equipment ontology class → return its super_col
-        #TODO: but super_cols are mostly properties, not classes. 
-        is_class = get_class(match)
-        if is_class is None:
-            col = get_super_col(match)
-            if col:
-                return col
-            #No super_col
-            return False
-    except:
-        return None
-
-
-def deduplicate_classes(classes_to_deduplicate):
+def deduplicate_classes(matches_to_deduplicate):
     '''
     DEDUPLICATE:
     - if same path, get_descendants to use leaf_most, delete the other
     - if different paths, use get_ancestors to get closest common ancestor, add both to note col and print flag
     '''
-    leaf_classes = get_descendants(classes_to_deduplicate)
+    leaf_classes = get_descendants(matches_to_deduplicate)
     
     if len(set(leaf_classes)) == 1:
         return leaf_classes[0]
 
     # Find nearest common ancestor
-    for depth in range(0, 6):
+    shared_ancestral_path = []
+    for depth in range(0, 10):
         try:
             generation = [get_ancestor(c, depth) for c in leaf_classes]
         except:
             # delved too greedily and too deep
-            return leaf_classes[0]
+            return shared_ancestral_path[depth-1]
 
         # If all ancestors at this depth are identical → keep going
         if len(set(generation)) == 1:
-            common_ancestor = generation[0]
+            shared_ancestral_path.append(generation[0])
         else:
             # Diverged → return deepest common ancestor
-            return common_ancestor
+            return shared_ancestral_path[depth-1]
 
-    return common_ancestor
+    return shared_ancestral_path[depth]
 
 
 def fix_classes(a_master_equipment):
@@ -69,82 +47,122 @@ def fix_classes(a_master_equipment):
       - set final_subclass in the DataFrame
     """
 
-    fixed = a_master_equipment.copy()
+    df = a_master_equipment.copy()
 
-    not_in_ontology = set()
+    not_in_ontology = []
 
-    for idx, row in fixed.iterrows():
-
-        if idx % 1000 == 0:
-            print(f"Rows checked: {idx}")
-
+    for idx, row in df.iterrows():
         raw_sub = row["sub_class"]
 
+        if idx % 1000 == 0:
+            print(f"On row: {idx}")
+
         if not raw_sub:
+            # CASE 6
             continue
 
-        # Split merged values
-        contestants = raw_sub.split(";")
+        contestants = [singularize(c.strip()) for c in raw_sub.split(";") if singularize(c.strip())]
+        # super_cols_to_edit[super_col] = value to add/replace in that super_col
+        super_cols_to_edit = {}
 
-        equip_candidates = []
-        non_equip_classes = []
-        unknown_classes = []
-
-        for raw_contestant in contestants:
-            contestant = normalize_text(raw_contestant)
+        for contestant in contestants:
             matches = regex_match_to_ontology(contestant)
 
             if not matches:
-                unknown_classes.append(contestant)
+                # CASE 7
+                not_in_ontology.append(contestant)
+                super_cols_to_edit.setdefault("note", []).append(contestant)
                 continue
 
             for match in matches:
                 cls = get_class(match, warn=False)
-                if cls is None:
-                    #Not a class, but maybe a property
-                    try:
-                        col = evaluate_class(match)
-                        print(f"col found for non-class: {idx} {contestant} - {match} - {is_equip}")
-                    except:
+
+                if cls is not None:
+                    '''
+                    Class Path; Cases: 1-5 possible
+                    '''
+                    ancestor0 = get_ancestor(cls, 0)
+
+                    if ancestor0 == get_class("Equipment"):
+                        # CASE 1: add for deduping
+                        super_cols_to_edit.setdefault("sub_class", []).append(match)
+                        super_cols_to_edit.setdefault("note", []).append(contestant)
                         continue
-                    continue
 
-                is_equip = evaluate_class(match)
-                if is_equip is True:
-                    equip_candidates.append(match)
-                elif is_equip is False:
-                    print(f"No super_col: {idx} - {contestant} - {match}")
-                    non_equip_classes.append((contestant, is_equip))
-                elif is_equip is None:
-                    # print(f"evaluate broke: {idx} - {contestant} - {match}")
-                    # unknown_classes.append(contestant)
+                    elif ancestor0 != get_class("EquipMission"):
+                        # CASE 2: ignore
+                        # this is a class we don't care about (country, rank, being, infrustructure)
+                        # we don't even want these moved to note
+                        continue
+
+                    # CASE 3-5: for EquipMission classes
+                    entity_for_property = get_ancestor(match, 1)
                 else:
-                    # is_equip is a super_col (status, etc.)
-                    print(f"{idx} {contestant} - {match} matched to super_col {is_equip}")
-                    non_equip_classes.append((contestant, is_equip))
+                    # CASE 4–5
+                    entity_for_property = match
 
-        # Deduplicate equipment classes
-        if equip_candidates:
-            final_subclass = deduplicate_classes(equip_candidates)
+                # super_col = evaluate_property(idx, entity_for_property)
+                super_col = get_super_col(entity_for_property)
+
+                if super_col is None:
+                    # CASE 3 or CASE 4 (already flagged)
+                    super_cols_to_edit.setdefault("note", []).append(contestant)
+                    continue
+                
+                # CASE 5 → move
+                super_cols_to_edit.setdefault(super_col, []).append(match)
+                super_cols_to_edit.setdefault("note", []).append(contestant)
+
+        # After all contestants:
+        # Handle CASE 1: sub_class assignment
+        if "sub_class" in super_cols_to_edit and super_cols_to_edit["sub_class"]:
+            # Deduplicate equipment classes
+            final_sub = deduplicate_classes(super_cols_to_edit["sub_class"])
+            df.at[idx, "sub_class"] = final_sub
+
+            # Any remaining equipment classes go to notes
+            remaining = [
+                cls for cls in super_cols_to_edit["sub_class"]
+                if cls != final_sub
+            ]
+            if remaining:
+                super_cols_to_edit.setdefault("note", []).extend(remaining)
         else:
-            final_subclass = None
+            # No equipment classes found
+            df.at[idx, "sub_class"] = None
 
-        # Write final_subclass into the DataFrame
-        fixed.at[idx, "sub_class"] = final_subclass
+        # Handle CASE 5: all other super_cols (except note)
+        for super_col, values in super_cols_to_edit.items():
+            if super_col in ("sub_class", "note"):
+                continue
 
-        # Move leftovers into notes
-        notes = row.get("notes", "")
+            # values are just ontology matches (strings or class names)
+            for match in values:
+                add_to_cell(df, idx, super_col, match)
 
-        #TODO: send to best col, like role or status
-        if non_equip_classes:
-            notes += f"; Non-equipment classes: {non_equip_classes}"
+        # Handle notes (CASE 3, 4, 7, leftovers)
+        if "note" in super_cols_to_edit:
+            # Remove duplicates
+            note_values = list(set(super_cols_to_edit["note"]))
 
-        if unknown_classes:
-            notes += f"; Unknown classes: {unknown_classes}"
-            not_in_ontology.update(unknown_classes)
+            # Remove any values already present in other columns
+            row_values = set()
+            for col in df.columns:
+                if col != "note":
+                    val = df.at[idx, col]
+                    if isinstance(val, list):
+                        row_values.update(val)
+                    elif val not in (None, "", float("nan")):
+                        row_values.add(val)
 
-        fixed.at[idx, "notes"] = notes.strip(" |")
+            # Only keep note items not found elsewhere in the row
+            final_notes = [v for v in note_values if v not in row_values]
 
-    print(f"Consider adding to Ontology: {len(not_in_ontology)}")
+            # Append to note column
+            for v in final_notes:
+                add_to_cell(df, idx, "note", v)
 
-    return fixed
+
+    # At end:
+    print("Consider adding to Ontology:", set(not_in_ontology))
+    return df

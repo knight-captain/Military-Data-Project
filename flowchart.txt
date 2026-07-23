@@ -1,18 +1,18 @@
 
 raw_sub = row["sub_class"]
-├Empty? -> NEXT ROW
-└contestants (1 or 2, prolly never 3+. If 2+, at least 1 is guaranteed to already be an equipment class)
+├Empty? -> CASE 6
+└contestants (1 or 2, prolly never 3+. If 2+, at least 1 is guaranteed to already be an equipment class) CASE 7
     ├contestant = [matches]: Empty? = Not in Ontology -> consider_editing_ontology.append(contestant) -> NEXT CONTESTANT
     │   └match = entity in Ontology > Is it a class?
     │       ├Class: is it an equipment class?
-    │       │   ├equipment class -> contestants_to_de-dupe_later.append(contestant) -> NEXT MATCH
+    │       │   ├equipment class -> contestants_to_de-dupe_later.append(match, contestant) -> CASE 1
     │       │   └non-equipment class -> get_ancestor(match,0)
-    │       │       ├is[Being,Infrustructure,Rank, or even QTY] -> don't care, ignore -> NEXT MATCH
-    │       │       └is EquipMission -> get_Property(get_ancestor(match,1)) > if no property -> FLAG & NEXT MATCH
+    │       │       ├is[Being,Infrustructure,Rank, or even QTY] -> don't care, ignore -> CASE 2
+    │       │       └is EquipMission -> get_Property(get_ancestor(match,1)) > if no property -> FLAG & CASE 3
     │       │           │ 
     │       └Property: does it have a super_col?
-    │           ├no super_col > Not possible? > FLAG & NEXT MATCH
-    │           └super_col -> move_contestant_to_other_col[super_col=match]:contestant -> NEXT MATCH
+    │           ├no super_col > Not possible? > FLAG & CASE 4
+    │           └super_col -> move_contestant_to_other_col[super_col=match]:contestant -> CASE 5
     ├contestants_to_de-dupe_later.append(contestant) = FALSE
     │   ├move_contestant_to_other_col[super_col]:contestant = TRUE -> MOVE contestant to [each or the???] super_col that it mached
     │   └move_contestant_to_other_col[super_col]:contestant = FALSE -> consider_editing_ontology.append(contestant)
@@ -20,3 +20,18 @@ raw_sub = row["sub_class"]
         ├move_contestant_to_other_col[super_col]:contestant = FALSE -> SEND to de-dupe
         └move_contestant_to_other_col[super_col]:contestant = TRUE
             └??? BOTH ???
+
+CASE
+1. equipment match -> add to de-dupe
+2. non-equip, non-mission -> ignore
+3. EquipMission -> get_Property
+4. Property but no super_col -> FLAG
+5. super_col -> add to dict[super_col]:(match,contestant)
+6. empty cell -> ignore
+7. contestant len[matches] = 0 or not in Ontology -> save for summary report
+
+FATE:
+- de-dupe: sub_class cell = "leaf-most shared equip class for any contestants", and any remaining contestants to save_for_note
+- move: add matches to super_cols and contestant to save_for_note
+- both: do both
+- nither: CASES [6,7,2,3,4]

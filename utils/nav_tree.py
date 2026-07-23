@@ -1,4 +1,4 @@
-from owlready2 import get_ontology, ThingClass
+from owlready2 import get_ontology, ThingClass, ObjectProperty, DataProperty
 
 _ONTO = None
 _CLASS_INDEX = {}      # label/name -> class
@@ -174,28 +174,66 @@ def get_regex(entity):
     return patterns
 
 def get_super_col(entity):
+    """
+    Return the super_col annotation for a property or class.
+    Assumes super_col contains only meaningful column names.
+    """
     if hasattr(entity, "super_col"):
         for val in entity.super_col:
-            val = str(val).strip()
-            if not val.lower().startswith("regex:"):
-                return val
+            return str(val).strip()
     return None
 
-def get_property(name):
-    """
-    Return an ontology object or data property by its name.
-    """
-    # Object properties
-    for prop in _ONTO.object_properties():
-        if prop.name == name:
-            return prop
 
-    # Data properties
-    for prop in _ONTO.data_properties():
-        if prop.name == name:
-            return prop
+def get_property(entity):
+    """
+    Return the ontology property object associated with `entity`.
 
+    Accepts:
+      - property object
+      - property name (string)
+      - class (EquipMission sub-class)
+      - class name (EquipMission sub-class string)
+
+    Returns:
+      - ontology property object
+      - None if no property exists
+    """
+
+    # 1. If entity is already a property object
+    if isinstance(entity, ObjectProperty) or isinstance(entity, DataProperty):
+        return entity
+
+    # 2. If entity is a string, try resolving it to a property first
+    if isinstance(entity, str):
+        # Try object properties
+        for prop in _ONTO.object_properties():
+            if prop.name == entity:
+                return prop
+
+        # Try data properties
+        for prop in _ONTO.data_properties():
+            if prop.name == entity:
+                return prop
+
+        # Try resolving string to a class
+        cls = get_class(entity, warn=False)
+        if cls is None:
+            return None
+        entity = cls  # continue as class
+
+    # 3. If entity is a class, check if it has a property annotation
+    if hasattr(entity, "hasProperty"):
+        # Ontology annotation: class → property
+        for ann in entity.hasProperty:
+            # ann is something like "HasRole"
+            # resolve it to a property object
+            prop = get_property(str(ann))
+            if prop is not None:
+                return prop
+
+    # 4. No property found
     return None
+
 
 def get_all_properties_of_class(cls):
     """
