@@ -1,7 +1,7 @@
 from data.data_synthesis.naive_classification import classify_naively
 from data.data_synthesis.advanced_classification import classify_advanced
 from utils.execute_SQL import get_a_meta_table, get_a_meta_table_of_columns
-from utils.nav_tree import get_ancestor
+from utils.nav_tree import *
 import re
 
 def classify_tables(conn):
@@ -56,7 +56,7 @@ def classify_tables(conn):
         eq_class = result["equipment_class"]
         if eq_class:
             # 0 = Equipment, 1 = Aircraft/Vessel/Vehicle/System/SmallArm
-            result["class_path"] = get_ancestor(eq_class, 1)
+            result["class_path"] = get_ancestral_path(eq_class)
         else:
             result["class_path"] = None
 

@@ -52,6 +52,26 @@ def get_class(input_, warn=False):
         print(f"[NAV WARNING] Class '{input_}' not found in ontology")
     return cls
 
+def get_name(entity):
+    """
+    Normalize any ontology entity (class, individual, or string)
+    into a SQL-safe string name/label.
+    """
+    # Already a string → return as-is
+    if isinstance(entity, str):
+        return entity
+
+    # OWL class or individual with label
+    if hasattr(entity, "label") and entity.label:
+        return entity.label[0]
+
+    # OWL class or individual with name
+    if hasattr(entity, "name"):
+        return entity.name
+
+    # Fallback
+    return str(entity)
+
 
 def get_all_classes():
     _create_tree()
@@ -117,6 +137,30 @@ def get_ancestor(input_, depth_from_root):
     if depth_from_root < 0 or depth_from_root >= len(path):
         return None
     return path[depth_from_root]
+
+def get_ancestral_path(input_):
+    """
+    i.e. Equipment>Aircraft>FixedWing
+      ...
+    """
+    _create_tree()
+    cls = get_class(input_,True)
+    if cls is None:
+        return None
+
+    # Build full path from root to cls
+    path = []
+    target = get_name(cls)
+    for depth in range(0, 10):
+        ancestor = get_ancestor(cls, depth)  # pass the class, not the name
+        if ancestor is None:
+            break
+        name = get_name(ancestor)
+        path.append(name)
+        if name == target:
+            return ">".join(path)
+
+    return None
 
 def get_descendants(inputs):
     """

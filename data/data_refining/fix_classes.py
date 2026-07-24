@@ -3,7 +3,13 @@ from utils.nav_tree import *
 from utils.normalization import normalize_text, singularize
 from utils.regex_match import regex_match_to_ontology
 
-from owlready2 import ThingClass
+# FOR DEBUGGING
+def is_sql_safe(val):
+    return isinstance(val, (str, int, float)) or val is None
+def debug_sql(func, val):
+    if not is_sql_safe(val):
+        print(f"{func}: {val} - {type(val)}")
+
 
 def deduplicate_classes(matches_to_deduplicate):
     '''
@@ -12,7 +18,7 @@ def deduplicate_classes(matches_to_deduplicate):
     - if different paths, use get_ancestors to get closest common ancestor, add both to note col and print flag
     '''
     leaf_classes = get_descendants(matches_to_deduplicate)
-    
+
     if len(set(leaf_classes)) == 1:
         return leaf_classes[0]
 
@@ -20,7 +26,7 @@ def deduplicate_classes(matches_to_deduplicate):
     shared_ancestral_path = []
     for depth in range(0, 10):
         try:
-            generation = [get_ancestor(c, depth) for c in leaf_classes]
+            generation = [get_name(get_ancestor(c, depth)) for c in leaf_classes]
         except:
             # delved too greedily and too deep
             return shared_ancestral_path[depth-1]
@@ -118,15 +124,18 @@ def fix_classes(a_master_equipment):
         if "sub_class" in super_cols_to_edit and super_cols_to_edit["sub_class"]:
             # Deduplicate equipment classes
             final_sub = deduplicate_classes(super_cols_to_edit["sub_class"])
+            path = get_ancestral_path(final_sub)
+            debug_sql("final_sub",final_sub)
             df.at[idx, "sub_class"] = final_sub
+            df.at[idx, "class_path"] = path
 
             # Any remaining equipment classes go to notes
-            remaining = [
-                cls for cls in super_cols_to_edit["sub_class"]
-                if cls != final_sub
+            rejects = [
+                reject for reject in super_cols_to_edit["sub_class"]
+                if reject != final_sub
             ]
-            if remaining:
-                super_cols_to_edit.setdefault("note", []).extend(remaining)
+            if rejects:
+                super_cols_to_edit.setdefault("note", []).extend(rejects)
         else:
             # No equipment classes found
             df.at[idx, "sub_class"] = None
@@ -161,7 +170,6 @@ def fix_classes(a_master_equipment):
             # Append to note column
             for v in final_notes:
                 add_to_cell(df, idx, "note", v)
-
 
     # At end:
     print("Consider adding to Ontology:", set(not_in_ontology))

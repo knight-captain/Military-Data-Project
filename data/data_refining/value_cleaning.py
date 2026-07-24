@@ -1,4 +1,5 @@
 from data.data_refining.fix_classes import fix_classes
+from data.data_refining.fix_quantities import fix_quantities
 from utils.edit_df import collapse_lists
 from utils.execute_SQL import get_table
 
@@ -11,7 +12,7 @@ def clean_all_values(conn):
 
     print("Fixing quantities...")
     # Clean quantity
-    cleaned_quantity_master = fixed_classes_master
+    cleaned_quantity_master = fix_quantities(fixed_classes_master)
     
     print("Standardizeing equipment names...")
     # Standardize equip_name
@@ -19,12 +20,6 @@ def clean_all_values(conn):
 
     #anything else?
     cleaned_master_equipment = collapse_lists(standardized_names_master)
-    print(cleaned_master_equipment.applymap(type).head())
-    for col in cleaned_master_equipment.columns:
-        for idx, val in cleaned_master_equipment[col].items():
-            if not isinstance(val, (str, int, float, type(None))):
-                print("BAD VALUE:", col, idx, val, type(val))
-                raise SystemExit
-
+    print(cleaned_master_equipment.info())
 
     return cleaned_master_equipment

@@ -8,6 +8,7 @@ def build_groups(table_classes):
     equipment_root = get_class("Equipment")
 
     # Collect all classes
+    #TODO move to nav_tree
     def collect_all(cls_obj, out):
         out.add(cls_obj)
         for child in get_children(cls_obj):
@@ -17,6 +18,7 @@ def build_groups(table_classes):
     collect_all(equipment_root, all_equipment_classes)
 
     # Helper: direct parent
+    #TODO move to nav_tree
     def get_parent(cls_obj):
         for candidate in all_equipment_classes:
             if cls_obj in get_children(candidate):

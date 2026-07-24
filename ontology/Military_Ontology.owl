@@ -658,7 +658,7 @@
 
     <owl:Class rdf:about="http://military.org/ontology#Anti_tank">
         <rdfs:subClassOf rdf:resource="http://military.org/ontology#Anti_armor"/>
-        <hasRegex>REGEX:(anti-tank)</hasRegex>
+        <hasRegex>REGEX:(anti-tank|MANPAT)</hasRegex>
     </owl:Class>
     
 
