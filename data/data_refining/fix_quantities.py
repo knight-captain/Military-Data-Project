@@ -1,70 +1,72 @@
 import re
-from utils.nav_tree import get_name
+import pandas as pd
 
-ESTIMATE_WORDS = {
-    "several", "many", "numerous", "thousands", "hundreds",
-    "unknown", "unk", "approx", "approx.", "c.", "circa"
-}
+YEAR_MIN = 1950
+YEAR_MAX = 2050
 
-def classify_quantity_token(token: str, ship_name: str | None):
-    token = token.strip()
-    if not token:
-        return None
+SHIP_PREFIXES = ["USS", "HMS", "HS", "INS", "ČMP", "KRI", "HMAS"]
 
-    if token.startswith("ε"):
-        num = re.sub(r"[^\d]", "", token)
-        return int(num) if num else 1
+def has_multiple_ship_names(name: str) -> bool:
+    #TODO: This logic is severely flawed. It makes the wrong assumptions about ambiguous ship_name
+    if not isinstance(name, str):
+        return False
 
-    m = re.search(r"\((\d+)\)", token)
-    if m:
-        class_count = int(m.group(1))
-        if ship_name:
-            return 1
-        return class_count
+    # obvious separators
+    if "," in name or ";" in name:
+        return True
 
-    if re.fullmatch(r"\d+", token):
-        num = int(token)
-        if num > 50000:
-            return None
-        return num
+    # repeated prefixes
+    for prefix in SHIP_PREFIXES:
+        if name.count(prefix) > 1:
+            return True
 
-    m = re.search(r"(\d+)\s*[-–]\s*(\d+)", token)
-    if m:
-        low, high = int(m.group(1)), int(m.group(2))
-        return high
+    # repeated parentheses (multiple ships listed)
+    if name.count("(") > 1:
+        return True
 
-    low_val = token.lower()
-    if any(word in low_val for word in ESTIMATE_WORDS):
-        return None
+    # multiple capitalized words often = multiple ships
+    caps = re.findall(r"\b[A-Z][a-zA-Z]+\b", name)
+    if len(caps) > 2:
+        return True
 
-    if re.fullmatch(r"\d{4}", token):
-        return None
+    return False
 
-    nums = re.findall(r"\d+", token)
-    if nums:
-        return max(int(n) for n in nums)
-
-    return None
 
 def clean_quantity_value(raw: str, ship_name: str | None):
     if raw is None:
         return None
 
-    val = str(raw).strip()
-    if not val:
+    if not isinstance(raw, str):
         return None
 
-    parts = [p for p in val.split(";") if p.strip()]
-    cleaned_parts = [
-        classify_quantity_token(part, ship_name)
-        for part in parts
-    ]
-    cleaned_parts = [c for c in cleaned_parts if c is not None]
-
-    if not cleaned_parts:
+    raw = raw.strip()
+    if not raw:
         return None
 
-    return max(cleaned_parts)
+    # Ship logic: multiple ships listed → quantity = 1
+    if ship_name and has_multiple_ship_names(ship_name):
+        return 1
+
+    # Extract all numbers
+    nums = [int(n) for n in re.findall(r"\d+", raw)]
+    if not nums:
+        return None
+
+    # Remove years unless they are the only number
+    filtered = [n for n in nums if not (YEAR_MIN <= n <= YEAR_MAX)]
+    if not filtered:
+        filtered = nums  # keep the year if it's the only number
+
+    # Ship logic: one ship, multiple numbers → use parentheses number
+    if ship_name and len(filtered) > 1:
+        m = re.search(r"\((\d+)\)", raw)
+        if m:
+            return int(m.group(1))
+        return 1
+
+    # Return min viable number
+    return int(min(filtered))
+
 
 def fix_quantities(df):
     cleaned = []
@@ -76,4 +78,5 @@ def fix_quantities(df):
         cleaned.append(cleaned_val)
 
     df["quantity_clean"] = cleaned
+    df["quantity_clean"] = df["quantity_clean"].astype("Int64")
     return df

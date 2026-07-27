@@ -30,10 +30,13 @@ def update_path(db_path: Path | str) -> Path:
     db_path = Path(db_path)
     name = db_path.name
 
-    if name.endswith("-REFINED.db"):
+    if name.endswith("-ANALYZED.db"):
         # Placeholder for future phases (Phase IV, V, etc.)
-        raise ValueError("No next stage defined after -REFINED.db")
+        raise ValueError("No next stage defined after -ANALYZED.db")
 
+    elif name.endswith("-REFINED.db"):
+        return db_path.with_name(name.replace("-REFINED.db", "-ANALYZED.db"))
+    
     elif name.endswith("-SYNTHED.db"):
         return db_path.with_name(name.replace("-SYNTHED.db", "-REFINED.db"))
 

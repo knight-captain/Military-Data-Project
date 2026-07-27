@@ -14,12 +14,14 @@ from data.data_acquisition.scrape_pipe import scrape_pipe
 from data.data_cleaning.clean_all import clean_all
 from data.data_synthesis.synthesize_equipment import synthesize_equipment
 from data.data_refining.refine_pipe import refine_pipe
+from data.data_analysis.analyze_pipe import analyze_data
 
 
 RUN_SCRAPER = False #If False, make sure a set of military_equipment_TEST.db exists; can also be str, and will run edge_case.txt and name the .db after the str
 RUN_CLEANING = False
 RUN_SYNTHESIZER = False
-RUN_REFINER = True
+RUN_REFINER = False
+RUN_ANALYZER = True
 
 def run_pipeline():
     stamp = datetime.now().strftime("%H%M%S")
@@ -40,6 +42,8 @@ def run_pipeline():
     # Phase II: Clean
     if RUN_CLEANING:
         print("\n=== PHASE II: CLEANING TABLES ===")
+        stamp = datetime.now().strftime("%H%M%S")
+        print(f"Started Cleaning: {stamp}")
         cleaned_path = clean_all(db_path=raw_path)
     else:
         # Load previously cleaned DB
@@ -52,6 +56,8 @@ def run_pipeline():
     # Phase III: Synthesis
     if RUN_SYNTHESIZER:
         print("\n=== PHASE III: SYNTHESIZING DATA ===")
+        stamp = datetime.now().strftime("%H%M%S")
+        print(f"Started Synth: {stamp}")
         synthed_path = synthesize_equipment(db_path=cleaned_path)
     else:
         # Load previously synthesized DB
@@ -64,18 +70,35 @@ def run_pipeline():
     # Phase IV: Refine
     if RUN_REFINER:
         print("\n=== PHASE IV: REFINING DATA ===")
+        stamp = datetime.now().strftime("%H%M%S")
+        print(f"Started Refine: {stamp}")
         refined_path = refine_pipe(db_path=synthed_path)
     else:
         # Load previously synthesized DB
         refined_path = Path(str(synthed_path).replace("-SYNTHED.db", "-REFINED.db"))
         if not synthed_path.exists():
             raise FileNotFoundError(
-                f"Skipping synthesis, but SYNTHED DB not found: {refined_path}"
+                f"Skipping synthesis, but REFINED DB not found: {refined_path}"
             )
 
-    print("\n=== PIPELINE COMPLETE ===")
+    # Phase V: Analysis
+    if RUN_ANALYZER:
+        print("\n=== PHASE V: ANALYZING DATA ===")
+        stamp = datetime.now().strftime("%H%M%S")
+        print(f"Started Analysis: {stamp}")
+        analyzed_path = analyze_data(db_path=refined_path)
+    else:
+        # Load previously synthesized DB
+        analyzed_path = Path(str(refined_path).replace("-REFINED.db", "-ANALYZED.db"))
+        if not analyzed_path.exists():
+            raise FileNotFoundError(
+                f"Skipping synthesis, but ANALYZED DB not found: {analyzed_path}"
+            )
+
     stamp = datetime.now().strftime("%H%M%S")
     print(f"Finished Pipe: {stamp}")
+    print("\n=== PIPELINE COMPLETE ===")
+
 
 if __name__ == "__main__":
     run_pipeline()

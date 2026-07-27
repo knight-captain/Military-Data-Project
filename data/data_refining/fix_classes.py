@@ -1,3 +1,5 @@
+import pandas as pd
+
 from utils.edit_df import add_to_cell
 from utils.nav_tree import *
 from utils.normalization import normalize_text, singularize
@@ -161,7 +163,7 @@ def fix_classes(a_master_equipment):
                     val = df.at[idx, col]
                     if isinstance(val, list):
                         row_values.update(val)
-                    elif val not in (None, "", float("nan")):
+                    elif val not in (None, "") and not pd.isna(val):
                         row_values.add(val)
 
             # Only keep note items not found elsewhere in the row

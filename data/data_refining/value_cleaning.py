@@ -14,7 +14,7 @@ def clean_all_values(conn):
     # Clean quantity
     cleaned_quantity_master = fix_quantities(fixed_classes_master)
     
-    print("Standardizeing equipment names...")
+    print("Standardizing equipment names...")
     # Standardize equip_name
     standardized_names_master = cleaned_quantity_master
 

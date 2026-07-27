@@ -1,3 +1,5 @@
+import pandas as pd
+
 from utils.nav_tree import get_name
 
 def add_to_cell(df, idx, col, value):
@@ -17,10 +19,21 @@ def normalize_cell(val):
         return get_name(val)
     return val
 
-
 def collapse_lists(df):
     for col in df.columns:
+
+        # Inspect the column's types
+        types = df[col].apply(lambda x: type(x)).unique()
+
+        # If column contains only safe SQL types, skip it
+        safe_types = {str, int, float, type(None)}
+        if all(t in safe_types for t in types):
+            continue
+
+        # Otherwise, collapse the column
         df[col] = df[col].apply(normalize_cell)
+
     return df
+
 
 
