@@ -15,7 +15,7 @@ from data.data_acquisition.scrape_wiki import scrape_all_to_sqlite
 
 # CONFIG
 
-DB_DIR = Path("data/db")
+DB_DIR = Path("data/db/runs")
 
 # MAIN ENTRY POINT
 def scrape_pipe(scrape_mode):

@@ -32,7 +32,7 @@ def run_pipeline():
         print("\n=== PHASE I: SCRAPING TABLES ===")
         raw_path = scrape_pipe(RUN_SCRAPER)
     else:
-        proxy_scrape = Path("data/db/military_equipment_TEST.db") # Make sure this exists & == a raw scrape
+        proxy_scrape = Path("data/db/runs/military_equipment_TEST.db") # Make sure this exists & == a raw scrape
         raw_path = Path(str(proxy_scrape).replace("TEST.db", "TEST-RAW.db"))
         if not raw_path.exists():
             raise FileNotFoundError(
