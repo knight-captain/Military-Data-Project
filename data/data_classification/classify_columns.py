@@ -1,5 +1,5 @@
 import re
-from data.data_synthesis.column_classification_helper import *
+from data.data_classification.column_classification_helper import *
 from utils.execute_SQL import build_mapping_table
 from utils.normalization import normalize_text
 

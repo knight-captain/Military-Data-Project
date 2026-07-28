@@ -36,8 +36,6 @@ def clean_all(conn=None, db_path=None):
     # Build CLEANED path & copy RAW → CLEANED
     cleaned_path = Path(str(db_path).replace("-RAW.db", "-CLEANED.db"))
     shutil.copy(db_path, cleaned_path)
-
-    # Open connection to CLEANED
     conn = sqlite3.connect(cleaned_path)
     cursor = conn.cursor()
 

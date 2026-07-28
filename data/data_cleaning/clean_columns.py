@@ -20,7 +20,7 @@ def clean_columns(df: pd.DataFrame) -> pd.DataFrame:
 
     #TODO: there are split tables that need to be merged; i.e.: australia_table_00_submarines_collinsclass & australia_table_01_submarines_collinsclass
 
-    # 2. Standardize column names
+    # 2. Find proper column names
     df = column_name_standardizer(df)
 
     # Step 3: Remove superfluous columns
@@ -28,7 +28,7 @@ def clean_columns(df: pd.DataFrame) -> pd.DataFrame:
     # - remove image cols (which Phase III handles), 
     # - remove numbered/unnamed cols (which column_name_standardizer handles), 
     # - and stopped cleaning tiny tables, but didn't actually drop them...
-    # - remove_superfluous_columns might need to be removed for being superfluous! XD
+    #TODO: remove_superfluous_columns might need to be removed for being superfluous! XD
     df = remove_superfluous_columns(df)
 
     # 4. Guarantee a DataFrame is returned

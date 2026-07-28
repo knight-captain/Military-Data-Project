@@ -2,7 +2,7 @@
 Classifies each cleaned equipment table using regex rules from
 ontology/table_regex_rules.csv.
 
-Output (returned to synthesize_equipment.py):
+Output (returned to classify_equipment.py):
     table_categories : dict {
         table_name : {
             "branch": str | None,
@@ -21,9 +21,9 @@ This module DOES NOT write anything to the database.
 import re
 from pathlib import Path
 
-from data.data_synthesis.old.calculate_confidence import calculate_confidence
-from data.data_synthesis.old.cluster_tables import cluster_tables
-from data.data_synthesis.old.derive_hierarchy import derive_hierarchy
+from data.data_classification.old.calculate_confidence import calculate_confidence
+from data.data_classification.old.cluster_tables import cluster_tables
+from data.data_classification.old.derive_hierarchy import derive_hierarchy
 from utils import read_csv
 from utils.normalization import normalize_text
 

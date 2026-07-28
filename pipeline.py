@@ -12,14 +12,14 @@ from pathlib import Path
 # --- Modules ---
 from data.data_acquisition.scrape_pipe import scrape_pipe
 from data.data_cleaning.clean_all import clean_all
-from data.data_synthesis.synthesize_equipment import synthesize_equipment
+from data.data_classification.data_classification import classify_all_equipment
 from data.data_refining.refine_pipe import refine_pipe
 from data.data_analysis.analyze_pipe import analyze_data
 
 
 RUN_SCRAPER = False #If False, make sure a set of military_equipment_TEST.db exists; can also be str, and will run edge_case.txt and name the .db after the str
 RUN_CLEANING = False
-RUN_SYNTHESIZER = False
+RUN_CLASSIFIER = False
 RUN_REFINER = False
 RUN_ANALYZER = True
 
@@ -53,18 +53,18 @@ def run_pipeline():
                 f"Skipping cleaning, but CLEANED DB not found: {cleaned_path}"
             )
 
-    # Phase III: Synthesis
-    if RUN_SYNTHESIZER:
-        print("\n=== PHASE III: SYNTHESIZING DATA ===")
+    # Phase III: Classification
+    if RUN_CLASSIFIER:
+        print("\n=== PHASE III: CLASSIFYING DATA ===")
         stamp = datetime.now().strftime("%H%M%S")
-        print(f"Started Synth: {stamp}")
-        synthed_path = synthesize_equipment(db_path=cleaned_path)
+        print(f"Started Classification: {stamp}")
+        classified_path = classify_all_equipment(db_path=cleaned_path)
     else:
-        # Load previously synthesized DB
-        synthed_path = Path(str(cleaned_path).replace("-CLEANED.db", "-SYNTHED.db"))
-        if not synthed_path.exists():
+        # Load previously classified DB
+        classified_path = Path(str(cleaned_path).replace("-CLEANED.db", "-CLASSIFIED.db"))
+        if not classified_path.exists():
             raise FileNotFoundError(
-                f"Skipping synthesis, but SYNTHED DB not found: {synthed_path}"
+                f"Skipping classification, but CLASSIFIED DB not found: {classified_path}"
             )
 
     # Phase IV: Refine
@@ -72,13 +72,13 @@ def run_pipeline():
         print("\n=== PHASE IV: REFINING DATA ===")
         stamp = datetime.now().strftime("%H%M%S")
         print(f"Started Refine: {stamp}")
-        refined_path = refine_pipe(db_path=synthed_path)
+        refined_path = refine_pipe(db_path=classified_path)
     else:
-        # Load previously synthesized DB
-        refined_path = Path(str(synthed_path).replace("-SYNTHED.db", "-REFINED.db"))
-        if not synthed_path.exists():
+        # Load previously refined DB
+        refined_path = Path(str(classified_path).replace("-CLASSIFIED.db", "-REFINED.db"))
+        if not classified_path.exists():
             raise FileNotFoundError(
-                f"Skipping synthesis, but REFINED DB not found: {refined_path}"
+                f"Skipping refining, but REFINED DB not found: {refined_path}"
             )
 
     # Phase V: Analysis
@@ -88,11 +88,11 @@ def run_pipeline():
         print(f"Started Analysis: {stamp}")
         analyzed_path = analyze_data(db_path=refined_path)
     else:
-        # Load previously synthesized DB
+        # Load previously analyzed DB
         analyzed_path = Path(str(refined_path).replace("-REFINED.db", "-ANALYZED.db"))
         if not analyzed_path.exists():
             raise FileNotFoundError(
-                f"Skipping synthesis, but ANALYZED DB not found: {analyzed_path}"
+                f"Skipping analysis, but ANALYZED DB not found: {analyzed_path}"
             )
 
     stamp = datetime.now().strftime("%H%M%S")

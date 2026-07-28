@@ -1,5 +1,5 @@
-from data.data_synthesis.naive_classification import classify_naively
-from data.data_synthesis.advanced_classification import classify_advanced
+from data.data_classification.naive_classification import classify_naively
+from data.data_classification.advanced_classification import classify_advanced
 from utils.execute_SQL import get_a_meta_table, get_a_meta_table_of_columns
 from utils.nav_tree import *
 import re

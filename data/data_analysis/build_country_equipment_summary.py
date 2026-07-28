@@ -20,7 +20,7 @@ def build_country_equipment_summary(conn):
             sub_class,
             SUM(quantity_clean) AS total_quantity
         FROM a_canonical_equipment
-        WHERE quantity_clean IS NOT NULL
+        WHERE (quantity_clean IS NOT NULL AND class_path IS NOT NULL AND sub_class IS NOT "Equipment")
         GROUP BY country, class_path, sub_class
         ORDER BY country, class_path, sub_class;
     """)

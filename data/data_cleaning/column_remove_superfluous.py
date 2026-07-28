@@ -20,10 +20,10 @@ def remove_superfluous_columns(df):
         col_str = str(col).strip().lower()
         if col_str.startswith("unnamed") or col_str.isdigit():
             drop_cols.append(col)
-            # if col_str.isdigit():
-            #     print("WARNING: dropping numeric column in superfluous")            
-            # if col_str.startswith("unnamed"):
-            #     print("WARNING: dropping numeric column in superfluous")
+            if col_str.isdigit():
+                print("WARNING: dropping numeric column in superfluous")            
+            if col_str.startswith("unnamed"):
+                print("WARNING: dropping numeric column in superfluous")
             continue
 
         # # 3. Columns with all NaN or empty-like values -> too aggressive

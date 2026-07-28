@@ -1,5 +1,5 @@
-from data.data_synthesis.compute_fingerprints import *
-from data.data_synthesis.group_tables import find_best_group, assign_table_to_group
+from data.data_classification.compute_fingerprints import *
+from data.data_classification.group_tables import find_best_group, assign_table_to_group
 from utils.nav_tree import *
 
 def build_groups(table_classes):

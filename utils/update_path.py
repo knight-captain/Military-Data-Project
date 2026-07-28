@@ -8,8 +8,8 @@ def update_path(db_path: Path | str) -> Path:
 
     Stages:
         -RAW.db      → -CLEANED.db
-        -CLEANED.db  → -SYNTHED.db
-        -SYNTHED.db  → (reserved for future phases)
+        -CLEANED.db  → -CLASSIFIED.db
+        -CLASSIFIED.db  → (reserved for future phases)
 
     Parameters
     ----------
@@ -37,11 +37,11 @@ def update_path(db_path: Path | str) -> Path:
     elif name.endswith("-REFINED.db"):
         return db_path.with_name(name.replace("-REFINED.db", "-ANALYZED.db"))
     
-    elif name.endswith("-SYNTHED.db"):
-        return db_path.with_name(name.replace("-SYNTHED.db", "-REFINED.db"))
+    elif name.endswith("-CLASSIFIED.db"):
+        return db_path.with_name(name.replace("-CLASSIFIED.db", "-REFINED.db"))
 
     elif name.endswith("-CLEANED.db"):
-        return db_path.with_name(name.replace("-CLEANED.db", "-SYNTHED.db"))
+        return db_path.with_name(name.replace("-CLEANED.db", "-CLASSIFIED.db"))
 
     elif name.endswith("-RAW.db"):
         return db_path.with_name(name.replace("-RAW.db", "-CLEANED.db"))

@@ -1,9 +1,7 @@
 """
 scrape_pipe.py
 --------------
-Handles Phase I of the pipeline:
-
-This module does NOT open DB connections or run cleaning/synthesis.
+Handles Phase I of the pipeline.
 """
 
 from datetime import datetime
