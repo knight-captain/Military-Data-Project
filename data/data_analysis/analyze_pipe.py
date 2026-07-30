@@ -12,7 +12,7 @@ def analyze_data(db_path):
     analyzed_path = update_path(db_path)
     shutil.copy(db_path, analyzed_path)
 
-    # 2. Run analysis SQL on ANALYZED
+    # 2. Run SQL on ANALYZED
     conn = sqlite3.connect(analyzed_path)
     build_country_equipment_summary(conn)
     conn.close()

@@ -17,10 +17,10 @@ from data.data_refining.refine_pipe import refine_pipe
 from data.data_analysis.analyze_pipe import analyze_data
 
 
-RUN_SCRAPER = False #If False, make sure a set of military_equipment_TEST.db exists; can also be str, and will run edge_case.txt and name the .db after the str
-RUN_CLEANING = False
-RUN_CLASSIFIER = False
-RUN_REFINER = False
+RUN_SCRAPER = True #If False, make sure a set of military_equipment_TEST.db exists; can also be str, and will run edge_case.txt and name the .db after the str
+RUN_CLEANING = True
+RUN_CLASSIFIER = True
+RUN_REFINER = True
 RUN_ANALYZER = True
 
 def run_pipeline():
